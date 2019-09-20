@@ -1,0 +1,54 @@
+#INCLUDE "APWEBEX.CH"
+#INCLUDE "TBICONN.CH"
+#INCLUDE "topconn.CH"
+#INCLUDE "protheus.CH"
+
+// Função de Inicialização
+USER FUNCTION INSITE()
+Local aEmp := {}
+if (Select("SX6") == 0)
+	aEmp := MyOpenSM0(HttpGet->Emp)
+	RPCSetType(3)      
+	PREPARE ENVIRONMENT EMPRESA aEmp[1] FILIAL aEmp[2]
+	ConOut("Logado " + cEmpAnt + "/" + cFilAnt)
+else // verifica se a empresa é correta
+	if !Empty(HttpGet->Emp)
+		ConOut("Valida a empresa aberta")		
+		if Trim(HttpGet->Emp) != Trim(cEmpAnt)
+			ConOut("Mudando empresa para " + Trim(HttpGet->Emp))
+			RpcClearEnv()
+			aEmp := MyOpenSM0(HttpGet->Emp)
+			RPCSetType(3)      
+			PREPARE ENVIRONMENT EMPRESA aEmp[1] FILIAL aEmp[2]
+			ConOut("Logado " + cEmpAnt + "/" + cFilAnt)
+		endIf
+	endIf
+EndIf
+
+Return
+
+// Abre o arquivo SM0
+Static Function MyOpenSM0(cEmpPar)
+
+Local lOpen := .F.
+Local nLoop := 0
+Local aEmp := {"01", "01"}
+
+For nLoop := 1 To 20
+	dbUseArea( .T.,, "SIGAMAT.EMP", "SM0" )
+	If !Empty( Select( "SM0" ) )
+		lOpen := .T.
+		dbSetIndex("SIGAMAT.IND")
+		SM0->(dbGoTop())
+		if !Empty(cEmpPar)
+			SM0->(dbSeek(cEmpPar))
+		EndIf
+		
+		aEmp := {Trim(SM0->M0_CODIGO), Trim(SM0->M0_CODFIL)}
+		ConOut("Empresa: " + Trim(SM0->M0_CODIGO) + "/" + Trim(SM0->M0_CODFIL))
+		SM0->(dbCloseArea())
+		Exit	
+	EndIf
+	Sleep( 200 )
+Next nLoop
+Return aEmp

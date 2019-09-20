@@ -1,0 +1,2107 @@
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\Dialog.ch"
+#line 28 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\Font.ch"
+#line 29 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\PTMenu.ch"
+#line 31 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\Print.ch"
+#line 33 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\Colors.ch"
+#line 35 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\Folder.ch"
+#line 37 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\msobject.ch"
+#line 38 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\VKey.ch"
+#line 42 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\WinApi.ch"
+#line 44 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\FWCommand.ch"
+#line 47 "PROTHEUS.CH"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\FWCSS.CH"
+#line 50 "PROTHEUS.CH"
+#line 2 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\RDMAKES\PROJ 2010\SFA\Sales Force\UPDPRO01.prw"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function U_UPDPRO01()
+
+	Local   aSay     := {}
+	Local   aButton  := {}
+	Local   aMarcadas:= {}
+	Local   cTitulo  := "ATUALIZAÇÃO DE DICIONÁRIOS E TABELAS"
+	Local   cDesc1   := "Esta rotina tem como função fazer  a atualização  dos dicionários do Sistema ( SX?/SIX )"
+	Local   cDesc2   := "Este processo deve ser executado em modo EXCLUSIVO, ou seja não podem haver outros"
+	Local   cDesc3   := "usuários  ou  jobs utilizando  o sistema.  É extremamente recomendavél  que  se  faça um"
+	Local   cDesc4   := "BACKUP  dos DICIONÁRIOS  e da  BASE DE DADOS antes desta atualização, para que caso "
+	Local   cDesc5   := "ocorra eventuais falhas, esse backup seja ser restaurado."
+	Local   cDesc6   := ""
+	Local   cDesc7   := ""
+	Local   lOk      := .F. 
+
+	Private oMainWnd  := NIL
+	Private oProcess  := NIL
+
+
+		TCInternal( 5, "*OFF" )
+
+
+	__cInterNet := NIL
+	__lPYME     := .F. 
+
+	Set( 11,"ON" )
+
+
+	aAdd( aSay, cDesc1 )
+	aAdd( aSay, cDesc2 )
+	aAdd( aSay, cDesc3 )
+	aAdd( aSay, cDesc4 )
+	aAdd( aSay, cDesc5 )
+
+
+
+
+	aAdd(  aButton, {  1, .T. , { || lOk := .T. , FechaBatch() } } )
+	aAdd(  aButton, {  2, .T. , { || lOk := .F. , FechaBatch() } } )
+
+	FormBatch(  cTitulo,  aSay,  aButton )
+
+	If lOk
+		aMarcadas := EscEmpresa()
+
+		If !Empty( aMarcadas )
+			If  ApMsgNoYes( "Confirma a atualização dos dicionários ?", cTitulo )
+				oProcess := MsNewProcess():New( { | lEnd | lOk := FSTProc( @lEnd, aMarcadas ) }, "Atualizando", "Aguarde, atualizando ...", .F.  )
+				oProcess:Activate()
+
+				If lOk
+					Final( "Atualização Concluída." )
+				Else
+					Final( "Atualização não Realizada." )
+				EndIf
+
+			Else
+				Final( "Atualização não Realizada." )
+
+			EndIf
+
+		Else
+			Final( "Atualização não Realizada." )
+
+		EndIf
+
+	EndIf
+
+Return NIL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSTProc( lEnd, aMarcadas )
+	Local   cTexto    := ""
+	Local   cFile     := ""
+	Local   cFileLog  := ""
+	Local   cAux      := ""
+	Local   cMask     := "Arquivos Texto (*.TXT)|*.txt|"
+	Local   nRecno    := 0
+	Local   nI        := 0
+	Local   nX        := 0
+	Local   nPos      := 0
+	Local   aRecnoSM0 := {}
+	Local   aInfo     := {}
+	Local   lOpen     := .F. 
+	Local   lRet      := .T. 
+	Local   oDlg      := NIL
+	Local   oMemo     := NIL
+	Local   oFont     := NIL
+
+	Local   cPathSIX:=Space(254)
+	Local   cPathSX1:=Space(254)
+	Local   cPathSX2:=Space(254)
+	Local   cPathSX3:=Space(254)
+	Local   cPathSX5:=Space(254)
+	Local   cPathSX6:=Space(254)
+	Local   cPathSX7:=Space(254)
+	Local   cPathSX9:=Space(254)
+	Local   cPathSXA:=Space(254)
+	Local   cPathSXB:=Space(254)
+	Local   cPathHLP:=Space(254)
+
+
+	Local   aSIX:={}
+	Local   aSX1:={}
+	Local   aSX2:={}
+	Local   aSX3:={}
+	Local   aSX5:={}
+	Local   aSX6:={}
+	Local   aSX7:={}
+	Local   aSX9:={}
+	Local   aSXA:={}
+	Local   aSXB:={}
+	Local   aHLP:={}
+
+	Local   aStruSIX:={}
+	Local   aStruSX1:={}
+	Local   aStruSX2:={}
+	Local   aStruSX3:={}
+	Local   aStruSX5:={}
+	Local   aStruSX6:={}
+	Local   aStruSX7:={}
+	Local   aStruSX9:={}
+	Local   aStruSXA:={}
+	Local   aStruSXB:={}
+
+	Local oFont1 := TFont():New("MS Sans Serif",,020,, .F. ,,,,, .F. , .F. )
+	Local oGet1
+	Local oGet10
+	Local oGet2
+	Local oGet3
+	Local oGet4
+	Local oGet5
+	Local oGet6
+	Local oGet7
+	Local oGet8
+	Local oGet9
+
+	Local oSay1
+	Local oSay10
+	Local oSay11
+	Local oSay2
+	Local oSay3
+	Local oSay4
+	Local oSay5
+	Local oSay6
+	Local oSay7
+	Local oSay8
+	Local oSay9
+	Local oSButton1
+	Local oSButton2
+	Local nOpc:=0
+
+	Private aArqUpd   := {}
+
+
+	If ( lOpen := MyOpenSm0Ex() )
+
+		dbSelectArea( "SM0" )
+		dbGoTop()
+
+		While !SM0->( EOF() )
+
+
+			If aScan( aRecnoSM0, { |x| x[2] == SM0->M0_CODIGO } ) == 0 .AND.  aScan( aMarcadas, { |x| x[1] == SM0->M0_CODIGO } ) > 0
+				aAdd( aRecnoSM0, { Recno(), SM0->M0_CODIGO } )
+			EndIf
+			SM0->( dbSkip() )
+		End
+
+		If lOpen
+
+			For nI := 1 To Len( aRecnoSM0 )
+
+				SM0->( dbGoTo( aRecnoSM0[nI][1] ) )
+
+				RpcSetType( 2 )
+				RpcSetEnv( SM0->M0_CODIGO, SM0->M0_CODFIL )
+
+				lMsFinalAuto := .F. 
+
+				cTexto += Replicate( "-", 128 ) + Chr(13)+Chr(10)
+				cTexto += "Empresa : " + SM0->M0_CODIGO + "/" + SM0->M0_NOME + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+				oProcess:SetRegua1( 8 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				oProcess:IncRegua1( "Dicionário de arquivos - " + SM0->M0_CODIGO + " " + SM0->M0_NOME + " ..."  )
+				cTexto +=  FSAtuSX3()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				__SetX31Mode( .F.  )
+
+				For nX := 1 To Len( aArqUpd )
+
+					If Select( aArqUpd[nx] ) > 0
+						dbSelectArea( aArqUpd[nx] )
+						dbCloseArea()
+					EndIf
+
+					X31UpdTable( aArqUpd[nx] )
+
+					If __GetX31Error()
+						Alert( __GetX31Trace() )
+						ApMsgStop( "Ocorreu um erro desconhecido durante a atualização da tabela : " + aArqUpd[nx] + ". Verifique a integridade do dicionário e da tabela.", "ATENÇÃO" )
+						cTexto += "Ocorreu um erro desconhecido durante a atualização da estrutura da tabela : " + aArqUpd[nx] + Chr(13)+Chr(10)
+					EndIf
+
+				next
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				oProcess:IncRegua1( "Helps de Campo - "  + SM0->M0_CODIGO + " " + SM0->M0_NOME + " ..." )
+				cTexto += FSAtuHlp()
+
+				RpcClearEnv()
+
+				If !( lOpen := MyOpenSm0Ex() )
+					Exit
+				EndIf
+
+			next
+
+			If lOpen
+
+				cAux += Replicate( "-", 128 ) + Chr(13)+Chr(10)
+				cAux += Replicate( " ", 128 ) + Chr(13)+Chr(10)
+				cAux += "LOG DA ATUALIZACAO DOS DICIONÁRIOS" + Chr(13)+Chr(10)
+				cAux += Replicate( " ", 128 ) + Chr(13)+Chr(10)
+				cAux += Replicate( "-", 128 ) + Chr(13)+Chr(10)
+				cAux += Chr(13)+Chr(10)
+				cAux += " Dados Ambiente"        + Chr(13)+Chr(10)
+				cAux += " --------------------"  + Chr(13)+Chr(10)
+				cAux += " Empresa / Filial...: " + cEmpAnt + "/" + cFilAnt  + Chr(13)+Chr(10)
+				cAux += " Nome Empresa.......: " + Capital( AllTrim( GetAdvFVal( "SM0", "M0_NOMECOM", cEmpAnt + cFilAnt, 1, "" ) ) ) + Chr(13)+Chr(10)
+				cAux += " Nome Filial........: " + Capital( AllTrim( GetAdvFVal( "SM0", "M0_FILIAL" , cEmpAnt + cFilAnt, 1, "" ) ) ) + Chr(13)+Chr(10)
+				cAux += " DataBase...........: " + DtoC( dDataBase )  + Chr(13)+Chr(10)
+				cAux += " Data / Hora........: " + DtoC( Date() ) + " / " + Time()  + Chr(13)+Chr(10)
+				cAux += " Environment........: " + GetEnvServer()  + Chr(13)+Chr(10)
+				cAux += " StartPath..........: " + GetSrvProfString( "StartPath", "" )  + Chr(13)+Chr(10)
+				cAux += " RootPath...........: " + GetSrvProfString( "RootPath", "" )  + Chr(13)+Chr(10)
+				cAux += " Versao.............: " + GetVersao( .T. )  + Chr(13)+Chr(10)
+				cAux += " Usuario Microsiga..: " + __cUserId + " " +  cUserName + Chr(13)+Chr(10)
+				cAux += " Computer Name......: " + GetComputerName()  + Chr(13)+Chr(10)
+
+				aInfo   := GetUserInfo()
+				If ( nPos    := aScan( aInfo,{ |x,y| x[3] == ThreadId() } ) ) > 0
+					cAux += " "  + Chr(13)+Chr(10)
+					cAux += " Dados Thread" + Chr(13)+Chr(10)
+					cAux += " --------------------"  + Chr(13)+Chr(10)
+					cAux += " Usuario da Rede....: " + aInfo[nPos][1] + Chr(13)+Chr(10)
+					cAux += " Estacao............: " + aInfo[nPos][2] + Chr(13)+Chr(10)
+					cAux += " Programa Inicial...: " + aInfo[nPos][5] + Chr(13)+Chr(10)
+					cAux += " Environment........: " + aInfo[nPos][6] + Chr(13)+Chr(10)
+					cAux += " Conexao............: " + AllTrim( StrTran( StrTran( aInfo[nPos][7], Chr( 13 ), "" ), Chr( 10 ), "" ) )  + Chr(13)+Chr(10)
+				EndIf
+				cAux += Replicate( "-", 128 ) + Chr(13)+Chr(10)
+				cAux += Chr(13)+Chr(10)
+
+				cTexto := cAux + cTexto
+
+				cFileLog := MemoWrite( CriaTrab( , .F.  ) + ".log", cTexto )
+
+				oFont := TFont():New( "Mono AS", 5, 12,.F.,,,,,,,,,,,, )
+
+				oDlg = MsDialog():New( 3, 0, 340, 417, "Atualizacao concluida.",,,.F.,,,,,,.T.,, ,.F. )
+
+				 oMemo := TMultiGet():New( 5, 5, { | u | If( PCount() == 0, cTexto, cTexto := u ) },oDlg, 200, 145,,.F.,,,,.T.,,.F.,,.F.,.F.,.F.,,,.F.,, )
+				oMemo:bRClicked := { || AllwaysTrue() }
+				oMemo:oFont     := oFont
+
+				 Pixel := SButton():New( 153, 175,1,{||  oDlg:End()}, oDlg,.T.,,)
+
+				 Pixel := SButton():New( 153, 145,13,{||  (cFile:=cGetFile(cMask,""),If(cFile=="", .T. ,MemoWrite(cFile,cTexto)))}, oDlg,.T.,,)
+
+				oDlg:Activate( oDlg:bLClicked, oDlg:bMoved, oDlg:bPainted,.T.,,,, oDlg:bRClicked, )
+
+			EndIf
+
+		EndIf
+
+	Else
+
+		lRet := .F. 
+
+	EndIf
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSX1()
+	Local aEstrut   := {}
+	Local aSX1      := {}
+	Local aStruDic  := SX1->( dbStruct() )
+	Local cAlias    := "SA1"
+	Local nI        := 0
+	Local nJ        := 0
+	Local nTam1     := Len( SX1->X1_GRUPO )
+	Local nTam2     := Len( SX1->X1_ORDEM )
+
+	cTexto  := "Inicio Atualizacao " + cAlias + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	aEstrut := { "X1_GRUPO", "X1_ORDEM", "X1_PERGUNT", "X1_PERSPA", "X1_PERENG", "X1_VARIAVL", "X1_TIPO", "X1_TAMANHO", "X1_DECIMAL", "X1_PRESEL", "X1_GSC", "X1_VALID", "X1_F3", "X1_GRPSXG", "X1_PYME", "X1_VAR01", "X1_DEF01", "X1_DEFSPA1", "X1_DEFENG1", "X1_CNT01", "X1_DEF02", "X1_DEFSPA2", "X1_DEFENG2", "X1_DEF03", "X1_DEFSPA3", "X1_DEFENG3", "X1_DEF04", "X1_DEFSPA4", "X1_DEFENG4", "X1_DEF05", "X1_DEFSPA5", "X1_DEFENG5", "X1_HELP" }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	AADD(aSX1,{"PRSTSPED", "17", "Diretoria?", "", "", "mv_chh", "C", 2, 0, 0, "G", "", "U2", "", "", "mv_par17", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ".PRSTSPED17."})
+
+
+
+
+
+	oProcess:SetRegua2( Len( aSX1 ) )
+
+	dbSelectArea( "SX1" )
+	SX1->( dbSetOrder( 1 ) )
+
+	For nI := 1 To Len( aSX1 )
+
+		oProcess:IncRegua2( "Atualizando perguntas..." )
+
+		If !SX1->( dbSeek( PadR( aSX1[nI][1], nTam1 ) + PadR( aSX1[nI][2], nTam2 ) ) )
+			cTexto +=  "Pergunta Criada. Grupo/Ordem "  + aSX1[nI][1] + "/" + aSX1[nI][2] + Chr(13)+Chr(10)
+			RecLock( "SX1", .T.  )
+		Else
+			cTexto +=  "Pergunta Alterada. Grupo/Ordem " + aSX1[nI][1] + "/" + aSX1[nI][2] + Chr(13)+Chr(10)
+			RecLock( "SX1", .F.  )
+		EndIf
+
+		For nJ := 1 To Len( aSX1[nI] )
+			If aScan( aStruDic, { |aX| PadR( aX[1], 10 ) == PadR( aEstrut[nJ], 10 ) } ) > 0
+				SX1->( FieldPut( FieldPos( aEstrut[nJ] ), aSX1[nI][nJ] ) )
+			EndIf
+		next
+
+		MsUnLock()
+
+	next
+
+	cTexto += Chr(13)+Chr(10) + "Final da Atualizacao" + " SX1" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+	PutHelp("PRSTSPED17",{"Diretoria ramo do cliente"},{""},{""}, .T. )
+
+Return aClone( aSX1 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSX2(aSX2, aEstrut)
+	Local nI        := 0
+	Local nJ        := 0
+	Local cAlias    := ""
+	Local cTexto    := "Inicio da Atualizacao do SX2" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+	Local cPath     := ""
+	Local cEmpr     := ""
+
+	dbSelectArea( "SX2" )
+	SX2->( dbSetOrder( 1 ) )
+	SX2->( dbGoTop() )
+	cPath := SX2->X2_PATH
+	cEmpr := Substr( SX2->X2_ARQUIVO, 4 )
+
+
+
+
+	oProcess:SetRegua2( Len( aSX2 ) )
+
+	dbSelectArea( "SX2" )
+	dbSetOrder( 1 )
+
+	For nI := 1 To Len( aSX2 )
+
+		If !SX2->( dbSeek( aSX2[nI][1] ) )
+
+			If !( aSX2[nI][1] $ cAlias )
+				cAlias += aSX2[nI][1] + "/"
+				cTexto += "Foi incluída a tabela " + aSX2[nI][1] + Chr(13)+Chr(10)
+			EndIf
+
+			RecLock( "SX2", .T.  )
+			For nJ := 1 To Len( aSX2[nI] )
+				If FieldPos( aEstrut[nJ,1] ) > 0
+					If AllTrim( aEstrut[nJ,1] ) == "X2_ARQUIVO"
+						FieldPut( FieldPos( aEstrut[nJ,1] ), SubStr( aSX2[nI][nJ], 1, 3 ) + cEmpAnt +  "0" )
+					Else
+						FieldPut( FieldPos( aEstrut[nJ,1] ), aSX2[nI][nJ] )
+					EndIf
+				EndIf
+			next
+			dbCommit()
+			MsUnLock()
+
+			oProcess:IncRegua2( "Atualizando Arquivos (SX2)...")
+
+		EndIf
+
+	next
+
+	cTexto += Chr(13)+Chr(10) + "Final da Atualizacao do SX2" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+Return cTexto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSX3()
+
+	Local aSX3           := {}
+	Local aEstrut        := {}
+	Local i              := 0
+	Local j              := 0
+	Local lSX3	         := .F. 
+	Local cTexto         := ""
+	Local cAlias         := ""
+	Local cOrdem         := ""
+	Local nTamSeek  := Len( SX3->X3_CAMPO )
+
+
+
+
+	aEstrut:= { "X3_ARQUIVO","X3_ORDEM"  ,"X3_CAMPO"  ,"X3_TIPO"   ,"X3_TAMANHO","X3_DECIMAL","X3_TITULO" ,"X3_TITSPA" ,"X3_TITENG" , "X3_DESCRIC","X3_DESCSPA","X3_DESCENG","X3_PICTURE","X3_VALID"  ,"X3_USADO"  ,"X3_RELACAO","X3_F3"     ,"X3_NIVEL"  , "X3_RESERV" ,"X3_CHECK"  ,"X3_TRIGGER","X3_PROPRI" ,"X3_BROWSE" ,"X3_VISUAL" ,"X3_CONTEXT","X3_OBRIGAT","X3_VLDUSER", "X3_CBOX"   ,"X3_CBOXSPA","X3_CBOXENG","X3_PICTVAR","X3_WHEN"   ,"X3_INIBRW" ,"X3_GRPSXG" ,"X3_FOLDER", "X3_PYME"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	Aadd(aSX3,{"SBM",	"26",	"BM_X_ENVSF",	"C",	1 ,	0,	"Envia SalesF",	"Envia SalesF",	"Envia SalesF",	"Envia SalesForce ?",	"Envia SalesForce ?",	"Envia SalesForce ?",	"@!",	"",	"€€€€€€€€€€€€€€ " ,	"",	"",	1,	"šÀ",	"",	"",	"U",	"N",	"A",	"R",	"",	"PERTENCE('SN').OR.VAZIO()",	"S=Sim;N=Nao",	"",	"",	"",	"",	"",	"",	"",	"N"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	Aadd(aSX3,{"SC5",	"D4",	"C5_X_ORIPD",	"C",	1 ,	0,	"Origem Ped  ",	"Origem Ped  ",	"Origem Ped  ",	"Origem Pedido            ",	"Origem Pedido            ",	"Origem Pedido            ",	"@!",	"",	"€€€€€€€€€€€€€€ " ,	"",	"",	1,	"šÀ",	"",	"",	"U",	"N",	"V",	"R",	"",	"Pertence('SHA')",	"S=SalesForce;H=Hybris;A=Armazenagem",	"S=SalesForce;H=Hybris;A=Armazenagem",	"S=SalesForce;H=Hybris;A=Armazenagem",	"",	"",	"",	"",	"",	"N"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	Aadd(aSX3,{"SC5",	"D5",	"C5_X_NUMPD",	"C",	25 ,	0,	"Nro Ped Exte",	"Nro Ped Exte",	"Nro Ped Exte",	"Nro Ped Externo          ",	"Nro Ped Externo          ",	"Nro Ped Externo          ",	"",	"",	"€€€€€€€€€€€€€€ " ,	"",	"",	1,	"šÀ",	"",	"",	"U",	"N",	"V",	"R",	"",	"",	"",	"",	"",	"",	"",	"",	"",	"",	"N"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	Aadd(aSX3,{"SA1",	"z9",	"A1_X_ENVSF",	"C",	1 ,	0,	"Envia SalesF",	"Envia SalesF",	"Envia SalesF",	"Envia SalesForce ?",	"Envia SalesForce ?",	"Envia SalesForce ?",	"@!",	"",	"€€€€€€€€€€€€€€ " ,	"",	"",	1,	"šÀ",	"",	"",	"U",	"N",	"A",	"R",	"",	"PERTENCE('SN').OR.VAZIO()",	"S=Sim;N=Nao",	"",	"",	"",	"",	"",	"",	"",	"N"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	Aadd(aSX3,{"SF2",	"D5",	"F2_X_SFID",	"C",	25 ,	0,	"Nro Id SF",	"Nro Id SF",	"Nro Id SF",	"Nro Id Salesforce        ",	"Nro Id Salesforce        ",	"Nro Id Salesforce        ",	"",	"",	"€€€€€€€€€€€€€€ " ,	"",	"",	1,	"šÀ",	"",	"",	"U",	"N",	"V",	"R",	"",	"",	"",	"",	"",	"",	"",	"",	"",	"",	"N"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	Aadd(aSX3,{"SC0",	"D4",	"C0_X_ORIPD",	"C",	1 ,	0,	"Origem Ped  ",	"Origem Ped  ",	"Origem Ped  ",	"Origem Pedido            ",	"Origem Pedido            ",	"Origem Pedido            ",	"@!",	"",	"€€€€€€€€€€€€€€ " ,	"",	"",	1,	"šÀ",	"",	"",	"U",	"N",	"V",	"R",	"",	"Pertence('SHA')",	"S=SalesForce;H=Hybris;A=Armazenagem",	"S=SalesForce;H=Hybris;A=Armazenagem",	"S=SalesForce;H=Hybris;A=Armazenagem",	"",	"",	"",	"",	"",	"N"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	Aadd(aSX3,{"SC0",	"D5",	"C0_X_NUMPD",	"C",	25 ,	0,	"Nro Ped Exte",	"Nro Ped Exte",	"Nro Ped Exte",	"Nro Ped Externo          ",	"Nro Ped Externo          ",	"Nro Ped Externo          ",	"",	"",	"€€€€€€€€€€€€€€ " ,	"",	"",	1,	"šÀ",	"",	"",	"U",	"N",	"V",	"R",	"",	"",	"",	"",	"",	"",	"",	"",	"",	"",	"N"})
+
+	ProcRegua(Len(aSX3))
+	SX3->(DbSetOrder(2))
+	cAliasAtu := ""
+	For nI := 1 To Len( aSX3 )
+
+		SX3->( dbSetOrder( 2 ) )
+
+		If !SX3->( dbSeek( PadR( aSX3[nI][3], nTamSeek ) ) )
+
+			If !( aSX3[nI][1] $ cAlias )
+				cAlias += aSX3[nI][1] + "/"
+				aAdd( aArqUpd, aSX3[nI][1] )
+			EndIf
+
+
+
+
+			If ( aSX3[nI][1] <> cAliasAtu )
+				cSeqAtu   := "00"
+				cAliasAtu := aSX3[nI][1]
+
+				dbSetOrder( 1 )
+				SX3->( dbSeek( cAliasAtu + "ZZ", .T.  ) )
+				dbSkip( -1 )
+
+				If ( SX3->X3_ARQUIVO == cAliasAtu )
+					cSeqAtu := SX3->X3_ORDEM
+				EndIf
+
+				nSeqAtu := Val( RetAsc( cSeqAtu, 3, .F.  ) )
+			EndIf
+
+			nSeqAtu++
+			cSeqAtu := RetAsc( Str( nSeqAtu ), 2, .T.  )
+			lSX3	:= .T. 
+			RecLock( "SX3", .T.  )
+			For nJ := 1 To Len( aSX3[nI] )
+				If     nJ == 2
+					FieldPut( FieldPos( aEstrut[nJ] ), cSeqAtu )
+
+				ElseIf FieldPos( aEstrut[nJ] ) > 0
+					FieldPut( FieldPos( aEstrut[nJ] ), aSX3[nI][nJ] )
+
+				EndIf
+			next
+
+			dbCommit()
+			MsUnLock()
+
+			cTexto += "Criado o campo " + aSX3[nI][3] + Chr(13)+Chr(10)
+
+		Else
+
+
+
+
+			For nJ := 1 To Len( aSX3[nI] )
+
+
+
+
+
+
+
+				If aEstrut[nJ] == SX3->( FieldName( nJ ) ) .AND.  PadR( StrTran( AllToChar( SX3->( FieldGet( nJ ) ) ), " ", "" ), 250 ) <> PadR( StrTran( AllToChar( aSX3[nI][nJ] )           , " ", "" ), 250 ) .AND.  AllTrim( SX3->( FieldName( nJ ) ) ) <> "X3_ORDEM"
+
+
+
+
+
+
+					If ApMsgNoYes( "O campo " + aSX3[nI][3] + " está com o " + SX3->( FieldName( nJ ) ) + " com o conteúdo" + Chr(13)+Chr(10) + "[" + RTrim( AllToChar( SX3->( FieldGet( nJ ) ) ) ) + "]" + Chr(13)+Chr(10) + "que será substituido pelo NOVO conteúdo" + Chr(13)+Chr(10) + "[" + RTrim( AllToChar( aSX3[nI][nJ] ) ) + "]" + Chr(13)+Chr(10) + "Deseja substituir ? ", "Confirmar substituição de conteúdo" )
+
+						cTexto += "Alterado o campo " + aSX3[nI][3] + Chr(13)+Chr(10)
+						cTexto += "   " + PadR( SX3->( FieldName( nJ ) ), 10 ) + " de [" + AllToChar( SX3->( FieldGet( nJ ) ) ) + "]" + Chr(13)+Chr(10)
+						cTexto += "            para [" + AllToChar( aSX3[nI][nJ] )          + "]" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+						lSX3	:= .T. 
+						RecLock( "SX3", .F.  )
+						FieldPut( FieldPos( aEstrut[nJ] ), aSX3[nI][nJ] )
+						dbCommit()
+						MsUnLock()
+
+						If !( aSX3[nI][1] $ cAlias )
+							cAlias += aSX3[nI][1] + "/"
+							aAdd( aArqUpd, aSX3[nI][1] )
+						EndIf
+
+					EndIf
+
+				EndIf
+
+			Next
+
+		EndIf
+
+		oProcess:IncRegua2( "Atualizando Campos de Tabelas (SX3)..." )
+
+	next
+
+	If lSX3
+		cTexto := "Foram alteradas as estruturas das seguintes tabelas : "+cAlias+CHR(13)+CHR(10)
+
+
+
+
+
+
+
+
+		cTexto := cTexto + CHR(13) + CHR(10) + "Helps Atualizados Com Sucesso!" + CHR(13) + CHR(10)
+	EndIf
+
+Return cTexto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSIX(aSIX, aEstrut)
+	Local cTexto    := "Inicio da Atualizacao do SIX" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+	Local cAlias    := ""
+	Local lDelInd   := .F. 
+	Local nI        := 0
+	Local nJ        := 0
+	Local lAlt      := .F. 
+	Local cSeq      := ""
+
+
+
+
+
+	oProcess:SetRegua2( Len( aSIX ) )
+
+	dbSelectArea( "SIX" )
+	SIX->( dbSetOrder( 1 ) )
+
+	For nI := 1 To Len( aSIX )
+		lAlt := .F. 
+
+		If !SIX->( dbSeek( aSIX[nI][1] + aSIX[nI][2] ) )
+			RecLock( "SIX", .T.  )
+			lDelInd := .F. 
+			cTexto += "Índice criado " + aSIX[nI][1] + "/" + aSIX[nI][2] + " - " + aSIX[nI][3] + Chr(13)+Chr(10)
+		Else
+			lDelInd := .F. 
+			If Upper(AllTrim(SIX->CHAVE)) <> Upper(AllTrim(aSIX[nI][3]))
+				If Empty(aSIX[nI][9])
+					If ApMsgYesNo("O indice da tabela " + aSIX[nI][1] + " definido como ordem " + aSIX[nI][2] + " no UPDATE já existe no dicionario da empresa: " + SM0->M0_CODIGO + " com uma CHAVE diferente da do UPDATE. Você confirma essa alteracao ? OBS: NAO FOI ESPECIFICADO UM NICKNAME PARA ESSE INDICE. PODEM OCORRER ERROS NA EXECUCAO DAS ROTINAS ENVOLVIDAS SE FOR CONFIRMADA ESSA OPCAO.")
+						lDelInd := .T. 
+						RecLock( "SIX", .F.  )
+					Else
+						cTexto += "ATENCAO, o indice da tabela " + aSIX[nI][1] + " ordem " + aSIX[nI][2] + " com a expressao " + aSIX[nI][3] + " nao foi atualizado pelo UPDATE." + Chr(13)+Chr(10)
+						Loop
+					EndIf
+				Else
+					If ApMsgYesNo("O indice da tabela " + aSIX[nI][1] + " definido como ordem " + aSIX[nI][2] + " no UPDATE já existe no dicionario da empresa: " + SM0->M0_CODIGO + " com uma CHAVE diferente da do UPDATE. Você confirma a numeracao automatica desse indice ? OBS: FOI ESPECIFICADO UM NICKNAME PARA ESSE INDICE.")
+
+						SIX->(dbGoTop())
+						SIX->( dbSeek( aSIX[nI][1] ) )
+						While SIX->(!Eof()) .And.  SIX->INDICE == aSIX[nI][1]
+							cSeq := SIX->ORDEM
+							SIX->(dbSkip())
+						EndDo
+						cSeq := Soma1(cSeq)
+						lDelInd := .F. 
+
+						aSIX[nI][2] := cSeq
+
+						RecLock( "SIX", .T.  )
+						lDelInd := .F. 
+						cTexto += "Índice criado " + aSIX[nI][1] + "/" + aSIX[nI][2] + " - " + aSIX[nI][3] + Chr(13)+Chr(10)
+					Else
+						cTexto += "ATENCAO, o indice da tabela " + aSIX[nI][1] + " ordem " + aSIX[nI][2] + " com a expressao " + aSIX[nI][3] + " nao foi atualizado pelo UPDATE." + Chr(13)+Chr(10)
+						Loop
+					EndIf
+				EndIf
+			Else
+				lDelInd := .T. 
+				cTexto += "Índice alterado " + aSIX[nI][1] + "/" + aSIX[nI][2] + " - " + aSIX[nI][3] + Chr(13)+Chr(10)
+				lAlt := .T. 
+			EndIf
+		EndIf
+
+
+		If StrTran( Upper( AllTrim( CHAVE )       ), " ", "") <> StrTran( Upper( AllTrim( aSIX[nI][3] ) ), " ", "" )
+			aAdd( aArqUpd, aSIX[nI][1] )
+
+			If !( aSIX[nI][1] $ cAlias )
+				cAlias += aSIX[nI][1] + "/"
+			EndIf
+
+			For nJ := 1 To Len( aSIX[nI] )
+				If FieldPos( aEstrut[nJ,1] ) > 0
+					FieldPut( FieldPos( aEstrut[nJ,1] ), aSIX[nI][nJ] )
+				EndIf
+			next
+
+			dbCommit()
+			MsUnLock()
+
+			If lDelInd
+				TcInternal( 60, RetSqlName( aSIX[nI][1] ) + "|" + RetSqlName( aSIX[nI][1] ) + aSIX[nI][2] )
+			EndIf
+
+		EndIf
+
+		oProcess:IncRegua2( "Atualizando índices..." )
+
+	next
+
+	cTexto += Chr(13)+Chr(10) + Chr(13)+Chr(10) + "Final da Atualizacao do SIX" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+Return cTexto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSX6(aSX6,aEstrut )
+	Local nI        := 0
+	Local nJ        := 0
+	Local cAlias    := ""
+	Local cTexto    := "Inicio da Atualizacao do SX6" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+	Local lReclock  := .T. 
+	Local lContinua := .T. 
+
+
+
+
+
+	oProcess:SetRegua2( Len( aSX6 ) )
+
+	dbSelectArea( "SX6" )
+	dbSetOrder( 1 )
+
+	For nI := 1 To Len( aSX6 )
+
+		If !SX6->( dbSeek("  "+aSX6[nI][1] ) )
+
+			If !( aSX6[nI][1] $ cAlias )
+				cAlias += aSX6[nI][2] + "/"
+				cTexto += "Foi incluída o parametro: " + aSX6[nI][2] + Chr(13)+Chr(10)
+			EndIf
+
+			RecLock( "SX6", .T.  )
+			For nJ := 1 To Len( aSX6[nI] )
+				If FieldPos( aEstrut[nJ,1] ) > 0
+
+
+
+					FieldPut( FieldPos( aEstrut[nJ,1] ), aSX6[nI][nJ] )
+
+				EndIf
+			next
+			dbCommit()
+			MsUnLock()
+
+			oProcess:IncRegua2( "Atualizando Arquivos (SX6)...")
+
+		EndIf
+
+	next
+
+
+	cTexto += Chr(13)+Chr(10) + "Final da Atualizacao do SX6" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+Return cTexto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSX7(aSX7, aEstrut)
+	Local nI        := 0
+	Local nJ        := 0
+	Local nTamSeek  := Len( SX7->X7_CAMPO )
+	Local cAlias    := ""
+	Local cTexto    := "Inicio da Atualizacao do SX7" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+
+
+
+	oProcess:SetRegua2( Len( aSX7 ) )
+
+	dbSelectArea( "SX7" )
+	dbSetOrder( 1 )
+
+	For nI := 1 To Len( aSX7 )
+
+		If !SX7->( dbSeek( PadR( aSX7[nI][1], nTamSeek ) + aSX7[nI][2] ) )
+
+			If !( aSX7[nI][1] $ cAlias )
+				cAlias += aSX7[nI][1] + "/"
+				cTexto += "Foi incluído o gatilho " + aSX7[nI][1] + "/" + aSX7[nI][2] + Chr(13)+Chr(10)
+			EndIf
+
+			RecLock( "SX7", .T.  )
+		Else
+
+			If !( aSX7[nI][1] $ cAlias )
+				cAlias += aSX7[nI][1] + "/"
+				cTexto += "Foi alterado o gatilho " + aSX7[nI][1] + "/" + aSX7[nI][2] + Chr(13)+Chr(10)
+			EndIf
+
+			RecLock( "SX7", .F.  )
+		EndIf
+
+		For nJ := 1 To Len( aSX7[nI] )
+			If FieldPos( aEstrut[nJ,1] ) > 0
+				FieldPut( FieldPos( aEstrut[nJ,1] ), aSX7[nI][nJ] )
+			EndIf
+		next
+
+		dbCommit()
+		MsUnLock()
+
+
+
+		dbSelectArea("SX3")
+		SX3->(dbSetOrder(2))
+		If SX3->(dbSeek(aSX7[nI][1]))
+			SX3->(RecLock("SX3", .F. ))
+			SX3->X3_TRIGGER := "S"
+			SX3->(MsUnlock())
+		EndIf
+
+		oProcess:IncRegua2( "Atualizando Arquivos (SX7)...")
+
+	next
+
+	cTexto += Chr(13)+Chr(10) + "Final da Atualizacao do SX7" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+Return cTexto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSXA(aSXA, aEstrut )
+
+	Local nI        := 0
+	Local nJ        := 0
+	Local cAlias    := ""
+	Local cTexto    := "Inicio da Atualizacao do SXA" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+
+
+
+
+	oProcess:SetRegua2( Len( aSXA ) )
+
+	dbSelectArea( "SXA" )
+	dbSetOrder( 1 )
+
+	For nI := 1 To Len( aSXA )
+
+		If !SXA->( dbSeek(aSXA[nI][1]+aSXA[nI][2] ) )
+
+			If !( aSXA[nI][1] $ cAlias )
+				cAlias += aSXA[nI][2] + "/"
+				cTexto += "Foi incluída o folder: " + aSXA[nI][3] + Chr(13)+Chr(10)
+			EndIf
+
+			RecLock( "SXA", .T.  )
+			For nJ := 1 To Len( aSXA[nI] )
+				If FieldPos( aEstrut[nJ,1] ) > 0
+
+
+
+					FieldPut( FieldPos( aEstrut[nJ,1] ), aSXA[nI][nJ] )
+
+				EndIf
+			next
+			dbCommit()
+			MsUnLock()
+
+			oProcess:IncRegua2( "Atualizando Arquivos (SXA)...")
+
+		EndIf
+
+	next
+
+
+	cTexto += Chr(13)+Chr(10) + "Final da Atualizacao do SXA" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+Return cTexto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSXB(aSXB, aEstrut )
+	Local nI        := 0
+	Local nJ        := 0
+	Local cAlias    := "Inicio da Atualizacao do SXB" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+	Local cTexto    := ""
+
+
+
+
+	oProcess:SetRegua2( Len( aSXB ) )
+
+	dbSelectArea( "SXB" )
+	dbSetOrder( 1 )
+
+	For nI := 1 To Len( aSXB )
+
+		If !Empty( aSXB[nI][1] )
+
+			If !SXB->( dbSeek( PadR( aSXB[nI][1], Len( SXB->XB_ALIAS ) ) + aSXB[nI][2] + aSXB[nI][3] + aSXB[nI][4] ) )
+
+				If !( aSXB[nI][1] $ cAlias )
+					cAlias += aSXB[nI][1] + "/"
+					cTexto += "Foi incluída a consulta padrão " + aSXB[nI][1] + Chr(13)+Chr(10)
+				EndIf
+
+				RecLock( "SXB", .T.  )
+
+				For nJ := 1 To Len( aSXB[nI] )
+					If !Empty( FieldName( FieldPos( aEstrut[nJ,1] ) ) )
+						FieldPut( FieldPos( aEstrut[nJ,1] ), aSXB[nI][nJ] )
+					EndIf
+				next
+
+				dbCommit()
+				MsUnLock()
+
+			Else
+
+
+
+
+				For nJ := 1 To Len( aSXB[nI] )
+
+
+
+
+
+
+					If aEstrut[nJ,1] == SXB->( FieldName( nJ ) ) .AND.  StrTran( AllToChar( SXB->( FieldGet( nJ ) )  ), " ", "" ) <> StrTran( AllToChar( aSXB[nI][nJ]             ), " ", "" )
+
+
+
+
+
+
+						If ApMsgNoyes( "A consulta padrao " + aSXB[nI][1] + " está com o " + SXB->( FieldName( nJ ) ) + " com o conteúdo" + Chr(13)+Chr(10) + "[" + RTrim( AllToChar( SXB->( FieldGet( nJ ) ) ) ) + "]" + Chr(13)+Chr(10) + ", e este é diferente do conteúdo" + Chr(13)+Chr(10) + "[" + RTrim( AllToChar( aSXB[nI][nJ] ) ) + "]" + Chr(13)+Chr(10) + "Deseja substituir ? ", "Confirma substituição de conteúdo" )
+
+							RecLock( "SXB", .F.  )
+							FieldPut( FieldPos( aEstrut[nJ,1] ), aSXB[nI][nJ] )
+							dbCommit()
+							MsUnLock()
+
+							If !( aSXB[nI][1] $ cAlias )
+								cAlias += aSXB[nI][1] + "/"
+								cTexto += "Foi Alterada a consulta padrao " + aSXB[nI][1] + Chr(13)+Chr(10)
+							EndIf
+
+						EndIf
+
+					EndIf
+
+				Next
+
+			EndIf
+
+		EndIf
+
+		oProcess:IncRegua2( "Atualizando Consultas Padroes (SXB)..." )
+
+	next
+
+	cTexto += Chr(13)+Chr(10) + "Final da Atualizacao do SXB" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+Return cTexto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSX5()
+	Local aEstrut   := {}
+	Local aSX5      := {}
+	Local cAlias    := ""
+	Local nI        := 0
+	Local nJ        := 0
+
+	cTexto  := "Inicio Atualizacao SX5" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+	aEstrut := { "X5_FILIAL", "X5_TABELA", "X5_CHAVE", "X5_DESCRI", "X5_DESCSPA", "X5_DESCENG" }
+
+	AADD(aSX5, {SM0->M0_CODFIL,"00","U2","DIRETORIA RAMO CLIENTE","DIRETORIA RAMO CLIENTE","DIRETORIA RAMO CLIENTE"})
+	AADD(aSX5, {SM0->M0_CODFIL,"U2","01","CONSTRUCAO","CONSTRUCAO","CONSTRUCAO"})
+	AADD(aSX5, {SM0->M0_CODFIL,"U2","02","HOME CENTER","HOME CENTER","HOME CENTER"})
+	AADD(aSX5, {SM0->M0_CODFIL,"U2","03","BAZAR","BAZAR","BAZAR"})
+	AADD(aSX5, {SM0->M0_CODFIL,"U2","04","B2B","B2B","B2B"})
+
+
+
+
+	oProcess:SetRegua2( Len( aSX5 ) )
+
+	dbSelectArea( "SX5" )
+	SX5->( dbSetOrder( 1 ) )
+
+	For nI := 1 To Len( aSX5 )
+
+		oProcess:IncRegua2( "Atualizando tabelas..." )
+
+		If !SX5->( dbSeek( aSX5[nI][1] + aSX5[nI][2] + aSX5[nI][3]) )
+			cTexto += "Item da tabela criado. Tabela " + AllTrim( aSX5[nI][1] ) + aSX5[nI][2] + "/" + aSX5[nI][3] + Chr(13)+Chr(10)
+			RecLock( "SX5", .T.  )
+		Else
+			cTexto += "Item da tabela alterado. Tabela " + AllTrim( aSX5[nI][1] ) + aSX5[nI][2] + "/" + aSX5[nI][3] + Chr(13)+Chr(10)
+			RecLock( "SX5", .F.  )
+		EndIf
+
+		For nJ := 1 To Len( aSX5[nI] )
+			If FieldPos( aEstrut[nJ] ) > 0
+				FieldPut( FieldPos( aEstrut[nJ] ), aSX5[nI][nJ] )
+			EndIf
+		next
+
+		MsUnLock()
+
+		aAdd( aArqUpd, aSX5[nI][1] )
+
+		If !( aSX5[nI][1] $ cAlias )
+			cAlias += aSX5[nI][1] + "/"
+		EndIf
+
+	next
+
+	cTexto += Chr(13)+Chr(10) + "Final da Atualizacao" + " SX5" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+Return aClone( aSX5 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuSX9(aSX9, aEstrut)
+	Local nI        := 0
+	Local nJ        := 0
+	Local nTamSeek  := Len( SX9->X9_DOM )
+	Local cAlias    := ""
+	Local cTexto    := "Inicio da Atualizacao do SX9" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+
+
+
+
+	oProcess:SetRegua2( Len( aSX9 ) )
+
+	dbSelectArea( "SX9" )
+	dbSetOrder( 1 )
+
+	For nI := 1 To Len( aSX9 )
+
+		If !SX9->( dbSeek(aSX9[nI][1]+aSX9[nI][2] ) )
+
+			If !( aSX9[nI][1] $ cAlias )
+				cAlias += aSX9[nI][2] + "/"
+				cTexto += "Foi incluída o dominio / contradominio: " + aSX9[nI][1] +"-" +aSX9[nI][3]+ Chr(13)+Chr(10)
+			EndIf
+
+			RecLock( "SX9", .T.  )
+			For nJ := 1 To Len( aSX9[nI] )
+				If FieldPos( aEstrut[nJ,1] ) > 0
+
+
+
+					FieldPut( FieldPos( aEstrut[nJ,1] ), aSX9[nI][nJ] )
+
+				EndIf
+			next
+			dbCommit()
+			MsUnLock()
+
+			oProcess:IncRegua2( "Atualizando Arquivos (SX9)...")
+
+		EndIf
+
+	next
+
+
+	cTexto += Chr(13)+Chr(10) + "Final da Atualizacao do SX9" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+Return cTexto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function FSAtuHlp(aHLP)
+	Local cCampo	  :=""
+	Local aHlpPor   := {}
+	Local aHlpEng   := {}
+	Local aHlpSpa   := {}
+	Local nI		  :=0
+	Local cTexto    := "Inicio da Atualizacao ds Helps de Campos" + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+
+
+
+	aHlpPor := {}
+	aHlpEng := {}
+	aHlpSpa := {}
+
+
+
+	cCampo:="PBM_X_ENVSF"
+	aHlpPor:={{"Indica se envia produto"},{" para Salesforce"}}
+	aHlpEng:={{"Indica se envia produto"},{" para Salesforce"}}
+	aHlpSpa:={{"Indica se envia produto"},{" para Salesforce"}}
+
+	PutHelp( cCampo, aHlpPor, aHlpEng, aHlpSpa, .T.  )
+	cTexto+="Atualizado help do campo " + cCampo + Chr(13)+Chr(10)
+
+	cCampo:="PC5_X_ORIPD"
+	aHlpPor:={{"Indica origem do pedido"}}
+	aHlpEng:={{"Indica origem do pedido"}}
+	aHlpSpa:={{"Indica origem do pedido"}}
+
+	PutHelp( cCampo, aHlpPor, aHlpEng, aHlpSpa, .T.  )
+	cTexto+="Atualizado help do campo " + cCampo + Chr(13)+Chr(10)
+
+	cCampo:="PC5_X_NUMPD"
+	aHlpPor:={{"Numero Pedido externo"}}
+	aHlpEng:={{"Numero Pedido externo"}}
+	aHlpSpa:={{"Numero Pedido externo"}}
+
+	PutHelp( cCampo, aHlpPor, aHlpEng, aHlpSpa, .T.  )
+	cTexto+="Atualizado help do campo " + cCampo + Chr(13)+Chr(10)
+
+	cTexto += Chr(13)+Chr(10) + "Final da Atualizacao dos Helps de Campos" + Chr(13)+Chr(10) + Replicate( "-", 128 ) + Chr(13)+Chr(10) + Chr(13)+Chr(10)
+
+Return cTexto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function EscEmpresa()
+
+
+
+
+
+
+
+
+
+
+
+
+	Local   aSalvAmb := GetArea()
+	Local   aSalvSM0 := {}
+	Local   aRet     := {}
+	Local   aVetor   := {}
+	Local   oDlg     := NIL
+	Local   oChkMar  := NIL
+	Local   oLbx     := NIL
+	Local   oMascEmp := NIL
+	Local   oMascFil := NIL
+	Local   oButMarc := NIL
+	Local   oButDMar := NIL
+	Local   oButInv  := NIL
+	Local   oSay     := NIL
+	Local   oOk      := LoadBitmap( GetResources(), "LBOK" )
+	Local   oNo      := LoadBitmap( GetResources(), "LBNO" )
+	Local   lChk     := .F. 
+	Local   lOk      := .F. 
+	Local   lTeveMarc:= .F. 
+	Local   cVar     := ""
+	Local   cNomEmp  := ""
+	Local   cMascEmp := "??"
+	Local   cMascFil := "??"
+
+	Local   aMarcadas  := {}
+
+
+	If !MyOpenSm0Ex()
+		ApMsgStop( "Não foi possível abrir SM0 exclusivo." )
+		Return aRet
+	EndIf
+
+
+	dbSelectArea( "SM0" )
+	aSalvSM0 := SM0->( GetArea() )
+	dbSetOrder( 1 )
+	dbGoTop()
+
+	While !SM0->( EOF() )
+
+		If aScan( aVetor, {|x| x[2] == SM0->M0_CODIGO} ) == 0
+			aAdd(  aVetor, { aScan( aMarcadas, {|x| x[1] == SM0->M0_CODIGO .and.  x[2] == SM0->M0_CODFIL} ) > 0, SM0->M0_CODIGO, SM0->M0_CODFIL, SM0->M0_NOME, SM0->M0_FILIAL } )
+		EndIf
+
+		dbSkip()
+	End
+
+	RestArea( aSalvSM0 )
+
+	oDlg = MsDialog():New( 0, 0, 270, 396, "",,,.F.,,,,,,.T.,, ,.F. )
+
+	oDlg:cToolTip := "Tela para Múltiplas Seleções de Empresas/Filiais"
+
+	oDlg:cTitle := "Selecione a(s) Empresa(s) para Atualização"
+
+	 oLbx := Var := cVar := TWBrowse():New( 10, 10, 178, 095,,{ " ", " ", "Empresa"},, oDlg, ,,,,,,,,,,,.F.,,.T.,,.F.,,, )
+	oLbx:SetArray(  aVetor )
+
+
+	oLbx:bLine := {|| {IIf( aVetor[oLbx:nAt, 1], oOk, oNo ), aVetor[oLbx:nAt, 2], aVetor[oLbx:nAt, 4]}}
+	oLbx:BlDblClick := { || aVetor[oLbx:nAt, 1] := !aVetor[oLbx:nAt, 1], VerTodos( aVetor, @lChk, oChkMar ), oChkMar:Refresh(), oLbx:Refresh()}
+	oLbx:cToolTip   :=  oDlg:cTitle
+	oLbx:lHScroll   := .F. 
+
+
+	 oChkMar := TCheckBox():New( 112, 10, "Todos",{ | u | If( PCount() == 0, lChk, lChk := u ) }, oDlg, 40, 007,,{|| MarcaTodos(lChk,@aVetor,oLbx)},,,,,.F.,.T., "Marca / Desmarca Todos",.F., )
+
+
+	 oButInv := TButton():New( 123, 10, "&Inverter", oDlg,{||  (InvSelecao(@aVetor,oLbx,@lChk,oChkMar),VerTodos(aVetor,@lChk,oChkMar))}, 32, 12,,,.F.,.T.,.F., "Inverter Seleção",.F.,,,.F. )
+
+
+	 oSay := TSay():New( 113, 51,{||  "Empresa"},oDlg,,,.F.,.F.,.F.,.T.,,, 40, 08,.F.,.F.,.F.,.F.,.F.,.F. )
+
+	 oMascEmp := TGet():New( 112, 80, { | u | If( PCount() == 0, cMascEmp, cMascEmp := u ) },oDlg, 05, 05, "@!",{||  (cMascEmp:=StrTran(cMascEmp," ","?"),cMascFil:=StrTran(cMascFil," ","?"),oMascEmp:Refresh(), .T. )},,,,.F.,,.T., "Máscara Empresa ( ?? )",.F.,,.F.,.F.,,.F.,.F. ,,"cMascEmp",,,, )
+
+	 oButMarc := TButton():New( 123, 50, "&Marcar", oDlg,{||  (MarcaMas(oLbx,aVetor,cMascEmp, .T. ),VerTodos(aVetor,@lChk,oChkMar))}, 32, 12,,,.F.,.T.,.F., "Marcar usando máscara ( ?? )",.F.,,,.F. )
+
+	 oButDMar := TButton():New( 123, 80, "&Desmarcar", oDlg,{||  (MarcaMas(oLbx,aVetor,cMascEmp, .F. ),VerTodos(aVetor,@lChk,oChkMar))}, 32, 12,,,.F.,.T.,.F., "Desmarcar usando máscara ( ?? )",.F.,,,.F. )
+
+	 SButton():New( 111, 125,1,{||  (RetSelecao(@aRet,aVetor),oDlg:End())}, oDlg,.T., "Confirma a Seleção",)
+	 SButton():New( 111, 158,2,{||  (IIf(lTeveMarc,aRet:=aMarcadas, .T. ),oDlg:End())}, oDlg,.T., "Abandona a Seleção",)
+	oDlg:Activate( oDlg:bLClicked, oDlg:bMoved, oDlg:bPainted,.T.,,,, oDlg:bRClicked, )
+
+	RestArea( aSalvAmb )
+	dbSelectArea( "SM0" )
+	dbCloseArea()
+
+Return  aRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function MarcaTodos( lMarca, aVetor, oLbx )
+	Local  nI := 0
+
+	For nI := 1 To Len( aVetor )
+		aVetor[nI][1] := lMarca
+	next
+
+	oLbx:Refresh()
+
+Return NIL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function InvSelecao( aVetor, oLbx )
+	Local  nI := 0
+
+	For nI := 1 To Len( aVetor )
+		aVetor[nI][1] := !aVetor[nI][1]
+	next
+
+	oLbx:Refresh()
+
+Return NIL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function RetSelecao( aRet, aVetor )
+	Local  nI    := 0
+
+	aRet := {}
+	For nI := 1 To Len( aVetor )
+		If aVetor[nI][1]
+			aAdd( aRet, { aVetor[nI][2] , aVetor[nI][3], aVetor[nI][2] +  aVetor[nI][3] } )
+		EndIf
+	next
+
+Return NIL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function MarcaMas( oLbx, aVetor, cMascEmp, lMarDes )
+	Local cPos1 := SubStr( cMascEmp, 1, 1 )
+	Local cPos2 := SubStr( cMascEmp, 2, 1 )
+	Local nPos  := oLbx:nAt
+	Local nZ    := 0
+
+	For nZ := 1 To Len( aVetor )
+		If cPos1 == "?" .or.  SubStr( aVetor[nZ][2], 1, 1 ) == cPos1
+			If cPos2 == "?" .or.  SubStr( aVetor[nZ][2], 2, 1 ) == cPos2
+				aVetor[nZ][1] :=  lMarDes
+			EndIf
+		EndIf
+	Next
+
+	oLbx:nAt := nPos
+	oLbx:Refresh()
+
+Return NIL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function VerTodos( aVetor, lChk, oChkMar )
+	Local lTTrue := .T. 
+	Local nI     := 0
+
+	For nI := 1 To Len( aVetor )
+		lTTrue := IIf( !aVetor[nI][1], .F. , lTTrue )
+	next
+
+	lChk := IIf( lTTrue, .T. , .F.  )
+	oChkMar:Refresh()
+
+Return NIL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function MyOpenSM0Ex()
+
+	Local lOpen := .F. 
+	Local nLoop := 0
+
+	For nLoop := 1 To 20
+		dbUseArea( .T. , , "SIGAMAT.EMP", "SM0", .F. , .F.  )
+
+		If !Empty( Select( "SM0" ) )
+			lOpen := .T. 
+			dbSetIndex( "SIGAMAT.IND" )
+			Exit
+		EndIf
+
+		Sleep( 500 )
+
+	next
+
+	If !lOpen
+
+		ApMsgStop( "Não foi possível a abertura da tabela " + "de empresas de forma exclusiva.", "ATENÇÃO" )
+	EndIf
+
+Return lOpen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function AdCampo(_aSX, _cAlias, _aStrut)
+	Local nI:=1
+	Local nJ:=1
+	Local aItSX:={}
+
+	dbSelectArea(_cAlias)
+	(_cAlias)->(dbGotop())
+
+
+	while (_cAlias)->(!eof())
+
+		for nI:=1 to Len(_aStrut)
+
+			AADD(aItSX,(_cAlias)->(FieldGet(nI)))
+
+		next
+		AADD(_aSX, aItSX)
+		aItSX:={}
+
+		(_cAlias)->(dbSkip())
+	enddo
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function LerSX(cFileSX, cAls)
+
+	dbUseArea(.T.,,cFileSX ,cAls , if(.F. .or. .F., !.F., NIL),.F. )
+
+Return .T. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function LerHLP(cFileHLP, aHLP)
+	Local nHDL  :=-1
+	Local lRet  := .T. 
+	Local aLine :={}
+	Local aUmHlp:={}
+	Local nTam  :=40
+
+	nHDL:=FT_FUse(cFileHLP)
+
+	if nHDL ==-1
+
+		lRet:= .F. 
+
+	else
+
+		while !FT_FEOF()
+			cLine:=FT_FReadLn()
+
+			if empty(cLine)
+				FT_FSkip()
+				loop
+			EndIf
+
+			aLine:=StrTokArr ( cLine, ";" )
+
+			if aLine[1]=="VAR"
+				FT_FSKIP()
+				loop
+			endif
+
+
+
+
+			for nJ:=2 to len(aLine)
+
+				aUmHpl:={}
+
+
+				for nX:=1 to len(aline[nj]) step nTam
+
+					ctexto:=substr(aLine[nJ],nX,nTam)
+
+					AADD(aUmHpl,cTexto)
+
+				next
+
+				aLine[nJ]:=aUmHpl
+
+			next
+
+			AADD(aHLP,aLine)
+
+			FT_FSKIP()
+		enddo
+		FT_FUSE(cFileHLP)
+	endif
+
+Return lRet

@@ -1,0 +1,724 @@
+#INCLUDE "topconn.CH"
+#INCLUDE "protheus.CH"
+#INCLUDE "APWEBEX.CH" 
+
+User Function PAPROVPC()
+Local lBloq := .F.
+Local lLib := .F.
+Private cStatus := Space(6), cEmail := ""
+Private cNum     := "", cCond := ""
+Private cPedido
+Private cFornec
+Private cFornecM
+Private cLoja
+Private cAprovad
+Private cSolCmp
+Private cTipo     := 'PC'
+Private aItens    := {}
+Private aRetSaldo := {}
+Private nSaldo
+Private CRoeda
+Private nTotal
+Private nSalDif
+Private cComprador
+Private cSolicitante
+Private cUserPed
+Private Cabec := "", Item := "", Pedido, cID
+Private cCondPag
+Private cNatureza:= "NAO UTILIZADO"//SC7->C7_NATUREZ
+Private cAssunto := ""
+Private cHtml := ''
+Private cFil := ""
+Private cEmp := ""
+Private cAprov := "" 
+Private aLibera := {}
+
+WEB Extended INIT cHtml START "U_INSITE"
+cEmp := HttpGet->Emp
+cFil := HttpGet->xFilial
+cPedido := HttpGet->xPedido
+cAprov := HttpGet->Aprovador
+
+ConOut("Empresa / Filial: " + cEmpAnt + "/" + cFilAnt)
+ConOut("Empresa / Filial Solicitada: " + cEmp + "/" + cFil)
+ConOut("Pedido: " + cPedido)
+//Return "<b>Teste ok</b>"
+
+SC7->(dbSetOrder(01))
+if !SC7->(dbSeek(cFil + cPedido))
+	Return "<b>Pedido não encontrado</b>"
+endIf
+
+cUserPed  := SC7->C7_USER
+cCondPag := SC7->C7_COND
+
+// busca a descricao da condicao de pagamento
+cCondPag += " - " + AllTrim(Posicione("SE4", 01, xFilial("SE4") + cCondPag, "E4_DESCRI"))
+
+cNatDesc := AllTrim(Posicione("SED", 01, xFilial("SED") + cNatureza, "ED_DESCRIC"))
+
+cPedido  := SC7->C7_NUM
+//Roberto - 06/04/2013 - Alterado para enviar workflow de liberação quando o tipo do pedido for Autorização de entrega também
+cTipo    := iif(SC7->C7_TIPO == 1, "PC", "AE")
+cLoja    := SC7->C7_LOJA
+cFornec  := SC7->C7_FORNECE
+cSolCmp  := SC7->C7_NUMSC	
+cFornecM := RTRIM(POSICIONE("SA2",1,xFilial("SA2")+cFornec+cLoja,"A2_NOME"))
+While SC7->C7_FILIAL + SC7->C7_NUM == cFil + cPedido
+	aAdd(aItens, {Trim(SC7->C7_PRODUTO) + " " + Trim(SC7->C7_DESCRI), ;
+	              SC7->C7_QUANT, ;
+	              SC7->C7_UM,;
+	              POSICIONE("SBZ",1,xFilial("SBZ")+SC7->C7_PRODUTO,"BZ_UPRC"),;
+	              SC7->C7_PRECO, ;
+	              SC7->C7_TOTAL, ;
+	              AllTrim(SC7->C7_OBS)} ) 
+	SC7->(dbSkip())
+EndDo
+
+dbSelectArea("SCR")
+dbSeek(cFil+cTipo+cPedido)
+while !eof().and.(cFil == SCR->CR_FILIAL) .And. (AllTrim(SCR->CR_NUM) == cPedido)  .And. (SCR->CR_TIPO == cTipo)// validas se é o mesmo pedido
+	if SCR->CR_APROV == cAprov
+		aRetSaldo   := MaSalAlc(SCR->CR_APROV,DDatabase)
+		nSaldo 	    := aRetSaldo[1]
+		CRoeda 	    := A097Moeda(aRetSaldo[2])
+		nTotal      := xMoeda(SCR->CR_TOTAL,SCR->CR_MOEDA,aRetSaldo[2],SCR->CR_EMISSAO,,SCR->CR_TXMOEDA)
+		nSalDif     := nSaldo - nTotal
+		aAdd(aLibera,{SCR->CR_EMISSAO, ;
+		              SCR->CR_APROV, ;
+		              getEmail(SCR->CR_USER), ;
+		              DTOC(DDATABASE), ;
+		              getLimits(SCR->CR_USER ), ;
+		              nSaldo, ;
+		              nTotal, ;
+		              CRoeda, ;
+		              nSalDif, ;
+		              UPPER(RTRIM(POSICIONE("SAK",1,xFilial("SAK") + SCR->CR_APROV,"AK_NOME")))} )
+	endIf
+	if SCR->CR_STATUS $ '01/02'
+		lBloq := .T.
+	endIf
+	if SCR->CR_STATUS == "03"
+		lLib := .T.
+	endIf
+	SCR->(dbSkip())
+EndDo
+
+if Len(aLibera) == 0
+	Return "<b>Aprovador não encontrado.</b>"
+endIf
+
+if !lBloq
+	cHtml := "<b>Não há aprovação pendente para o pedido " + cPedido + "</b>"
+	if lLib
+		cHtml += "<br>Pedido já liberado anteriormente."
+	endIf
+	Return cHtml
+endIf
+
+if Len(aItens) == 0
+	Return "<b>Não há intens do pedido de compra.</b>"
+endIf
+
+dbSelectArea("SCR")
+dbSeek(cFil+cTipo+cPedido)
+
+SC7->(dbSetOrder(01))
+SC7->(dbSeek(cFil + cPedido))
+
+cHtml += H_PAPROVPC()
+
+WEB EXTENDED END
+
+RETURN cHtml                          
+
+User Function PAPROVLI()
+Local aArea		:= GetArea()
+Local aCposObrig:= {"D1_ITEM","D1_COD","D1_QUANT","D1_VUNIT","D1_PEDIDO","D1_ITEMPC","C7_QUANT","C7_PRECO","C7_QUJE"}
+Local aHeadCpos := {}
+Local aHeadSize := {}
+Local aArrayNF	:= {}
+Local aCampos   := {}
+Local aRetSaldo := {}
+Local cUsr 		:= ""
+
+Local cObs 		:= ""
+Local ca097User := ""
+Local cTipoLim  := ""
+Local CRoeda    := ""
+Local cAprov    := ""
+Local cName     := ""
+Local cSavColor := ""
+Local cGrupo	:= ""
+Local cCodLiber := ""
+Local cDocto    := ""
+Local cTipo     := ""   
+Local cFilDoc   := ""
+Local dRefer 	:= DATE()
+Local dDataBase 	:= DATE()
+Local cPCLib	:= ""
+Local cPCUser	:= ""
+                                                           
+Local lMta097   := .F.
+Local lAprov    := .F.
+Local lLiberou	:= .F.
+Local lLibOk    := .F.                                               
+Local lContinua := .T.
+Local lShowBut  := .T.
+Local lOGpaAprv := .F.
+
+Local nSavOrd   := IndexOrd()        
+Local nSaldo    := 0
+Local nOpc      := 0
+Local nSalDif	:= 0
+Local nTotal    := 0
+Local nMoeda	:= 1
+Local nX        := 1
+Local nRecnoAS400:= 1
+
+Local oDlg
+Local oDataRef
+Local oSaldo
+Local oSalDif
+Local oBtn1
+Local oBtn2
+Local oBtn3
+Local oQual     
+
+Local aSize := {0,0}
+
+Local lUsaACC := .F.
+
+Local lA097PCO	:= .F.
+Local lLanPCO	:= .F.	//-- Podera ser modificada pelo PE A097PCO
+
+Local lPrjCni := .F. //FindFunction("ValidaCNI") .And. ValidaCNI()
+Local lEnvMail := .T.
+
+Local cHtml := ''
+Local xContJava := ''
+Local _cDest := ""
+
+Private cCadastro:=''
+Private cConteudo:=''
+Private cImagemTit:=''
+Private xConteudo:='', xJavascript:='', xTitulo:=''
+Private _NumReg
+Private _cRefresh := 0
+Private _cSelf := 'U_APBSYS01.apw'
+Private _aTot2,_cAno, _cAnoAnt, _cJRefresh:= '#'
+
+
+WEB EXTENDED INIT cHtml START "u_insite"
+
+IF(!EMPTY(HTTPGET->xFilial))
+	cFilAnt := AllTrim(HTTPGET->xFilial)
+	xFilial := AllTrim(HTTPGET->xFilial)
+	xPedido := AllTrim(HTTPGET->xNumero)
+	cUsr    := AllTrim(HTTPGET->xUsuario)
+	cPsw    := AllTrim(HTTPGET->xSenha)
+	ConOut("parte get " + cUsr)
+	ConOut(cPsw)
+ELSEIF(!EMPTY(HTTPPOST->xFilial))
+	cFilAnt := AllTrim(HTTPPOST->xFilial)
+	xFilial := AllTrim(HTTPPOST->xFilial)
+	xPedido := AllTrim(HTTPPOST->xNumero)
+	cUsr    := AllTrim(HTTPPOST->xUsuario)
+	cPsw    := AllTrim(HTTPPOST->xSenha)
+	ConOut("parte post" + HTTPPOST->cUsr)
+ENDIF
+
+PswOrder(2)
+ConOut("parte usuário " + cUsr)
+If PswSeek(cUsr, .T. )
+	If !PswName(cPsw)
+		cHtml := "<html>"
+		cHtml += "<br>"
+		cHtml += "<p><b><center>Senha Incorreta. Verifique!</center></b></p>"
+		cHtml += "</html>"
+		Return cHtml
+	else 
+		_aUser	:= PswRet()
+		ca097User	:= _aUser[1,1]
+	endIf
+else
+	cHtml := "<html>"
+	cHtml += "<br>"
+	cHtml += "<p><b><center>Usuário Inexistente. Verifique!</center></b></p>"
+	cHtml += "</html>"
+	Return cHtml
+endIf
+
+lOGpaAprv:= SuperGetMv("MV_OGPAPRV",.F.,.F.)
+
+dbSelectArea("SC7")
+dbSetOrder(01)
+dbSeek(xFilial + xPedido)
+
+
+DBSELECTAREA("SCR")
+SCR->(DBSETORDER(2))
+SET FILTER TO
+SCR->(DBGOTOP())
+ConOut("Avalia Liberação")
+IF(SCR->(DBSEEK(xFilial+ if(SC7->C7_TIPO == 1, "PC", "AE") + PADR(ALLTRIM(xPedido), TAMSX3("CR_NUM")[1])+ca097User)))
+
+	cAlias	:="SCR"
+	nReg 	:= SCR->(RECNO())
+	nOpcx 	:= 2
+	nOpc 	:= 2
+
+	cFilAnt 	:= HTTPGET->xFilial
+
+	cCodLiber	:= SCR->CR_APROV
+	cDocto		:= SCR->CR_NUM
+	cTipo		:= SCR->CR_TIPO   
+	cFilDoc	:= SCR->CR_FILIAL
+	dRefer		:= dDataBase
+	
+	aRetSaldo	:= MaSalAlc(cCodLiber,dRefer)
+	nSaldo		:= aRetSaldo[1]
+	CRoeda 	:= A097Moeda(aRetSaldo[2])
+	cName 		:= UsrRetName(ca097User)
+	nTotal		:= xMoeda(SCR->CR_TOTAL,SCR->CR_MOEDA,aRetSaldo[2],SCR->CR_EMISSAO,,SCR->CR_TXMOEDA)
+	
+	dbSelectArea("SC7")
+	dbSetOrder(1)
+	MsSeek(xFilial("SC7")+Substr(SCR->CR_NUM,1,len(SC7->C7_NUM)))
+	cGrupo := SC7->C7_APROV
+	
+	dbSelectArea("SA2")
+	dbSetOrder(1)
+	MsSeek(xFilial("SA2")+SC7->C7_FORNECE+SC7->C7_LOJA)
+		
+	dbSelectArea("SAL")       
+	dbSetOrder(3)
+	MsSeek(xFilial("SAL")+SC7->C7_APROV+SAK->AK_COD)    
+		
+	If Eof()
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Posiciona a Tabela SAL pelo Aprovador de Origem caso o Documento tenha sido ³
+		//| transferido por Ausência Temporária ou Transferência superior e o aprovador |
+		//| de destino não fizer parte do Grupo de Aprovação.                           |
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		
+		If !Empty(SCR->(FieldPos("CR_USERORI")))
+			dbSeek(xFilial("SAL")+SC7->C7_APROV+SCR->CR_APRORI)
+		EndIf
+	EndIf
+
+	If SAL->AL_LIBAPR != "A"
+		lAprov := .T.
+		cAprov := OemToAnsi("VISTO / LIVRE") // 
+	EndIf
+	nSalDif := nSaldo - IIF(lAprov,0,nTotal)
+	If (nSalDif < 0)
+		xConteudo += Help(" ",1,"A097SALDO") //"Saldo Insuficiente"
+		lContinua := .F.
+	EndIf
+	
+	IF(lContinua)
+		lLibOk := A097Lock(Substr(SCR->CR_NUM,1,Len(SC7->C7_NUM)),SCR->CR_TIPO)
+		IF(lLibOk)
+			Begin Transaction
+				If lMta097 .And. nOpc == 2
+					If ExecBlock("MTA097",.F.,.F.)
+						lLiberou := MaAlcDoc({SCR->CR_NUM,SCR->CR_TIPO,nTotal,cCodLiber,,cGrupo,,,,,cObs},dRefer,If(nOpc==2,4,6))
+					EndIf
+				Else
+					lLiberou := MaAlcDoc({SCR->CR_NUM,SCR->CR_TIPO,nTotal,cCodLiber,,cGrupo,,,,,cObs},dRefer,If(nOpc==2,4,6))
+				EndIf
+				
+				//-- Apenas o PE A097PCO pode alterar o valor de lA097PCO
+				//-- Se ele nao existir ela devera seguir o valor da liberacao (lLiberou)
+				If !lA097PCO
+					lLanPCO := lLiberou
+				EndIf
+				
+				If lLiberou
+					cPCLib  := SC7->C7_NUM
+					cPCUser := SC7->C7_USER
+					_cDest	:= getEmail(cPCUser)
+					MEnviaMail("034",{cPCLib,SCR->CR_TIPO},cPCUser) 				
+				Endif
+				
+				If lLiberou
+					If (SCR->CR_TIPO $ "PC/AE")
+						dbSelectArea("SC7")
+						cPCLib := SC7->C7_NUM
+						cPCUser:= SC7->C7_USER
+						
+						Private	cNumPed 	:= SC7->C7_NUM   	// Numero do Pedido de Compras	
+						Private	cObserv1	:= mv_par02		   	// 1a Linha de Observacoes
+						Private	cObserv2	:= mv_par03				// 2a Linha de Observacoes
+						Private	cObserv3	:= mv_par04				// 3a Linha de Observacoes
+						Private	cObserv4	:= mv_par05				// 4a Linha de Observacoes
+						Private	lPrintCodFor:= mv_par06 		// Imprime o Codigo do produto no fornecedor ?	
+						
+						Private Cond := SC7->C7_COND
+						Private TpFrete := SC7->C7_TPFRETE
+						Private _cCond := POSICIONE("SE4",1,xFilial("SE4")+Cond,"E4_DESCRI")
+						Private _nValMerc := 0
+						Private _nValIPI := 0
+						Private _nValDesc := 0
+						Private _nValDes := 0
+						Private _nValICM := 0
+						Private _nTotAcr := 0
+						Private _nTotSeg := 0
+						Private _nTotFre := 0
+						Private _nTotIcmsRet := 0
+						
+						While !SC7->(Eof()) .And. SC7->C7_FILIAL+Substr(SC7->C7_NUM,1,len(SC7->C7_NUM)) == xFilial("SC7")+Substr(SCR->CR_NUM,1,len(SC7->C7_NUM))
+							If lLiberou								
+
+									
+								Reclock("SC7",.F.)
+						 		SC7->C7_CONAPRO := "L"
+								MsUnlock()
+								
+								// Totaliza os valores do pedido
+								_nValMerc 	+= SC7->C7_TOTAL
+								_nValIPI		+= (SC7->C7_TOTAL * SC7->C7_IPI) / 100								
+								_nValICM    += SC7->C7_VALICM
+								_nValDesc		+= SC7->C7_VLDESC
+								_nValDes		+= SC7->C7_VLDESC
+								_nTotAcr		+= SC7->C7_DESPESA
+								_nTotSeg		+= SC7->C7_SEGURO
+								_nTotFre		+= SC7->C7_VALFRE
+								
+								If	( Empty(SC7->C7_TES) )
+									_nTotIcmsRet	+= SC7->C7_ICMSRET
+								Else									
+									SF4->(DbSetOrder(1))
+									If	SF4->(DbSeek(xFilial('SF4') + SC7->C7_TES))
+										If	( AllTrim(SF4->F4_INCSOL) == 'S' )
+											_nTotIcmsRet	+= SC7->C7_ICMSRET
+										EndIf
+									EndIf
+								EndIf
+								
+								//Caio.Santos - 11/01/13 - Req.72
+								If ExistBlock("MT097APR")
+									ExecBlock("MT097APR",.F.,.F.)
+								EndIf
+							EndIf
+							SC7->(dbSkip())
+						EndDo
+						
+						if !Empty(_cDest)
+							oWF := TWFProcess():New('WFBloqPed','Liberacao de pedido de Compra')
+							oWF:NewTask("WFBloqPed", "\workflow\wfmsg.htm")
+							oWF:cTo:= _cDest
+							oWF:cSubject := "Liberacao do pedido de compra - " + cNumPed
+							oHtml:= oWF:oHtml
+							oHtml:ValByName("MENSAGEM", "Pedido de compra " + cNumPed + " foi liberado.")
+							oWF:Start()
+							oWF:Finish()
+						endIf
+						
+						nTot :=(_nValMerc + _nValIPI - _nValDesc + _nTotAcr	+ _nTotSeg + _nTotFre + _nTotIcmsRet)						
+						
+					EndIf					
+				EndIf
+			End Transaction
+	
+			If cTipo $ "PC/AE"
+				SC7->(MsUnlockAll())
+			EndIf
+		ELSE
+			xConteudo += '<p>Registro sendo Editado por outra rotina</p>'
+		ENDIF
+			
+	ENDIF
+	IF (lLiberou)
+		xConteudo += '<p>Pedido Liberado</p>'
+	ENDIF
+ELSE
+	xConteudo := "<p><b>Não Foi encontrada aprovação para o pedido "+xPedido + " ou usuário não solicitado para aprovação.</b></p>"//+" e Usuario:"+cvaltochar(ca097User)+"</p>"
+ENDIF
+
+cHtml := xConteudo
+
+
+WEB EXTENDED END
+
+Return cHtml
+
+User Function PAROVBLQ()
+Local aRetSaldo := {}
+Local cObs 		:= ""
+Local ca097User := ""
+Local cTipoLim  := ""
+Local CRoeda    := ""
+Local cAprov    := ""
+Local cName     := ""
+Local cSavColor := ""
+Local cGrupo	:= ""
+Local cCodLiber := ""
+Local cDocto    := ""
+Local cTipo     := ""   
+Local cFilDoc   := ""
+Local dRefer 	:= DATE()
+Local dDataBase 	:= DATE()
+Local cPCLib	:= ""
+Local cPCUser	:= ""
+                                                           
+Local lMta097   := .F.
+Local lAprov    := .F.
+Local lLiberou	:= .F.
+Local lLibOk    := .F.                                               
+Local lContinua := .T.
+Local lShowBut  := .T.
+Local lOGpaAprv := .F.
+
+Local nSavOrd   := IndexOrd()        
+Local nSaldo    := 0
+Local nOpc      := 0
+Local nSalDif	:= 0
+Local nTotal    := 0
+Local nMoeda	:= 1
+Local nX        := 1
+Local nRecnoAS400:= 1
+
+Local oDlg
+Local oDataRef
+Local oSaldo
+Local oSalDif
+Local oBtn1
+Local oBtn2
+Local oBtn3
+Local oQual     
+
+Local aSize := {0,0}
+
+Local lUsaACC := .F.
+
+Local lA097PCO	:= .F.
+Local lLanPCO	:= .F.	//-- Podera ser modificada pelo PE A097PCO
+
+Local lPrjCni := .F. //FindFunction("ValidaCNI") .And. ValidaCNI()
+
+
+Local cHtml := ''
+Local xContJava := ''
+Local _cDest := ""
+Local _cEntreg := ""
+
+Private cCadastro:=''
+Private cConteudo:=''
+Private cImagemTit:=''    
+Private xConteudo:='', xJavascript:='', xTitulo:=''
+Private _NumReg
+Private _cRefresh := 0
+Private _cSelf := 'U_APBSYS01.apw'
+Private _aTot2,_cAno, _cAnoAnt, _cJRefresh:= '#'
+
+
+WEB EXTENDED INIT cHtml START "u_insite"
+
+IF(!EMPTY(HTTPGET->xFilial))
+	cFilAnt := HTTPGET->xFilial
+	xFilial := HTTPGET->xFilial
+	xPedido := HTTPGET->xNumero
+	cObs 	:= HTTPGET->xMotivo
+	cUser   := HTTPGET->xUsuario
+	cPsw    := HTTPGET->xSenha
+ELSEIF(!EMPTY(HTTPPOST->xFilial))
+	cFilAnt := HTTPPOST->xFilial
+	xFilial := HTTPPOST->xFilial
+	xPedido := HTTPPOST->xNumero
+	cObs 	:= HTTPPOST->xMotivo
+	cUser   := HTTPPOST->xUsuario
+	cPsw    := HTTPPOST->xSenha
+ENDIF
+
+PswOrder(2)
+If PswSeek(cUser)
+	If !PswName(cPsw)
+		cHtml := "<html>"
+		cHTML += "<br>"
+		cHtml += "<p><b><center>Senha Incorreta. Verifique!</center></b></p>"
+		cHtml += "</html>"
+		Return cHtml
+	else 
+		_aUser	:= PswRet()
+		ca097User	:= _aUser[1,1]
+	endIf
+else
+	cHtml := "<html>"
+	cHTML += "<br>"
+	cHtml += "<p><b><center>Usuário Inexistente. Verifique!</center></b></p>"
+	cHtml += "</html>"
+	Return cHtml
+endIf
+
+dbSelectArea("SC7")
+dbSetOrder(01)
+dbSeek(xFilial + xPedido)
+
+lOGpaAprv:= SuperGetMv("MV_OGPAPRV",.F.,.F.)
+
+DBSELECTAREA("SCR")
+SCR->(DBSETORDER(2))
+SET FILTER TO
+SCR->(DBGOTOP())
+IF(SCR->(DBSEEK(xFilial+ if(SC7->C7_TIPO == 1, "PC", "AE") + PADR(ALLTRIM(xPedido), TAMSX3("CR_NUM")[1])+ca097User)))
+
+	cAlias	:= "SCR"
+	nReg 	:= SCR->(RECNO())
+	nOpcx 	:= 2
+	nOpc 	:= 3
+
+	
+	cFilAnt 	:= HTTPGET->xFilial
+
+	cCodLiber	:= SCR->CR_APROV
+	cDocto		:= SCR->CR_NUM
+	cTipo		:= SCR->CR_TIPO   
+	cFilDoc	:= SCR->CR_FILIAL
+	dRefer		:= dDataBase
+	
+	aRetSaldo	:= MaSalAlc(cCodLiber,dRefer)
+	nSaldo		:= aRetSaldo[1]
+	CRoeda 	:= A097Moeda(aRetSaldo[2])
+	cName 		:= UsrRetName(ca097User)
+	nTotal		:= xMoeda(SCR->CR_TOTAL,SCR->CR_MOEDA,aRetSaldo[2],SCR->CR_EMISSAO,,SCR->CR_TXMOEDA)
+	
+	dbSelectArea("SC7")
+	dbSetOrder(1)
+	MsSeek(xFilial("SC7")+Substr(SCR->CR_NUM,1,len(SC7->C7_NUM)))
+	cGrupo := SC7->C7_APROV
+	
+	dbSelectArea("SA2")
+	dbSetOrder(1)
+	MsSeek(xFilial("SA2")+SC7->C7_FORNECE+SC7->C7_LOJA)
+		
+	dbSelectArea("SAL")       
+	dbSetOrder(3)
+	MsSeek(xFilial("SAL")+SC7->C7_APROV+SAK->AK_COD)    
+		
+	If Eof()
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Posiciona a Tabela SAL pelo Aprovador de Origem caso o Documento tenha sido ³
+		//| transferido por Ausência Temporária ou Transferência superior e o aprovador |
+		//| de destino não fizer parte do Grupo de Aprovação.                           |
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		
+		If !Empty(SCR->(FieldPos("CR_USERORI")))
+			dbSeek(xFilial("SAL")+SC7->C7_APROV+SCR->CR_APRORI)
+		EndIf
+	EndIf
+
+	If SAL->AL_LIBAPR != "A"
+		lAprov := .T.
+		cAprov := OemToAnsi("VISTO / LIVRE") // 
+	EndIf
+	
+	
+	IF(lContinua)
+		lLibOk := A097Lock(Substr(SCR->CR_NUM,1,Len(SC7->C7_NUM)),SCR->CR_TIPO)
+		IF(lLibOk)
+			Begin Transaction
+				If lMta097 .And. nOpc == 2
+					If ExecBlock("MTA097",.F.,.F.)
+						lLiberou := MaAlcDoc({SCR->CR_NUM,SCR->CR_TIPO,nTotal,cCodLiber,,cGrupo,,,,,cObs},dRefer,If(nOpc==2,4,6))
+					EndIf
+				Else
+					lLiberou := MaAlcDoc({SCR->CR_NUM,SCR->CR_TIPO,nTotal,cCodLiber,,cGrupo,,,,,cObs},dRefer,If(nOpc==2,4,6))
+				EndIf
+				
+				//-- Apenas o PE A097PCO pode alterar o valor de lA097PCO
+				//-- Se ele nao existir ela devera seguir o valor da liberacao (lLiberou)
+				If !lA097PCO
+					lLanPCO := lLiberou
+				EndIf				
+				
+				
+				ConOut("Bloqueou o pedido")
+				If (SCR->CR_TIPO $ "PC/AE")
+					dbSelectArea("SC7")
+					cPCLib := SC7->C7_NUM
+					cPCUser:= SC7->C7_USER
+					
+					// Evia o email avisando que o pedido foi bloqueado
+					// envia workflow	
+					cEmail := GetEmail(cPCUser)
+					ConOut("Email: " + cEmail)
+					if !Empty(cEmail)
+						oWF := TWFProcess():New('WFBloqPed','Bloqueio de Pedido de Compra')
+						oWF:NewTask("WFBloqPed", "\workflow\wfmsg.htm")
+						oWF:cTo:= cEmail
+						oWF:cSubject := "Bloqueio do pedido de compra - " + xPedido
+						oHtml:= oWF:oHtml
+						oHtml:ValByName("MENSAGEM", "Pedido de compra " + xPedido + " foi bloqueado. <br> Motivo: " + cObs)
+						oWF:Start()
+						oWF:Finish()
+					endIf
+					xConteudo += '<p><b>Pedido bloqueado com sucesso.</b></p>'
+				EndIf
+				
+			End Transaction
+	
+			If cTipo $ "PC/AE"
+				SC7->(MsUnlockAll())
+			EndIf
+		ELSE
+			xConteudo += '<p>Registro sendo Editado por outra rotina</p>'
+		ENDIF
+			
+	EndIf
+	
+	IF (lLiberou)
+		xConteudo += '<p>Pedido Bloqueado</p>'
+	ENDIF
+
+ELSE
+
+	xConteudo := "<p><b>Não Foi encontrada aprovação para o pedido "+xPedido + " ou usuário não solicitado</b></p>"//+" e Usuario:"+cvaltochar(ca097User)+"</p>"
+ENDIF
+
+cHtml := xConteudo
+
+WEB EXTENDED END
+
+Return cHtml
+
+//////////
+Static function getLimits(pcUser)
+local cArea := getArea()
+local aRet  := {NIL,NIL,NIL,NIL}
+//
+dbSelectArea("SAK")
+dbSetOrder(2)
+dbgotop()
+if dbSeek(xFilial()+pcUser)
+	aRet[1] := SAK->AK_LIMMIN
+	aRet[2] := SAK->AK_LIMMAX
+	aRet[3] := SAK->AK_LIMITE
+	aRet[4] := SAK->AK_TIPO
+	//
+	do case
+		case aRet[4] = 'D'
+			aRet[4] += ' - DIARIA'
+			
+		case aRet[4] = 'S'
+			aRet[4] += ' - SEMANAL'
+			
+		case aRet[4] = 'M'
+			aRet[4] += ' - MENSAL'
+	endcase
+endif
+RestArea(cArea)
+Return(aRet)
+
+//////////
+Static function getEmail(pcUser)
+	local cArea := getArea()
+	local cRet  := ''
+	PswOrder(1)
+	//
+	if PswSeek(pcUser,.t.)
+		cRet := PswRet(1)[1,14]
+	endif
+	RestArea(cArea)
+Return(cRet)

@@ -1,0 +1,245 @@
+<% Local nX := 0 %>
+<html>
+<head>
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO8859_1">
+    <title>Aprovação de Pedido de Compra - GRUPO CANTU</title>
+    <style>
+        <!--
+        body {
+            font-family: Tahoma;
+            font-size: 10 pt;
+        }
+
+        .title {
+            font-family: Tahoma;
+            font-size: 10 pt;
+        }
+
+        .caber {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #999999;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .cabel {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #999999;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .cabec {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #999999;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .cabed {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #999999;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .itemr {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #CCCCCC;
+            text-align: right;
+        }
+
+        .iteml {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #CCCCCC;
+            text-align: left;
+        }
+
+        .itemc {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #CCCCCC;
+            text-align: center;
+        }
+
+        .itemz {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #CCCCCC;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .itemzz {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #FFFFFF;
+            text-align: left;
+        }
+
+        .itemzzz {
+            font-family: Tahoma;
+            font-size: 10 pt;
+            background-color: #FFFFFF;
+            text-align: center;
+        }
+        -->
+    </style>
+</head>
+<body>
+    <div style="width:100%">
+        <p class="title" style="text-align: center;"><b><%=ALLTRIM(SM0->M0_NOMECOM)%><br/><br/>Aprovação de Pedido de Compra</b></p>
+        <table border="0" width="96%">
+            <tr>
+                <td class="title"><b><%=cFornec + "/" + cLoja + " - " + cFornecM%></b> </td>
+            </tr>
+        </table>
+        <div align="left">
+            <hr noshade color="#000000" width="80%"/>
+        </div>
+        <table border="0" width="96%">
+            <tr>
+                <td width="32%" class="title"><b>Nr. Pedido:</b><%=cPedido%><b> </b></td>
+                <td width="32%" class="title"><strong>Data de ref...:</strong> 
+                <input class="itemzzz" type="text" name="Data" size=20 value="<%=DDATABASE%>" readonly="readonly">  </td>
+                <td width="36%" class="title"><strong>Cond. Pagto...: <%=cCondPag%> </strong></td>
+            </tr>
+        </table>
+        <div align="left">
+            <hr noshade color="#000000" width="80%"/>
+            <table width="96%" border="0">
+                <tr>
+                    <td width="36%" class="title"><strong>Aprovador....:</strong> 
+                    <%=aLibera[1][2]+"-"+aLibera[1][10]%></td>
+                    <td width="64%" class="title"><strong>Emissão.........:</strong> 
+                    <%=aLibera[1,1]%> </td>
+                </tr>
+                <tr>
+                    <td class="title"><strong>Limite Min.....:</strong> 
+                    <%=aLibera[1][8] + " " + Transform(aLibera[1][5][1],"@E 999,999,999.99")%></td>
+                    <td class="title"><strong>Limite Max.....:</strong> 
+                    <%=aLibera[1][8]+" " +Transform(aLibera[1][5][2],"@E 999,999,999.99")%></td>
+                </tr>
+                <tr>
+                    <td class="title"><strong>Limite............:</strong> 
+                    <%=aLibera[1][8]+" "+Transform(aLibera[1][5][3],"@E 999,999,999.99")%></td>
+                    <td class="title"><strong>Tipo Limite.....:</strong> <%=aLibera[1][5][4]%></td>
+                </tr>
+                <tr>
+                    <td class="title"><strong>Comprador....:</strong> <%=SC7->C7_USER + " - " + RTrim(UsrFullName(SC7->C7_USER))%></td>
+                    <td class="title"><strong>Solicitante......:</strong> 
+                    <%=if(!empty(cSolCmp), AllTrim(POSICIONE("SC1",1,xFilial("SC1")+cSolCmp,"C1_SOLICIT")), "")%></td>
+                </tr>
+                <tr>
+                    <td class="title"><strong>Empresa :</strong> <%=Trim(SM0->M0_NOME)%></td>
+                    <td class="title"><strong>Filial :</strong> <%=Trim(SM0->M0_FILIAL)%></td>
+                </tr>
+                <tr>
+                    <td class="title"><strong>Segmento :</strong> 
+                    <%=SC7->C7_CLVL + " - " + POSICIONE("CTH",1,xFilial("CTH")+SC7->C7_CLVL,"CTH_DESC01")%></td>
+                    <td class="title"><strong>Centro Custo :</strong> 
+                    <%=SC7->C7_CC + " - " + POSICIONE("CTT",1,xFilial("CTT")+SC7->C7_CC,"CTT_DESC01")%></td>
+                </tr>
+            </table>
+            <hr noshade color="#000000" width="80%"/>
+            <table width="986">
+                <!--DWLayoutTable-->
+                <tr>
+                    <td width="192">&nbsp;</td>
+                    <td width="782" height="73">
+                        <table width="62%" border="0">
+                            <tr>
+                                <td width="222" height="21" valign="top" class="cabed">Saldo na data&nbsp;</td>
+                                <td width="245" valign="top" class="itemz">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<%=aLibera[1][8]%>
+                                    <%=Transform(aLibera[1][6],"@E 999,999,999.99")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="21" valign="top" class="cabed">Total do documento&nbsp;</td>
+                                <td valign="top" class="itemz">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <%=aLibera[1][8] + " " + Transform(aLibera[1][7],"@E 999,999,999.99")%></td>
+                            </tr>
+                            <tr>
+                                <td height="21" valign="top" class="cabed">
+                                    Saldo Disponivel após liberação&nbsp;
+                                </td>
+                                <td valign="top" class="itemz">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <%=aLibera[1][8]+" " + Transform(aLibera[1][9],"@E 999,999,999.99")%></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div align="left">
+            <hr noshade color="#000000" width="80%"/>
+            <strong><%=if(empty(cSolCmp), "S/ SOL. COMPRA ", "SOL. COMPRA No: " + cSolCmp)%></strong><BR>
+            
+            <table border="1" width="80%" cellpadding="3" cellspacing="0">
+                <tr>
+                    <td class="cabel">Produto</td>
+                    <td class="caber">Quantidade</td>
+                    <td class="cabec">UM</td>
+                    <td class="caber">Preço Ult. Compra</td>
+                    <td class="caber">Preço Compra Atual</td>
+                    <td class="caber">Val. Total</td>
+                    <td class="caber">Observação</td>
+                </tr>
+                <% For nX := 1 to len(aItens) %>
+                <tr>
+                    <td class="iteml"><%=aItens[nX, 1]%></td>
+                    <td class="itemr"><%=aItens[nX, 2]%></td>
+                    <td class="itemc"><%=aItens[nX, 3]%></td>
+                    <td class="itemr"><%=aItens[nX, 4]%></td>
+                    <td class="itemr"><%=aItens[nX, 5]%></td>
+                    <td class="itemr"><%=aItens[nX, 6]%></td>
+                    <td class="itemr"><%=aItens[nX, 7]%></td>
+                </tr>
+                <% Next nX %>
+            </table>
+            <br>            
+            <br>
+			<form name="formaprov" mehtod="POST" action="U_PAPROVLI.APW" style="text-align: center;">
+			  <strong>Aprovar Pedido de Compra</strong><br><br>
+			  <span>Usuário:&nbsp;&nbsp;</span><input type="text" name="xUsuario" maxlength="60" width="200" required="required"></input><br>
+			  <span>Senha:&nbsp;&nbsp;&nbsp;&nbsp;</span><input type="password" name="xSenha" maxlength="60" width="200" required="required"></input><br><br>
+			  <input type="submit" name="Aprovar" Value="Aprovar"/>
+			  <input type="hidden" name="xNumero"  Value="<%=cPedido%>"/>
+			  <input type="hidden" name="xFilial"  Value="<%=cFil%>"/>
+			</form>
+			<hr noshade color="#000000" width="80%"/>
+			<br>
+			<form name="formabloq" mehtod="POST" action="U_PAROVBLQ.APW" style="text-align: center;">
+			  <strong>Bloquear Pedido de Compra</strong> <br><br>
+			  <span>Usuário:&nbsp;&nbsp;</span><input type="text" name="xUsuario" maxlength="60" width="200" required="required"></input><br>
+			  <span>Senha:&nbsp;&nbsp;&nbsp;&nbsp;</span><input type="password" name="xSenha" maxlength="60" width="200" required="required"></input><br>
+			  <span>Motivo:&nbsp;&nbsp;&nbsp;</span>
+			  <input type"text" name="xMotivo" maxlength="60" width="200"></input><br><br> 
+			  <input type="submit" name="Bloquear" Value="Bloquear"/>
+			  <input type="hidden" name="xNumero"  Value="<%=cPedido%>"/>
+			  <input type="hidden" name="xFilial"  Value="<%=cFil%>"/>
+			</form>
+            <hr noshade color="#000000" width="80%"/>
+            <table width="100%" height="43" border="0">
+                <tr>
+                    <td width="4%" height="39" align="left" valign="middle">
+                        <div align="left">
+                            <img src="http://www.cantu.com.br/imagens/logo-rodape.png" 
+                            	name="logo" width="64" height="26" id="logo">
+                        </div>
+                    </td>
+                    <td width="96%" style="font-family: Tahoma;font-weight: bold ">GRUPO CANTU</td>
+                </tr>
+            </table>            
+            <hr noshade color="#000000" width="80%"/>
+    </div>
+</body>
+</html>

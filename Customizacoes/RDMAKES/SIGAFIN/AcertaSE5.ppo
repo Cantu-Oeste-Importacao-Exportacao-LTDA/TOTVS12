@@ -1,0 +1,137 @@
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\rwmake.ch"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\stdwin.ch"
+#line 14 "rwmake.ch"
+#line 2 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\RDMAKES\SIGAFIN\AcertaSE5.prw"
+#line 1 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\INCLUDES\TopConn.ch"
+#line 22 "C:\TOTVS\Totvs Developer Studio\Workspace\CANTU\RDMAKES\SIGAFIN\AcertaSE5.prw"
+Function U_AcertaSE5
+
+
+
+
+U_USORWMAKE(ProcName(),FunName())
+
+
+If MsgYesNo("Deseja executar o acerto de Segmento e Centro de Custo na tabela SE5?")
+
+
+	Processa( {|| ProcCons() }, "Aguarde...", "Carregando registros para correção...", .F. )
+
+Endif
+
+Return
+
+Static Function ProcCons
+Local nQuant := 0
+
+
+
+cQuery := " SELECT SE5.R_E_C_N_O_ SE5REC, SE1.R_E_C_N_O_ SE1REC, SE2.R_E_C_N_O_ SE2REC, "
+cQuery += " SE1.E1_CLVLDB, SE1.E1_CLVLCR, SE1.E1_CCD, SE1.E1_CCC, SE1.E1_ITEMD, SE1.E1_ITEMC, "
+cQuery += " SE2.E2_CLVLDB, SE2.E2_CLVLCR, SE2.E2_CCD, SE2.E2_CCC, SE2.E2_ITEMD, SE2.E2_ITEMC "
+cQuery += " From "
+cQuery += RetSqlName("SE5")+ " SE5 "
+
+
+cQuery += " LEFT JOIN "+RetSqlName("SE1")+ " SE1 ON SE1.E1_FILIAL = SE5.E5_FILIAL AND SE1.E1_PREFIXO = SE5.E5_PREFIXO  "
+cQuery += " AND SE1.E1_NUM = SE5.E5_NUMERO AND SE1.E1_PARCELA = SE5.E5_PARCELA AND SE1.E1_TIPO = SE5.E5_TIPO "
+cQuery += " AND SE1.E1_CLIENTE = SE5.E5_CLIFOR AND SE1.E1_LOJA = SE5.E5_LOJA  AND SE1.E1_NATUREZ = SE5.E5_NATUREZ AND SE1.D_E_L_E_T_ <> '*' "
+
+cQuery += " LEFT JOIN "+RetSqlName("SE2")+ " SE2 ON SE2.E2_FILIAL = SE5.E5_FILIAL AND SE2.E2_PREFIXO = SE5.E5_PREFIXO "
+cQuery += " AND SE2.E2_NUM = SE5.E5_NUMERO AND SE2.E2_PARCELA = SE5.E5_PARCELA AND SE2.E2_TIPO = SE5.E5_TIPO "
+cQuery += " AND SE2.E2_FORNECE = SE5.E5_FORNECE AND SE2.E2_LOJA = SE5.E5_LOJA AND SE2.E2_NATUREZ = SE5.E5_NATUREZ AND SE2.D_E_L_E_T_ <> '*' "
+
+cQuery += " Where  SE5.D_E_L_E_T_  <> '*'"
+
+cQuery += " AND ( SE5.E5_CLVLDB = ' 'OR SE5.E5_CLVLCR = ' ' OR SE5.E5_CCD = ' '  OR SE5.E5_CCC = ' ' OR SE5.E5_ITEMD = ' ' OR SE5.E5_ITEMC = ' ')"
+
+cQuery += " AND ( SE5.E5_CLVLDB <> SE1.E1_CLVLDB OR SE5.E5_CLVLCR <> SE1.E1_CLVLCR"
+cQuery += "          OR SE5.E5_CCD <> SE1.E1_CCD  OR SE5.E5_CCC <> SE1.E1_CCC OR SE5.E5_ITEMD <> SE1.E1_ITEMD  OR SE5.E5_ITEMC <> SE1.E1_ITEMC"
+cQuery += "          OR  SE5.E5_CLVLDB <> SE2.E2_CLVLDB OR SE5.E5_CLVLCR <> SE2.E2_CLVLCR"
+cQuery += "          OR SE5.E5_CCD <> SE2.E2_CCD  OR SE5.E5_CCC <> SE2.E2_CCC OR SE5.E5_ITEMD <> SE2.E2_ITEMD  OR SE5.E5_ITEMC <> SE2.E2_ITEMC)"
+
+cQuery += " AND SE5.E5_MULTNAT <> '1'"
+
+dbUseArea(.T., "TOPCONN", TCGENQRY(,,cQuery), "QRYE5" , .F. , .T. )
+
+
+nRecCount := 0; DBEval( {|| nRecCount := nRecCount + 1},,,,,.F. )
+
+
+If nRecCount > 0
+
+	QRYE5->(DbGoTop())
+
+	ProcRegua(nRecCount)
+
+
+	While !QRYE5->(EOF())
+
+
+		if !Empty(QRYE5->SE1REC)
+			SE5->(DbGoTo(QRYE5->SE5REC))
+
+			RecLock("SE5", .F. )
+				if Empty(SE5->E5_CLVLDB)
+					SE5->E5_CLVLDB	= QRYE5->E1_CLVLDB
+				Endif
+				If Empty(SE5->E5_CLVLCR)
+					SE5->E5_CLVLCR	= QRYE5->E1_CLVLCR
+				Endif
+				If Empty(SE5->E5_CCD)
+					SE5->E5_CCD			= QRYE5->E1_CCD
+				Endif
+				If Empty(SE5->E5_CCC)
+					SE5->E5_CCC			= QRYE5->E1_CCC
+				Endif
+				If Empty(SE5->E5_ITEMD)
+					SE5->E5_ITEMD		= QRYE5->E1_ITEMD
+				Endif
+				If Empty(SE5->E5_ITEMC)
+					SE5->E5_ITEMC		= QRYE5->E1_ITEMC
+				Endif
+			MsUnLock()
+
+		Else
+
+			SE5->(DbGoTo(QRYE5->SE5REC))
+
+			RecLock("SE5", .F. )
+				If Empty(SE5->E5_CLVLDB)
+					SE5->E5_CLVLDB	= QRYE5->E2_CLVLDB
+				Endif
+				If Empty(SE5->E5_CLVLCR)
+					SE5->E5_CLVLCR	= QRYE5->E2_CLVLCR
+				Endif
+				If Empty(SE5->E5_CCD)
+					SE5->E5_CCD	= QRYE5->E2_CCD
+				Endif
+				If Empty(SE5->E5_CCC)
+					SE5->E5_CCC			= QRYE5->E2_CCC
+				Endif
+				If Empty(SE5->E5_ITEMD)
+					SE5->E5_ITEMD		= QRYE5->E2_ITEMD
+				Endif
+				If Empty(SE5->E5_ITEMC)
+					SE5->E5_ITEMC		= QRYE5->E2_ITEMC
+				Endif
+			MsUnLock()
+		Endif
+
+
+		nQuant++
+		IncProc("Atualizando registro "+cValToChar(nQuant)+" de "+cValToChar(nRecCount)+ " na SE5."  )
+		QRYE5->(DbSkip())
+
+
+	EndDo
+
+	MsgInfo("A rotina atualizou os registros.")
+Else
+
+	MsgInfo("Não foram encontrados registros para atualização.")
+
+Endif
+
+
+Return
