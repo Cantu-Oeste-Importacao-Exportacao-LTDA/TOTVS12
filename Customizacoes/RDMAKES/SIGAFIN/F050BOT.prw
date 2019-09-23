@@ -2,8 +2,10 @@
 
 User Function F050BOT()
 
-Local aMenu := {}
+//Local aMenu := {}
+Local aRotina := {}
 
-aadd(aMenu,{'S4WB011N',{ || U_F050REL()},'Comp. Pagamento'})
+//aadd(aMenu,{'S4WB011N',{ || U_F050REL()},'Comp. Pagamento'})
+aAdd(aRotina,{"MsDocument","FATA340",0,3,0,Nil})//"Conhecimento"
 
-Return aMenu
+Return aRotina

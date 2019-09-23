@@ -24,8 +24,10 @@ Local cMVATCFC := ALLTRIM(SuperGetMV("MV_X_ATCFC",,"N"))
 Local cMVAPRGB := ALLTRIM(SuperGetMV("MV_X_APRGB",,"N"))
 Local _lEmpGrp := .F.  
 Local cNatureza := MaFisRet(,"NF_NATUREZA")  
-Local nPosTes := aScan(aHeader,{|x| AllTrim(x[2])=="D1_TES"}) 
- 
+Local nPosTes := aScan(aHeader,{|x| AllTrim(x[2])=="D1_TES"})
+Local cFormpg := ALLTRIM(SA2->A2_FORMPAG)
+
+
 Public __lDOCDEV := .F.                                       
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
@@ -108,15 +110,61 @@ if !ISINCALLSTACK("U_SCHCLACTE") .and. !ISINCALLSTACK("SPEDINUT")
 		EndIf        
 		
 		// VALIDAÇÃO DE ESPECIE DE NOTA FISCAL - GUILHERME 14/04/11
-   	If lRetPAD                                                        		
+   /*	If lRetPAD                                                        		
 	  	Do Case
 	  		Case Alltrim(cEspecie) == "NFCF" .or. Alltrim(cEspecie) == "NFPS" .or. Alltrim(cEspecie) == "NFS" .or. Alltrim(cEspecie) == "RPS" .or. Alltrim(cEspecie) == "NTST" .or. Alltrim(cEspecie) == "NTSC"
 				MsgBox("Especie de nota ("+Alltrim(cEspecie)+") utilizada somente para operações de saída no grupo Cantu!!","Alerta","ERRO")
 				lRetPAD := .F. 
 	 		End Case
-		EndIf		
-		// FIM - GUILHERME 14/04/11 
+		EndIf
+  */			
+		// FIM - GUILHERME 14/04/11
 		
+		
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³Validação da forma e condição de pagamento.³
+		//³Edison G. Barbieri             19/02/2019  ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		
+		If lRetPAD                                                        		
+			Do Case
+				Case !Alltrim(M->cTipo) $ "D/I/P/B/C" .and. Empty(cFormpg)  
+					 MsgBox("Divergencia na forma de pagamento para este fornecedor, favor entrar em contato com o cadastro, tel: (46) 2101-4084, após ajuste refaça o lançamento!","Alerta","ERRO")
+					 lRetPAD := .F.
+				 	   
+			End Case
+		EndIf
+		
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³Validação de desconto condicional retorno.³
+		//³Edison G. Barbieri             11/04/2019  ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		
+		If lRetPAD
+		   DbSelectArea("Z16")
+		   DbSetOrder(03)
+		   
+		   If dbSeek( xFilial("Z16") + CA100FOR)
+		   		If Alltrim(M->cTipo) == "D" .and. Z16_REGRA == "C" .and.  Z16_ATIVO = 'S'
+		   			MsgBox("Cliente cadastrado com desconto condicional, verifique se o boleto esta corretamente com o seu devido desconto, em caso de divergência, favor entrar em contato com o cliente!","Alerta","ERRO")		
+		   			lRetPAD := .T.
+		   		EndIf	
+		   EndIf
+		   
+		EndIf
+  
+        //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³Validação da especie, caso cte obrigório. ³
+		//³necessario informar a UF origem/destino   ³
+		//³Edison G. Barbieri             12/07/2019 ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+     
+  
+		If Alltrim(M->cEspecie) == "CTE" 	  	 
+	  	   Aviso( "Lançamento de Cte!", "necessário informar os campos Uf Origem e Destino da aba Informações Adicionais, caso não informado, cancelar a tela a seguir e informar.")
+	  	Endif
+		
+	
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Validação do código da natureza informada.³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
@@ -126,13 +174,13 @@ if !ISINCALLSTACK("U_SCHCLACTE") .and. !ISINCALLSTACK("SPEDINUT")
 			DbSetOrder(01)
 
 			if DbSeek(xFilial("SED")+AllTrim(cNatureza))
-			  DbSelectArea("SF1")
-			  DbSetOrder(1)
-        If dbSeek( xFilial("SF1") + CNFISCAL + CSERIE + CA100FOR + CLOJA)	        
-				  RecLock("SF1", .F.)
-				  SF1->F1_NATUREZ := cNatureza
-				  SF1->(MsUnlock())                                              
-				EndIf
+			    DbSelectArea("SF1")
+			    DbSetOrder(1)
+                  If dbSeek( xFilial("SF1") + CNFISCAL + CSERIE + CA100FOR + CLOJA)	        
+				    RecLock("SF1", .F.)
+				    SF1->F1_NATUREZ := cNatureza
+				    SF1->(MsUnlock())                                              
+				  EndIf
 			Else
 				Alert("Você deve informar uma natureza válida!")
 				lRetPAD := .F.	
@@ -1103,5 +1151,7 @@ EndDo
 RpcClearEnv()
 Quit
 Return .T.  
+
+
 
 	

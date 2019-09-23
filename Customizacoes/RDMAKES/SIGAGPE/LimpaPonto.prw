@@ -49,11 +49,11 @@ Else
 EndIf		
   */     
   
-  	//VldPerg(cPerg)  // Chama funcao VldPerg para Verificar se as Perguntas existem no SX1, se nao existir cria
-	//AjusteSX1(cPerg)
-	//If !Pergunte(cPerg,.T.)
-		//Return
-	//EndIf
+  	VldPerg(cPerg)  // Chama funcao VldPerg para Verificar se as Perguntas existem no SX1, se nao existir cria
+	AjusteSX1(cPerg)
+	If !Pergunte(cPerg,.T.)
+		Return
+	EndIf
   
 		cSql += "BEGIN "																															+cEol
 		cSql += "UPDATE " + RetSqlName("RFB") + " RFB SET  RFB.D_E_L_E_T_   = '*' "  										  						+cEol

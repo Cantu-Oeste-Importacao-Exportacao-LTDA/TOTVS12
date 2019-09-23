@@ -38,20 +38,11 @@ For nFileImp := 1 to Len(aFiles)
 	cFileMov := cPathPed + "old\" + aFiles[nFileImp,1]
 	
 	// valida a primeira linha para importação e troca da filial
-	If !File(cFileImp)
-		MsgAlert("Arquivo texto: "+cFileImp+" não localizado")
-		Return
-    Endif
-	
-	nHandle := FT_FUSE(cFileImp)
-	If nHandle == -1
-		Alert("Erro Abertura Arquivo")
-	EndIf
-	FT_FGOTOP()
+	FT_FUSE(cFileImp)
+	FT_FGOTOP()	
 	cLinha := FT_FREADLN()	
 	cStr := SubStr(cLinha, 167, 14) // busca o cnpj do fornecedor do produto, no caso a filial de faturamento
 	FT_FUSE()
-	Alert(cStr) //@Aqui
 	aEmp := PesqCGC(cStr)
 	if (Len(aEmp) > 0) .And. (aEmp[1,1] == cEmpAnt)
 		cFilAnt := aEmp[1,2]
@@ -118,7 +109,7 @@ FT_FUSE(cArquivo)
 FT_FGOTOP()
 While !FT_FEOF()
 	cLinha := FT_FREADLN()
-	if empty(cLinha) .or. SubStr(cLinha, 1, 2) == "09"
+	if empty(cLinha)
 		exit
 	endIf
 	if (SubStr(cLinha, 1, 2) == "01")
@@ -409,9 +400,7 @@ While !FT_FEOF()
 		nPos := aScan(aHeader, {|x| AllTrim(x[2]) == "C6_DESCRI"})
 		aCols[nACols, nPos] := SB1->B1_DESC
 		
-		Alert(SB1->B1_COD)
-		
-		A410Produto(SB1->B1_COD,.F.)
+		A410Produto(SB1->B1_COD,.T.)
 		
 		// Referência do Produto
 		//cRefProd := SubStr(cLinha, 72, 20)

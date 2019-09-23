@@ -10,7 +10,8 @@ Inclusao de consulta de titulos nos funcoes de contas a receber
 /*/
 
 User Function F740BROW()
-		
+
+	AADD(aRotina,{OemtoAnsi("Consulta")	,"FC040CON()", 0 , 6})		
 	AADD(aRotina,{OemtoAnsi('Log') 		,'U_prologe1', 0 , 7})
 
 Return

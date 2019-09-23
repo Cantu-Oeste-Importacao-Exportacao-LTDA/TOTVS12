@@ -23,51 +23,198 @@ Local cFiltro :=  "!(E2_FORNECE $ '00163222/03588984/22149730/22149803/524867969
 
 
 Do Case
-	    
-	Case cModPgto == "01" .and. cTipoPag == "20" //CRÉDITO EM CONTA CORRENTE PARA PAGAMENTO DE FORNECEDORES.
-		cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "
-		cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '341' " 
-	   	cFiltro += ".and. !(GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) $ '2/3') " 
+
+	//CRÉDITO EM CONTA CORRENTE BANCO ITAU PARA PAGAMENTO DE FORNECEDORES.
+	    Case cPort240 == "341" .and. cModPgto == "01" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '341' " 
+	   	 cFiltro += ".and. !(GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) $ '2/3') " 
+	
+	//CRÉDITO EM CONTA CORRENTE BANCO BRASIL PARA PAGAMENTO DE FORNECEDORES.
+	Case cPort240 == "001" .and. cModPgto == "01" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '001' " 
+	     cFiltro += ".and. !(GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) $ '2/3') "  
 	   	
+    
+	//CRÉDITO EM CONTA CORRENTE BANCO SAFRA PARA PAGAMENTO DE FORNECEDORES.
+	Case cPort240 == "422" .and. cModPgto == "01" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '422' " 
+	     cFiltro += ".and. !(GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) $ '2/3') "  
+	   	
+    
+    //CRÉDITO EM CONTA CORRENTE BANCO ITAU PARA PAGAMENTO DE SALARIOS.
+    Case cPort240 == "341" .and. cModPgto == "01" .and. cTipoPag == "30" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '341' " 
+	   	 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' " 
+	   	
+	   	
+    //CRÉDITO EM CONTA CORRENTE BANCO BRASIL PARA PAGAMENTO DE SALARIOS.
+    Case cPort240 == "001" .and. cModPgto == "01" .and. cTipoPag == "30" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '001' " 
+	   	 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' "    	
 
-	Case cModPgto == "01" .and. cTipoPag == "30" //CRÉDITO EM CONTA CORRENTE PARA PAGAMENTO DE SALARIOS.
-		cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "
-		cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '341' " 
-	   	cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' " 
+	   	
+    //CRÉDITO EM CONTA CORRENTE BANCO SAFRA PARA PAGAMENTO DE SALARIOS.
+    Case cPort240 == "422" .and. cModPgto == "01" .and. cTipoPag == "30" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '422' " 
+	   	 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' "    	
 
-		
-	Case cModPgto == "05" .and. cTipoPag == "20" //CRÉDITO EM CONTA POUPANÇA PARA PAGAMENTO DE FORNECEDORES
-		cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' " 
-		cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '341' "      
-		cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '2' "
+	
+	//CRÉDITO EM CONTA POUPANÇA ITAU PARA PAGAMENTO DE FORNECEDORES	
+	Case cPort240 == "341" .and. cModPgto == "05" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' " 
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '341' "      
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '2' "
 	
 	
-	Case cModPgto == "13" .and. cTipoPag == "20" //PAGAMENTO CONCESSIONARIAS PARA PAGAMENTO DE FORNECEDORES
-		cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "
-		cFiltro += ".and. ALLTRIM(E2_NATUREZ) $ '2015028/2015070/2015012/IG20007/2015001/2015043' "	
+	//CRÉDITO EM CONTA POUPANÇA BRASIL PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "001" .and. cModPgto == "05" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' " 
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '001' "      
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '2' "
+
+	
+	//CRÉDITO EM CONTA POUPANÇA SAFRA PARA PAGAMENTO DE FORNECEDORES	
+	Case cPort240 == "422" .and. cModPgto == "05" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' " 
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '422' "      
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '2' "
+	
+	
+	//PAGAMENTO CONCESSIONARIAS ITAU PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "341" .and. cModPgto == "13" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "
+		 cFiltro += ".and. ALLTRIM(E2_NATUREZ) $ '2015028/2015070/2015012/IG20007/2015001/2015043' "	
 	 
 	
-	Case cModPgto == "30" .and. cTipoPag == "20" //LIQUIDACAO DE TITULOS EM COBRANCA NO ITAU PARA PAGAMENTO DE FORNECEDORES
-		cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "	
-		cFiltro += ".and. Substr(E2_CODBAR,1,3) == '341' "	
+	//LIQUIDACAO DE TITULOS EM COBRANCA NO ITAU PARA PAGAMENTO DE FORNECEDORES (BOLETOS)
+	Case cPort240 == "341" .and. cModPgto == "30" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "	
+		 cFiltro += ".and. Substr(E2_CODBAR,1,3) == '341' "	
+		
+	
+	//LIQUIDACAO DE TITULOS EM COBRANCA NO BRAISL PARA PAGAMENTO DIVERSOS (BOLETOS)
+	Case cPort240 == "001" .and. cModPgto == "30" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "	
+		 cFiltro += ".and. Substr(E2_CODBAR,1,3) == '001' "	
 	
 		
-	Case cModPgto == "31" .and. cTipoPag == "20" //LIQUIDACAO DE TITULOS EM OUTRO BANCO PARA PAGAMENTO DE FORNECEDORES
-		cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "         
-		cFiltro += ".and. Substr(E2_CODBAR,1,3) <> '341' "	
-		cFiltro += ".and. !(ALLTRIM(E2_NATUREZ) $ '2015028/2015070/2015012/IG20007/2015001/2015043') "		
+	
+	//LIQUIDACAO DE TITULOS EM COBRANCA NO SAFRA PARA PAGAMENTO DIVERSOS (BOLETOS)
+	Case cPort240 == "422" .and. cModPgto == "30" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "	
+		 cFiltro += ".and. Substr(E2_CODBAR,1,3) == '422' "	
+	
+		
+	//LIQUIDACAO DE TITULOS EM OUTRO BANCO ITAU PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "341" .and. cModPgto == "31" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "         
+		 cFiltro += ".and. Substr(E2_CODBAR,1,3) <> '341' "	
+		 cFiltro += ".and. !(ALLTRIM(E2_NATUREZ) $ '2015028/2015070/2015012/IG20007/2015001/2015043') "		
+		
+	
+	//LIQUIDACAO DE TITULOS EM OUTRO BANCO BRASIL PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "001" .and. cModPgto == "31" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "         
+		 cFiltro += ".and. Substr(E2_CODBAR,1,3) <> '001' "	
+		 cFiltro += ".and. !(ALLTRIM(E2_NATUREZ) $ '2015028/2015070/2015012/IG20007/2015001/2015043') "		
 	
 	
-	Case cModPgto == "41" .and. cTipoPag == "20" //TED OUTRO TITULAR PARA PAGAMENTO DE FORNECEDORES
-		cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
-		cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '341' "   
-		cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '3' "	
+	//LIQUIDACAO DE TITULOS EM OUTRO BANCO SAFRA PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "422" .and. cModPgto == "31" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) $ 'BO/DDA' "         
+		 cFiltro += ".and. Substr(E2_CODBAR,1,3) <> '422' "	
+		 cFiltro += ".and. !(ALLTRIM(E2_NATUREZ) $ '2015028/2015070/2015012/IG20007/2015001/2015043') "		
+	
+	
+	//TED OUTRO TITULAR ITAU PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "341" .and. cModPgto == "41" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '341' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '3' "	
+		
+	
+	//TED OUTRO TITULAR BRASIL PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "001" .and. cModPgto == "41" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '001' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '3' "	
 
+	
+	
+	//TED OUTRO TITULAR SAFRA PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "422" .and. cModPgto == "41" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '422' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '3' "	
 
-	Case cModPgto == "41" .and. cTipoPag == "30" //TED OUTRO TITULAR PARA PAGAMENTO DE SALARIOS
-		cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
-		cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '341' "   
-		cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' "	
+	
+	//TED OUTRO TITULAR ITAU PARA PAGAMENTO DE SALARIOS
+	Case cPort240 == "341" .and. cModPgto == "41" .and. cTipoPag == "30" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '341' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' "	
+
+	
+	//TED OUTRO TITULAR PARA PAGAMENTO DE SALARIOS
+	Case cPort240 == "001" .and. cModPgto == "41" .and. cTipoPag == "30" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '001' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' "	
+		 
+
+	
+	//TED OUTRO TITULAR PARA PAGAMENTO DE SALARIOS
+	Case cPort240 == "422" .and. cModPgto == "41" .and. cTipoPag == "30" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) <> '422' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' "	
+		 
+		 
+	//TED MESMO TITULAR ITAU PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "341" .and. cModPgto == "43" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '341' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '1' "	
+		 
+	
+	//TED MESMO TITULAR BRASIL PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "001" .and. cModPgto == "43" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '001' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '1' "	
+		 
+	
+	
+	//TED MESMO TITULAR SAFRA PARA PAGAMENTO DE FORNECEDORES
+	Case cPort240 == "422" .and. cModPgto == "43" .and. cTipoPag == "20" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '422' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '1' "	
+		 
+	
+	//TED MESMO TITULAR ITAU PARA PAGAMENTO DE SALARIOS
+	Case cPort240 == "341" .and. cModPgto == "43" .and. cTipoPag == "30" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '341' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' "		
+		 
+	//TED MESMO TITULAR BRASIL PARA PAGAMENTO DE SALARIOS
+	Case cPort240 == "001" .and. cModPgto == "43" .and. cTipoPag == "30" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '001' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' "		  	 	 
+		 
+	//TED MESMO TITULAR SAFRA PARA PAGAMENTO DE SALARIOS
+	Case cPort240 == "422" .and. cModPgto == "43" .and. cTipoPag == "30" 
+		 cFiltro += ".and. ALLTRIM(E2_FORMPAG) == 'DE' "    
+		 cFiltro += ".and. GetAdvFval('SA2','A2_BANCO' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '422' "   
+		 cFiltro += ".and. GetAdvFval('SA2','A2_TPCONTA' ,xFilial('SA2')+E2_FORNECE+E2_LOJA,1) == '3' "		  	 	 
 		
 EndCase
  

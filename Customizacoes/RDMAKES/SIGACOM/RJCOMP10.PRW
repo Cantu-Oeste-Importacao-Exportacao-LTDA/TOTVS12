@@ -126,7 +126,7 @@ U_USORWMAKE(ProcName(),FunName())
 		aCCols := aClone(aCols)
 	EndIf
 	
-	AADD(aObjects, {100, 040, .T., .F.})
+	AADD(aObjects, {100, 055, .T., .F.})
 	AADD(aObjects, {100, 100, .T., .T.})
 	
 	aSize := MsAdvSize(.F.)
@@ -136,10 +136,10 @@ U_USORWMAKE(ProcName(),FunName())
 	
 	DEFINE MSDIALOG oDlg TITLE cCadastro From aSize[7],0 To aSize[6],aSize[5] OF oMainWnd PIXEL	
 
-	@ 022,010 SAY RetTitle("Z29_CODFAM") COLOR CLR_HBLUE SIZE 40,7 OF oDlg PIXEL
-	@ 020,050 MSGET M->Z29_CODFAM	When lInc Valid (!VAZIO().AND.EXISTCHAV("Z29",M->Z29_CODFAM).AND.EXISTCPO("Z27",M->Z29_CODFAM,1)) F3 "Z27000" SIZE 30,10 OF oDlg PIXEL
-	@ 022,120 SAY RetTitle("Z29_DESFAM") COLOR CLR_HBLUE SIZE 40,7 OF oDlg PIXEL
-	@ 020,160 MSGET M->Z29_DESFAM  	When .F. SIZE 100,10 OF oDlg PIXEL
+	@ 042,030 SAY RetTitle("Z29_CODFAM") COLOR CLR_HBLUE SIZE 40,7 OF oDlg PIXEL
+	@ 040,070 MSGET M->Z29_CODFAM	When lInc Valid (!VAZIO().AND.EXISTCHAV("Z29",M->Z29_CODFAM).AND.EXISTCPO("Z27",M->Z29_CODFAM,1)) F3 "Z27000" SIZE 30,10 OF oDlg PIXEL
+	@ 042,140 SAY RetTitle("Z29_DESFAM") COLOR CLR_HBLUE SIZE 40,7 OF oDlg PIXEL
+	@ 040,180 MSGET M->Z29_DESFAM  	When .F. SIZE 100,10 OF oDlg PIXEL
 	
 	oGet := MSGetDados():New(aPosObj[2,1],aPosObj[2,2],aPosObj[2,3],aPosObj[2,4],nOpc,"U_RJC29LOK","U_RJC29TOK","",If(!lExc,.T.,.F.),,,,999,)
 	

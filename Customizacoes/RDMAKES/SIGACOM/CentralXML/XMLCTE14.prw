@@ -81,7 +81,7 @@ User Function XMLCTE14()
 	
 	DEFINE MSDIALOG oDlgCte14 TITLE (ProcName(0)+"."+ Alltrim(Str(ProcLine(0)))+" Dados para lançamento do CTE") FROM 001,001 TO 220,1000 PIXEL
 		
-	oGetD1Cte:= MsNewGetDados():New(005,005,070,495,GD_UPDATE,"AllwaysTrue()"/*cLinhaOk*/,"AllwaysTrue()"/*cTudoOk*/,"",aAlterD1,1/*nFreeze*/,Len(aColsD1)/*nMax*/,"AllWaysTrue()"/*cCampoOk*/,"AllwaysTrue()"/*cSuperApagar*/,"AllWaysTrue()"/*cApagaOk*/,oDlgCte14,@aHeaderD1,@aColsD1,{|| .T.})
+	oGetD1Cte:= MsNewGetDados():New(030,005,100,495,GD_UPDATE,"AllwaysTrue()"/*cLinhaOk*/,"AllwaysTrue()"/*cTudoOk*/,"",aAlterD1,1/*nFreeze*/,Len(aColsD1)/*nMax*/,"AllWaysTrue()"/*cCampoOk*/,"AllwaysTrue()"/*cSuperApagar*/,"AllWaysTrue()"/*cApagaOk*/,oDlgCte14,@aHeaderD1,@aColsD1,{|| .T.})
 	oMulti:oBrowse:Align := CONTROL_ALIGN_ALLCLIENT
 						
 		

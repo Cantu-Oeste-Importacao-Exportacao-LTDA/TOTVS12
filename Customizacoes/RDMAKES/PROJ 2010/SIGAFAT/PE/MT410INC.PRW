@@ -107,15 +107,13 @@ if !ExistDir ( cPathXML )
 endif 
 */
 
-If IsInCallStack("A410Copia")
-	If RecLock("SC5",.F.)
-		SC5->C5_X_TPLIC := ""
-		SC5->C5_COTACAO := ""
-		SC5->(MsUnLock())				
-	EndIf	
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+//³Chama função para monitor uso de fontes customizados³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+U_USORWMAKE(ProcName(),FunName())
+
+If IsInCallStack(" A410Copia ")
 	U_MT410INC()
-	
-EndIf	
 //ElseIf IsInCallStack( " A410ProcDv " ) 
 //ApMsgInfo( " Liberacao " )
 //ElseIf IsInCallStack( " A410Altera " ) 
@@ -210,7 +208,7 @@ ElseIf IsInCallStack( "A410Deleta" )
 		
 	endif 
 */
-
+EndIf 
 //ErrorBlock(oError)
 Return
 

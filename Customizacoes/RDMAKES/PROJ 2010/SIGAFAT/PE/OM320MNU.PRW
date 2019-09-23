@@ -270,7 +270,7 @@ U_USORWMAKE(ProcName(),FunName())
 	
 	If ( lTravas )
 
-		AAdd( aObjects, { 100, 036, .T., .F. } )
+		AAdd( aObjects, { 100, 046, .T., .F. } )
 		AAdd( aObjects, { 100, 100, .T., .T. } )
 
 		aInfo   := { aSize[ 1 ], aSize[ 2 ], aSize[ 3 ], aSize[ 4 ], 3, 2 }
@@ -278,8 +278,8 @@ U_USORWMAKE(ProcName(),FunName())
 
 		DEFINE MSDIALOG oDlg TITLE cCadastro FROM aSize[7],00 TO aSize[6],aSize[5] OF oMainWnd PIXEL
 
-		@ 021,005 SAY OemToAnsi("Número carga:") SIZE 050,009 OF oDlg PIXEL 
-		@ 020,060 GET oGetCpo VAR cDAKCOD SIZE 030,009 OF oDlg PIXEL WHEN .F.
+		@ 035,005 SAY OemToAnsi("Número carga:") SIZE 050,009 OF oDlg PIXEL 
+		@ 034,060 GET oGetCpo VAR cDAKCOD SIZE 030,009 OF oDlg PIXEL WHEN .F.
 
 		oGetDAT := MsNewGetDados():New( aPosObj[2,1],aPosObj[2,2],aPosObj[2,3],aPosObj[2,4], nOpcNewReg, "AllwaysTrue()", "AllwaysTrue()", "", aAlterEnch , 0, Len(aCols),,, .T.,, aHeader ,aCols )
 

@@ -1,8 +1,6 @@
 #Include "rwmake.ch"        // incluido pelo assistente de conversao do AP5 IDE em 03/07/00
 #INCLUDE "IMPFER.CH"
 
-Static nOrdSRR
-
 User Function IMPFER()        // incluido pelo assistente de conversao do AP5 IDE em 03/07/00
 
 Local cLinAtu		:= ""
@@ -414,10 +412,7 @@ If lAchou
 		For i := 1 To Len(aVerbsAbo)
 		
 			If dbSeek(SRA->RA_FILIAL + SRA->RA_MAT + "F" + Dtos(dDtBusFer) + aVerbsAbo[i] )
-				While SRR->RR_FILIAL + SRR->RR_MAT + SRR->RR_TIPO3 + DToS(SRR->RR_DATA) + SRR->RR_PD == SRA->RA_FILIAL + SRA->RA_MAT + "F" + DToS(dDtBusFer) + aVerbsAbo[i]
-					nValAb += SRR->RR_VALOR
-					SRR->(DbSkip())
-				EndDo
+				nValAb += SRR->RR_VALOR
 			Endif
 			
 		Next
@@ -425,10 +420,7 @@ If lAchou
 		For i := 1 To Len(aVerbs13Abo)
 		
 			If dbSeek(SRA->RA_FILIAL + SRA->RA_MAT + "F" + Dtos(dDtBusFer) + aVerbs13Abo[i] )
-				While SRR->RR_FILIAL + SRR->RR_MAT + SRR->RR_TIPO3 + DToS(SRR->RR_DATA) + SRR->RR_PD == SRA->RA_FILIAL + SRA->RA_MAT + "F" + DToS(dDtBusFer) + aVerbs13Abo[i]
-					nValAb13 += SRR->RR_VALOR
-					SRR->(DbSkip())
-				EndDo
+				nValAb13 += SRR->RR_VALOR
 			Endif
 			
 		Next i 
@@ -648,12 +640,7 @@ If lAchou
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³ Posiciona Arq. SRR Para Guardar na Matriz as Verbas De Ferias³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-		If Empty( nOrdSRR )
-			nOrdSRR := RetOrder( "SRR", "RR_FILIAL+RR_MAT+RR_TIPO3+DTOS(RR_DATA)+RR_PD+RR_CC" )
-		EndiF
-		
 		dbSelectArea("SRR")
-		dbSetOrder(nOrdSRR)
 		If dbSeek( SRA->RA_FILIAL + SRA->RA_MAT + "F" )
 			While ! Eof() .And. SRA->RA_FIlIAL + SRA->RA_MAT + "F" == SRR->RR_FILIAL + SRR->RR_MAT + SRR->RR_TIPO3
 				//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -1012,7 +999,7 @@ Else
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³ Solicitacao 1o Parcela 13o Salario                           ³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-		If nSol13 == 1 .And. M->RH_PERC13S > 0  // Imprimi Sol.1.Parc.13., caso parametro "Sol. 1.Parc.13.Sal" esteja como Sim
+		If nSol13 == 1  // Imprimi Sol.1.Parc.13., caso parametro "Sol. 1.Parc.13.Sal" esteja como Sim
 			If nLi > 35
 				nLi := 1
 			Endif

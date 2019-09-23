@@ -47,20 +47,20 @@ Private cSE2_NATUREZ:= SE2->E2_NATUREZ
 U_USORWMAKE(ProcName(),FunName())
 
 @ 100, 100 To 300, 470 Dialog oDlg Title "Alterar Segmento do Lançamento de Contas a Pagar"
-@ 21, 10 SAY "C.Custo Deb:"  
-@ 18, 50 GET cSE2_CCD f3 "CTT" valid (empty(cSE2_CCD) .or. existCpo("CTT",cSE2_CCD)) SIZE 40, 10 
+@ 34, 10 SAY "C.Custo Deb:"  
+@ 31, 50 GET cSE2_CCD f3 "CTT" valid (empty(cSE2_CCD) .or. existCpo("CTT",cSE2_CCD)) SIZE 40, 10 
 
-@ 36, 10 SAY "Segmento Deb:"
-@ 33, 50 GET cSE2_CLVLDB F3 "CTH" valid (empty(cSE2_CLVLDB) .or. existCpo("CTH",cSE2_CLVLDB)) SIZE 40, 20
+@ 49, 10 SAY "Segmento Deb:"
+@ 45, 50 GET cSE2_CLVLDB F3 "CTH" valid (empty(cSE2_CLVLDB) .or. existCpo("CTH",cSE2_CLVLDB)) SIZE 40, 20
 
-@ 51, 10 SAY "C.Custo Crd:"
-@ 48, 50 GET cSE2_CCC F3 "CTT" valid (empty(cSE2_CCC) .or. existCpo("CTT",cSE2_CCC)) SIZE 40, 30
+@ 64, 10 SAY "C.Custo Crd:"
+@ 60, 50 GET cSE2_CCC F3 "CTT" valid (empty(cSE2_CCC) .or. existCpo("CTT",cSE2_CCC)) SIZE 40, 30
 
-@ 66, 10 SAY "Segmento Crd:" 
-@ 63, 50 GET cSE2_CLVLCR F3 "CTH" valid (empty(cSE2_CLVLCR) .or. existCpo("CTH",cSE2_CLVLCR)) SIZE 40, 40
+@ 79, 10 SAY "Segmento Crd:" 
+@ 75, 50 GET cSE2_CLVLCR F3 "CTH" valid (empty(cSE2_CLVLCR) .or. existCpo("CTH",cSE2_CLVLCR)) SIZE 40, 40
 
-@ 81, 10 SAY "Natureza:" 
-@ 78, 50 GET cSE2_NATUREZ F3 "SED" valid (empty(cSE2_NATUREZ) .or. existCpo("SED",cSE2_NATUREZ)) SIZE 44, 50
+@ 92, 10 SAY "Natureza:" 
+@ 89, 50 GET cSE2_NATUREZ F3 "SED" valid (empty(cSE2_NATUREZ) .or. existCpo("SED",cSE2_NATUREZ)) SIZE 44, 50
 
 ACTIVATE DIALOG oDlg CENTER ON INIT ;      
 EnchoiceBar(oDlg,{|| GravaSGSE2(), ODlg:End(), Nil }, {|| oDlg:End() })

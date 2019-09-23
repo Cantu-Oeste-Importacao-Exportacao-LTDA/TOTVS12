@@ -144,6 +144,7 @@ Local aErrCalc 		:= {}
 Local nValVend 		:= 0
 Local nValTab  		:= 0
 Local cArm 			:= ""
+Local cMsgErro		:= ""
 Local cVend 		:= M->C5_VEND1
 Local nOpc 			:= ParamIxb[1]
 Local nOpcInc 		:= 3
@@ -156,7 +157,88 @@ Local lSim3GM		:= iif(SC5->(FieldPos("C5_SIM3GM")) > 0, M->C5_SIM3GM, .F.)
 Local leEco			:= iif(SC5->(FieldPos("C5_X_EECO")) > 0, M->C5_X_EECO, .F.)
 Local lB2BVertis	:= iif(SC5->(FieldPos("C5_X_IB2B")) > 0, M->C5_X_IB2B=="S", .F.)
 Local lValCst  		:= SuperGetMV("MV_VLDOCST", ,.T.)
-Local nPVlOri 		:= 0             
+Local nPVlOri 		:= 0  
+
+//| Início das alterações feitas Por Jonatas Oliveira.
+
+Local nPosDel	:= Len(aHeader) + 1
+Local nPosTot	:= Ascan(aHeader, {|x| AllTrim(x[02]) == "C6_VALOR"})
+Local nItem		:= 0
+Local nTotPv	:= 0 
+Local nTotRat	:= 0 
+Local aArea		:= GetArea()
+Local aAreaZE1	:= ZE1->(GetArea())           
+
+
+IF INCLUI .OR. ALTERA
+	
+	DBSELECTAREA("ZE1")
+	ZE1->(DBSETORDER(1))
+	
+	IF ZE1->(DBSEEK(XFILIAL("ZE1") + M->C5_NUM ))
+	
+		WHILE ZE1->(!EOF()) .AND. ZE1->(ZE1_FILIAL + ZE1_PEDIDO) ==  XFILIAL("SC5") + M->C5_NUM 
+	
+			nTotRat += ZE1->ZE1_VALOR
+	
+			ZE1->(DBSKIP())
+		ENDDO
+	
+		For nItem := 1 to Len(aCols)
+			If !aCols[nItem][nPosDel]
+				nTotPv += aCols[nItem][nPosTot]
+			EndIf
+		Next nItem 
+	
+        //Edison, comentado pelo fato que esta validando somente o valor líquido, precisa considerar os impostos.
+        /* 	
+		IF nTotRat != nTotPv
+	
+			//AVISO("MT410TOK","O Valor total do pedido difere do total Rateado",{"Fechar"}, 3, ,, , .T.,  )
+			Help(" ",1,"CODAUTCAR",,"O Valor total do pedido difere do total Rateado entre cartoes",4,5)
+			Return .F.
+			
+		ENDIF
+		*/ 
+	ELSEIF !(ISBLIND())
+		DBSELECTAREA("SE4")
+		SE4->(DBSETORDER(1))
+		SE4->(DBSEEK(XFILIAL("SE4") + M->C5_CONDPAG ))
+		
+		//| Só adciona o botão se a condição for do tipo Cartão.
+		
+		//IF SE4->E4_XPGCART == "S"
+		IF ALLTRIM(SE4->E4_FORMA) == "CC" .OR. ALLTRIM(SE4->E4_FORMA) == "CD"
+			cMsgErro	:= ""
+			
+			IF !EMPTY(M->C5_XCODAUT) .AND. !EMPTY(M->C5_XCODADQ)
+				IF M->C5_XCODADQ == "004" .AND. ALLTRIM(SE4->E4_FORMA) == "CD"
+					IF !(LEN(ALLTRIM(M->C5_XCODAUT)) > 6 .AND. LEN(ALLTRIM(M->C5_XCODAUT)) <= 12) //LEN(ALLTRIM(M->C5_XCODAUT)) <> 12
+						cMsgErro	:= "Venda a débito da adquirente REDE, deve-se infomar o Comprovante de Venda (Maior que 6 digitos)"
+					ENDIF
+					
+				ELSEIF LEN(ALLTRIM(M->C5_XCODAUT)) <> 6
+					cMsgErro	:= "Codigo de autorização inválido."
+				ENDIF
+			ELSE
+				cMsgErro	:= "Para a forma de pgto da condição de pgto utilizada, é obrigatório o preenchimento dos campos Cod. Autorizacao e Cod. Adquirente"				
+			ENDIF
+			
+			IF !empty(cMsgErro)
+				Help(" ",1,"CODAUTCAR",,cMsgErro,4,5)
+				Return .F.		
+			endif
+			
+		ENDIF
+	
+	ENDIF 
+
+	RestArea(aAreaZE1)
+	RestArea(aArea)
+ENDIF
+
+//| Final das alterações feitas Por Jonatas Oliveira.
+
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
@@ -698,7 +780,14 @@ For nI := 1 to len(aCols)
 		If SF4->F4_DUPLIC == "S" .And. AllTrim(M->C5_CLIENTE) == AllTrim(SUBSTR(SM0->M0_CGC,1,8)) .And. !SF4->F4_CODIGO $ SuperGetMV("MV_X_TESTR",.F.,"")
 			lOk := .F.
 			ShowHelpDlg("Atenção",{"Não é possível fazer transferência entre filiais com TES que movimente financeiro."}, 5,{"Verifique a TES informada."}, 5)
-		EndIf			  
+		EndIf
+		
+		//Edison 17/07/2019 - Não permitir que seja utilizada uma TES quando for transferência para raiz de cnpj diferentes	
+		If  AllTrim(M->C5_CLIENTE) != AllTrim(SUBSTR(SM0->M0_CGC,1,8)) .And. SF4->F4_CODIGO $ SuperGetMV("MV_XTESTRF",.F.,"")
+			lOk := .F.
+			ShowHelpDlg("Atenção",{"Não é possível fazer transferência quando raiz do CNPJ é diferente do código cliente."}, 5,{"Verifique a TES informada."}, 5)
+		EndIf
+		//Edison 17/07/2019 - Fim			  
 	EndIf
 Next nI
 //Gustavo 11/06/2014 - Fim

@@ -73,38 +73,11 @@ U_MANUTCPOS("SA1", "A1_X_DESC", cCad)
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 U_USORWMAKE(ProcName(),FunName())
 
-Return .t.
-
-
-
-User Function MANSZ7()
-Local cTab	:= "SZ7"
-AxCadastro(cTab)
-
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-//³Chama função para monitor uso de fontes customizados³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-U_USORWMAKE(ProcName(),FunName())
-
-Return .t.
-
-
-User Function MANSRE()
-Local cTab	:= "SRE"
-AxCadastro(cTab)
-
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-//³Chama função para monitor uso de fontes customizados³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-U_USORWMAKE(ProcName(),FunName())
-
-Return .t.
+Return
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Programa utilizado para alimentar descontos na tabela ZZ0³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-
-
 
 User Function MANZZ0()
 Local cTab	:= "ZZ0"
@@ -135,7 +108,7 @@ Return .T.
 
 User Function MANZZF()
 Local cTab	:= "ZZF"
-AxCadastro(cTab, "Amarração Tabela x Kit")
+AxCadastro(cTab)
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
@@ -411,60 +384,6 @@ U_USORWMAKE(ProcName(),FunName())
 Return
 
 
-User Function MANSZ8()
-Local cTab	:= "SZ8"
-AxCadastro(cTab, "Amarração de Tabelas x Vendedor")
-
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-//³Chama função para monitor uso de fontes customizados³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-U_USORWMAKE(ProcName(),FunName())
-
-Return .t.
-
-
-//ESTOQUE RESERVADO PARA VENDEDOR
-
-User Function MANSZZ()
-Local cTab	:= "SZZ"
-AxCadastro(cTab, "Estoque x Produto X Vendedor")
-
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-//³Chama função para monitor uso de fontes customizados³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-U_USORWMAKE(ProcName(),FunName())
-
-Return .t.
-
-//ESTOQUE RESERVADO PARA VENDEDOR
-
-User Function MANSZY()
-Local cTab	:= "SZY"
-AxCadastro(cTab, "Filial x Tabela x Cliente")
-
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-//³Chama função para monitor uso de fontes customizados³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-U_USORWMAKE(ProcName(),FunName())
-
-Return .t.
-
-
-
-//SEMÁFORO ESTOQUES VINHO
-
-
-User Function MANSZ9()
-Local cTab	:= "SZ9"
-AxCadastro(cTab, "Semáforo Estoques Vinho")
-
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-//³Chama função para monitor uso de fontes customizados³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-U_USORWMAKE(ProcName(),FunName())
-
-Return .t.
-
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Função utilizada para validação da praça de cobrança quando o controle de CEP é por faixa³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
@@ -509,19 +428,6 @@ Return Nil
 
 User function MANZZV()
 Local cTab := "ZZV"
-AxCadastro(cTab)
-
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-//³Chama função para monitor uso de fontes customizados³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-U_USORWMAKE(ProcName(),FunName())
-
-Return
-
-
-
-User function MANSZA()
-Local cTab := "SZA"
 AxCadastro(cTab)
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ

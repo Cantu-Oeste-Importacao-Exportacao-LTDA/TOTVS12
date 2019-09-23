@@ -29,7 +29,8 @@ Private lStatus := .F.
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 
 U_USORWMAKE(ProcName(),FunName())
 
-If !Empty(cArqTemp) //Verificar se é chamado pelo programa certo
+//If !Empty(cArqTemp) //Verificar se é chamado pelo programa certo
+If iif(TYPE("cArqTemp") == "C", !Empty(cArqTemp),.F.) //Verificar se é chamado pelo programa certo
 	
 	cDiret   := cArqAux     //Variavel recebe o valor no programa GETARQFIN e valoriza no P.E em questão.
 	cArq 	 := cArqTemp    //Variavel recebe o valor no programa GETARQFIN e valoriza no P.E em questão.

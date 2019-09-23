@@ -133,7 +133,14 @@ Local aEMPRESAS := {}
 		//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
 		//≥Chama funÁ„o para monitor uso de fontes customizados≥
 		//¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
-		U_USORWMAKE(ProcName(),FunName())        
+		U_USORWMAKE(ProcName(),FunName())      
+		
+		
+		//Edison 27/06/18
+    	//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+		//≥Ajuste sobre registros da SE2 referente a segmento e centro de custo da apuracao≥
+		//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+		fASE2_AP()  
     
     	//Guilherme 08/12/14
     	//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
@@ -182,6 +189,11 @@ Local aEMPRESAS := {}
 		//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
 		fASE2_PRV()
 		
+		//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+		//≥FunÁ„o para ajuste sobre registros da SE1 referente a baixas da SE5 do tipo liquidaÁ„o∫±±
+		//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+		fASE1_E5()
+		
 		//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
 		//≥FunÁ„o para ajuste sobre registros da SE5 referente a baixas da SE1 ≥
 		//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
@@ -213,6 +225,147 @@ Local aEMPRESAS := {}
 	conout(time()+"-RJFINP04 - FIM DA EXECUCAO.")
 	
 Return
+                          
+                          
+/*
+‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±…ÕÕÕÕÕÕÕÕÕÕ—ÕÕÕÕÕÕÕÕÕÕÀÕÕÕÕÕÕÕ—ÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÀÕÕÕÕÕÕ—ÕÕÕÕÕÕÕÕÕÕÕÕÕª±±
+±±∫Programa  ≥fASE2_AP ∫Autor  ≥EDISON BARBIERI   ∫ Data ≥  27/06/2018    ∫±±
+±±ÃÕÕÕÕÕÕÕÕÕÕÿÕÕÕÕÕÕÕÕÕÕ ÕÕÕÕÕÕÕœÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕ ÕÕÕÕÕÕœÕÕÕÕÕÕÕÕÕÕÕÕÕπ±±
+±±∫Desc.     ≥FunÁ„o para ajuste sobre registros da SD2 referente ao seg- ∫±±
+±±∫          ≥mento e centro de custo da apuraÁ„o icms.                   ∫±±
+±±ÃÕÕÕÕÕÕÕÕÕÕÿÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕπ±±
+±±∫Uso       ≥Oeste                                                       ∫±±
+±±»ÕÕÕÕÕÕÕÕÕÕœÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕº±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂ
+*/
+*---------------------------------------------------------------------------*
+Static Function fASE2_AP()
+*---------------------------------------------------------------------------* 
+Local aAreaTMP	:= GetArea()
+Local cAliasTMP := GetNextAlias()
+Local nNUMREG   := 0
+Local nNUMPRC	:= 0  
+local cEmpDef := cEmpAnt
+Local cFilDef := cFilAnt
+
+
+	conout(time()+"-RJFINP04 - INICIO DA FUNCAO fASE2_AP.")
+
+	cQuery := " SELECT SE2.R_E_C_N_O_ SE2REC, 														"+chr(13)+chr(10)
+	cQuery += "        SE2.E2_FILIAL,  																"+chr(13)+chr(10)
+	cQuery += "        SE2.E2_NUM, 																	"+chr(13)+chr(10)
+	cQuery += "        SE2.E2_PREFIXO, 	 															"+chr(13)+chr(10)
+    cQuery += "        SE2.E2_CCD, 	    															"+chr(13)+chr(10)
+	cQuery += "        SE2.E2_CLVLDB 	   															"+chr(13)+chr(10)
+	cQuery += "   FROM "+ RetSqlName("SE2") +" SE2													"+chr(13)+chr(10)
+	cQuery += "  WHERE SE2.D_E_L_E_T_ 	= ' '                                            			"+chr(13)+chr(10)
+	//cQuery += " 	   AND  SE2.E2_ORIGEM = 'MATA953'                  								"+chr(13)+chr(10)
+	cQuery += " 	   AND (SE2.E2_CLVLDB = ' '                      								"+chr(13)+chr(10)
+	cQuery += " 	   OR 	SE2.E2_CCD 		= ' ')   	    		                				"+chr(13)+chr(10)
+	cQuery += "ORDER BY SE2.E2_FILIAL,						                          				"+chr(13)+chr(10)
+	cQuery += "        SE2.E2_NUM, 																	"+chr(13)+chr(10)
+	cQuery += "        SE2.E2_PREFIXO 	 															"+chr(13)+chr(10)
+	
+	memowrite("fASE2_AP.sql",cQuery)
+	TcQuery cQuery New Alias (cAliasTMP)
+	dbSelectArea(cAliasTMP)
+	Count To nNUMREG   
+	
+	If nNUMREG > 0
+		(cAliasTMP)->(dbGoTop())	
+		If lProtheus
+			ProcRegua(nNUMREG)
+		EndIf
+		While !(cAliasTMP)->(EOF())
+			If !Empty((cAliasTMP)->SE2REC) 
+			
+				dbSelectArea("SE2")
+				SE2->(dbGoTo((cAliasTMP)->SE2REC))
+
+				If cEmpDef = '01' .and. ((cAliasTMP)->E2_FILIAL) == '01' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '007001001'
+						SE2->E2_CCD	:= '020201001'
+				
+				elseif cEmpDef = '01' .and. ((cAliasTMP)->E2_FILIAL) == '02' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '002001002'
+						SE2->E2_CCD	:= '020201001'
+						
+				elseif cEmpDef = '02' .and. ((cAliasTMP)->E2_FILIAL) $ '01/02/03/04/05' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '003001001'
+						SE2->E2_CCD	:= '020201001'		
+						
+				elseif cEmpDef = '03' .and. ((cAliasTMP)->E2_FILIAL) $ '01/02' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '003001001'
+						SE2->E2_CCD	:= '020201001'	
+						
+				elseif cEmpDef = '04' .and. ((cAliasTMP)->E2_FILIAL) == '01' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '001001001'
+						SE2->E2_CCD	:= '020201001'	
+						
+				elseif cEmpDef = '07' .and. ((cAliasTMP)->E2_FILIAL) == '02' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '007001001'
+						SE2->E2_CCD	:= '020201001'	
+						
+				elseif cEmpDef = '10' .and. ((cAliasTMP)->E2_FILIAL) == '01' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '003001001'
+						SE2->E2_CCD	:= '020201001'	
+						
+				elseif cEmpDef = '40' .and. ((cAliasTMP)->E2_FILIAL) $ '01/02/03/04/05/06/07/08/09/10/11' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '001001001'
+						SE2->E2_CCD	:= '020201001'	
+				
+				elseif cEmpDef = '40' .and. ((cAliasTMP)->E2_FILIAL) == '12' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '001001002'
+						SE2->E2_CCD	:= '020201001'	
+																		
+				elseif cEmpDef = '41' .and. ((cAliasTMP)->E2_FILIAL) == '01' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '001001002'
+						SE2->E2_CCD	:= '020201001'	
+				
+				elseif cEmpDef = '42' .and. ((cAliasTMP)->E2_FILIAL) == '01' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '001001002'
+						SE2->E2_CCD	:= '020201001'
+				
+				elseif cEmpDef = '43' .and. ((cAliasTMP)->E2_FILIAL) == '01' .and. (Empty(SE2->E2_CLVLDB) .or. Empty(SE2->E2_CCD))
+					    RecLock("SE2",.F.)
+						SE2->E2_CLVLDB := '001001002'
+						SE2->E2_CCD	:= '020201001'																						
+				
+				
+					SE2->(MsUnLock())
+					conout(time()+"-fASE2_AP Filial - "+cValToChar((cAliasTMP)->E2_FILIAL)+"NUM "+cValToChar((cAliasTMP)->E2_NUM)+"PREFIXO "+cValToChar((cAliasTMP)->E2_PREFIXO))
+		        EndIf   
+				nNUMPRC += 1
+			Endif
+			If lProtheus
+				IncProc("Atualizando registro "+cValToChar(nNUMPRC)+" de "+cValToChar(nNUMREG)+ " na SE2."  )
+			Endif	
+	
+			(cAliasTMP)->(dbSkip())	
+       Enddo	  
+    EndIf
+	(cAliasTMP)->(dbCloseArea())
+
+	conout(time()+"-RJFINP04 - FIM DA FUNCAO fASE2_AP - TOTAL DE REGISTROS PROCESSADOS: "+cValToChar(nNUMREG))
+	RestArea(aAreaTMP)
+	
+Return
+//EDISON 27/06/18 - FIM                          
+                          
                           
 /*
 ‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹
@@ -1150,7 +1303,7 @@ Local nNUMPRC	:= 0
 	cQuery += " 			OR 	SE5.E5_CCD 		= ' ')   							"+chr(13)+chr(10)
 	cQuery += " 			AND ( SE5.E5_CLVLDB <> SE2.E2_CLVLDB  					"+chr(13)+chr(10)
 	cQuery += "          	OR 	SE5.E5_CCD 		<> SE2.E2_CCD)   					"+chr(13)+chr(10)
-	cQuery += " 			AND SE5.E5_MULTNAT 	<> '1'								"+chr(13)+chr(10)
+	//cQuery += " 			AND SE5.E5_MULTNAT 	<> '1'								"+chr(13)+chr(10)
 	memowrite("fASE5_E2.sql",cQuery)
 	
 	TcQuery cQuery New Alias (cAliasTMP)
@@ -1168,9 +1321,12 @@ Local nNUMPRC	:= 0
 				If RecLock("SE5",.F.)
 					If Empty(SE5->E5_CLVLDB) .and. !Empty((cAliasTMP)->E2_CLVLDB)
 						SE5->E5_CLVLDB	:= (cAliasTMP)->E2_CLVLDB
+						SE5->E5_CLVLCR	:= ' '
+						
 					Endif
 					If Empty(SE5->E5_CCD) .and. !Empty((cAliasTMP)->E2_CCD)
 						SE5->E5_CCD		:= (cAliasTMP)->E2_CCD
+						SE5->E5_CCC		:= ' '
 					Endif
 					SE5->(MsUnLock())
 				EndIf   
@@ -1378,6 +1534,88 @@ Local nNUMPRC	:= 0
 	RestArea(aAreaTMP)
 	
 Return
+
+
+/*
+‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±…ÕÕÕÕÕÕÕÕÕÕ—ÕÕÕÕÕÕÕÕÕÕÀÕÕÕÕÕÕÕ—ÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÀÕÕÕÕÕÕ—ÕÕÕÕÕÕÕÕÕÕÕÕÕª±±
+±±∫Programa  ≥fASE1_E5    ∫Autor  ≥TOTVS CASCAVEL    ∫ Data ≥  16/05/2018 ∫±±
+±±ÃÕÕÕÕÕÕÕÕÕÕÿÕÕÕÕÕÕÕÕÕÕ ÕÕÕÕÕÕÕœÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕ ÕÕÕÕÕÕœÕÕÕÕÕÕÕÕÕÕÕÕÕπ±±
+±±∫Desc.     ≥FunÁ„o para ajuste sobre registros da SE1 referente a baixas∫±±
+±±∫          ≥da SE5 do tipo liquidaÁ„o.                                  ∫±±
+±±ÃÕÕÕÕÕÕÕÕÕÕÿÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕπ±±
+±±∫Uso       ≥RJU                                                         ∫±±
+±±»ÕÕÕÕÕÕÕÕÕÕœÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕº±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂ
+*/                                                                              
+
+*---------------------------------------------------------------------------*
+Static Function fASE1_E5()
+*---------------------------------------------------------------------------* 
+Local aAreaTMP	:= GetArea()
+Local cAliasTMP := GetNextAlias()
+Local nNUMREG   := 0                      
+Local nNUMPRC	:= 0
+
+	conout(time()+"-RJFINP04 - INICIO DA FUNCAO fASE1_E5.")
+
+	cQuery := " SELECT 		SE5.R_E_C_N_O_ SE5REC, 									"+chr(13)+chr(10)
+	cQuery += " 			SE1.R_E_C_N_O_ SE1REC,									"+chr(13)+chr(10)
+	cQuery += " 			SE5.E5_CLVLCR, 											"+chr(13)+chr(10)
+	cQuery += " 			SE5.E5_CCC  											"+chr(13)+chr(10)
+	cQuery += " FROM " + RetSqlName("SE5") + " SE5 									"+chr(13)+chr(10)
+	cQuery += " INNER JOIN " + RetSqlName("SE1") + " SE1 	 						"+chr(13)+chr(10)
+	cQuery += " 			ON	SE5.E5_DOCUMEN  = SE1.E1_NUMLIQ 					"+chr(13)+chr(10)
+	cQuery += " 			AND SE1.D_E_L_E_T_	=  ' '  							"+chr(13)+chr(10)
+	cQuery += " WHERE			SE5.D_E_L_E_T_  = ' ' 								"+chr(13)+chr(10)
+	cQuery += " 			AND ( SE1.E1_CLVLCR = ' '  								"+chr(13)+chr(10)
+	cQuery += " 			OR 	SE1.E1_CCC 		= ' ')  							"+chr(13)+chr(10)
+	cQuery += " 			AND SE5.E5_MOTBX 	= 'LIQ'								"+chr(13)+chr(10)
+	memowrite("fASE1_E5.sql",cQuery)
+
+	TcQuery cQuery New Alias (cAliasTMP)
+	dbSelectArea(cAliasTMP)
+	Count To nNUMREG
+	If nNUMREG > 0
+		(cAliasTMP)->(dbGoTop())	
+		If lProtheus
+			ProcRegua(nNUMREG)
+		EndIf
+		While !(cAliasTMP)->(EOF())
+			If !Empty((cAliasTMP)->SE5REC)
+			
+			    dbSelectArea("SE5")
+				SE5->(dbGoTo((cAliasTMP)->SE5REC))
+				 
+				dbSelectArea("SE1")
+				SE1->(dbGoTo((cAliasTMP)->SE1REC))
+				
+				
+				If RecLock("SE1",.F.)
+					If Empty(SE1->E1_CLVLCR) .and. !Empty((cAliasTMP)->E5_CLVLCR)
+						SE1->E1_CLVLCR	:= (cAliasTMP)->E5_CLVLCR
+					Endif
+					If Empty(SE1->E1_CCC) .and. !Empty((cAliasTMP)->E5_CCC)
+						SE1->E1_CCC		:= (cAliasTMP)->E5_CCC
+					Endif
+					SE1->(MsUnLock())
+				EndIf   
+				nNUMPRC += 1
+			EndIf
+			If lProtheus				
+				IncProc("Atualizando registro "+cValToChar(nNUMPRC)+" de "+cValToChar(nNUMREG)+ " na SE1/SE5."  )
+			EndIf
+			(cAliasTMP)->(dbSkip())	
+		Enddo	  
+	EndIf
+	(cAliasTMP)->(dbCloseArea())
+
+	conout(time()+"-RJFINP04 - FIM DA FUNCAO fASE1_E5 - TOTAL DE REGISTROS PROCESSADOS: "+cValToChar(nNUMREG))
+	RestArea(aAreaTMP)
+	
+Retur
 
 
 

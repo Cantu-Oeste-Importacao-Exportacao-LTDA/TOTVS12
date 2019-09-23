@@ -27,7 +27,8 @@
 User Function TITICMST()
                     
 Local aArea			:= GetArea()
-Local cOrigem		:= PARAMIXB[1] 
+Local cOrigem		:= PARAMIXB[1]  
+Local cTipoImp 		:= PARAMIXB[2]
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
@@ -41,53 +42,62 @@ U_USORWMAKE(ProcName(),FunName())
 // DFT - 06/04/2015
 // MILDESK: 15581
 // QUANDO TITULO FOR GERADO PELO FATURAMENTO  
-If AllTrim(cOrigem)=="MATA460A" 
-  
-	/* NAO É NECESSARIO POSICIONAR NA SC5, POIS NO FATURAMENTO JÁ ESTÁ POSICIONADO
-	dbSelectArea("SC5")
-	SC5->(dbSetOrder(1))
-	SC5->(dbGoTop())
-	SC5->(dbSeek(xFilial("SC5") + SD2->D2_PEDIDO))
-	*/         
+If AllTrim(cOrigem)=="MATA460A"  
 	
+	If cTipoImp == "3" //ICMS-ST
+	  
+		/* NAO É NECESSARIO POSICIONAR NA SC5, POIS NO FATURAMENTO JÁ ESTÁ POSICIONADO
+		dbSelectArea("SC5")
+		SC5->(dbSetOrder(1))
+		SC5->(dbGoTop())
+		SC5->(dbSeek(xFilial("SC5") + SD2->D2_PEDIDO))
+		*/         
+		
+		
+		//ABRE UMA SEGUNDA SE2 PARA PESQUISAR SE O TITULO JÁ EXISTE COM A CHAVE FILIAL+PREFIXO+NUM+TIPO+PARCELA+FORNECE+LOJA
+		If Select("NEWSE2") != 0
+			NEWSE2->(dbCloseArea())
+		EndIf
+		
+		cPrefixo	:= SE2->E2_PREFIXO 
+		cNumero 	:= SF2->F2_DOC  //MUDA PARA NUMERO DA NOTA FISCAL
+		cParcela	:= SE2->E2_PARCELA
+		cTipo		:= SE2->E2_TIPO
+		cFornece	:= SE2->E2_FORNECE
+		cLoja		:= SE2->E2_LOJA
+		
+		If ( ChkFile("SE2",.F.,"NEWSE2") )
+			
+			DbSelectArea("NEWSE2")                                               
+			
+			// PROCURA SE O TITULO JA EXISTE PARA INCREMENTAR O NUMERO DE PARCELA
+			NEWSE2->(dbSetOrder(1))
+			NEWSE2->(dbGoTop())
+			While NEWSE2->(dbSeek(xFilial("SE2")+cPrefixo+cNumero+cParcela+cTipo+cFornece+cLoja)) 
+				cParcela	:=	Soma1(cParcela, TAMSX3("E2_PARCELA")[1])
+				NEWSE2->(dbSkip())
+			Enddo
+			NEWSE2->(dbCloseArea())
+		
+		EndIf
 	
-	//ABRE UMA SEGUNDA SE2 PARA PESQUISAR SE O TITULO JÁ EXISTE COM A CHAVE FILIAL+PREFIXO+NUM+TIPO+PARCELA+FORNECE+LOJA
-	If Select("NEWSE2") != 0
-		NEWSE2->(dbCloseArea())
+		//SE2->E2_PREFIXO	:= "ICM"
+		SE2->E2_NUM			:= cNumero //SF2->F2_DOC   
+		SE2->E2_PARCELA		:= cParcela
+		SE2->E2_NATUREZ 	:= GETMV("MV_X_NATST")
+		SE2->E2_VENCTO		:= dDataBase
+		SE2->E2_VENCREA		:= DataValida( dDataBase )
+		SE2->E2_HIST		:= "ICMS ST NF. " + ALLTRIM(SF2->F2_SERIE)+" - "+ ALLTRIM(SF2->F2_DOC)  
+		SE2->E2_CLVLDB 		:= SC5->C5_X_CLVL
+		SE2->E2_CCD			:= SC5->C5_X_CC
 	EndIf
 	
-	cPrefixo	:= SE2->E2_PREFIXO 
-	cNumero 	:= SF2->F2_DOC  //MUDA PARA NUMERO DA NOTA FISCAL
-	cParcela	:= SE2->E2_PARCELA
-	cTipo		:= SE2->E2_TIPO
-	cFornece	:= SE2->E2_FORNECE
-	cLoja		:= SE2->E2_LOJA
-	
-	If ( ChkFile("SE2",.F.,"NEWSE2") )
-		
-		DbSelectArea("NEWSE2")                                               
-		
-		// PROCURA SE O TITULO JA EXISTE PARA INCREMENTAR O NUMERO DE PARCELA
-		NEWSE2->(dbSetOrder(1))
-		NEWSE2->(dbGoTop())
-		While NEWSE2->(dbSeek(xFilial("SE2")+cPrefixo+cNumero+cParcela+cTipo+cFornece+cLoja)) 
-			cParcela	:=	Soma1(cParcela, TAMSX3("E2_PARCELA")[1])
-			NEWSE2->(dbSkip())
-		Enddo
-		NEWSE2->(dbCloseArea())
-	
+	//-- Titulos de Difal e FECP grava número da nota nos históricos
+	If cTipoImp == "B" 
+		SE2->E2_HIST	:= "DIFAL NF. " + ALLTRIM(SF2->F2_SERIE)+" - "+ ALLTRIM(SF2->F2_DOC)  	
 	EndIf
-
-	//SE2->E2_PREFIXO	:= "ICM"
-	SE2->E2_NUM			:= cNumero //SF2->F2_DOC   
-	SE2->E2_PARCELA		:= cParcela
-	SE2->E2_NATUREZ 	:= GETMV("MV_X_NATST")
-	SE2->E2_VENCTO		:= dDataBase
-	SE2->E2_VENCREA		:= DataValida( dDataBase )
-	SE2->E2_HIST		:= "ICMS ST NF. " + ALLTRIM(SF2->F2_SERIE)+" - "+ ALLTRIM(SF2->F2_DOC)  
-	SE2->E2_CLVLDB 		:= SC5->C5_X_CLVL
-	SE2->E2_CCD			:= SC5->C5_X_CC
-endif
+Endif
+	
                 
 RestArea(aArea)
 

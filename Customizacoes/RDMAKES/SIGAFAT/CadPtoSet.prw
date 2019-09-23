@@ -26,15 +26,15 @@ Private cUF := Space(2)
 U_USORWMAKE(ProcName(),FunName())
 
 @ 100, 100 To 340, 630 Dialog oDlg Title "Gerar Pontos por Setor por Muncípio"
-@ 20, 10 SAY "Zona"
-@ 20, 60 GET cZona Size 40, 10 F3 "DA6" Valid GetDescZona(@cDescSet)
-@ 35, 10 SAY "Setor"
-@ 35, 60 Get cSetor Size 40, 10
-@ 35,100 Get cDescSet Size 100, 10 when .F.
-@ 50, 10 SAY "Estado"
-@ 50, 60 GET cUF PICTURE "@!" SIZE 40, 10 
-@ 65, 10 Say "Muncipio" 
-@ 65, 60 Get cCodMun Size 40, 10 Valid !Empty(cCodMun) F3 "CC2GER"
+@ 35, 10 SAY "Zona"
+@ 35, 60 GET cZona Size 40, 10 F3 "DA6" Valid GetDescZona(@cDescSet)
+@ 50, 10 SAY "Setor"
+@ 50, 60 Get cSetor Size 40, 10
+@ 50,100 Get cDescSet Size 100, 10 when .F.
+@ 65, 10 SAY "Estado"
+@ 65, 60 GET cUF PICTURE "@!" SIZE 40, 10 
+@ 80, 10 Say "Muncipio" 
+@ 80, 60 Get cCodMun Size 40, 10 Valid !Empty(cCodMun) F3 "CC2GER"
 
 ACTIVATE DIALOG oDlg CENTER ON INIT ;
 EnchoiceBar(oDlg,{|| GeraPtoSet(), Nil }, {|| oDlg:End() })

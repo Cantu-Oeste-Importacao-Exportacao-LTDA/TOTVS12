@@ -20,13 +20,23 @@
 */
 
 User Function A410CONS()
+
+
+Local cTpOp		:= IIF(INCLUI .OR. ALTERA, "1", "2")
+
+Local alarea	:= GetArea()
+Local alareaSC5	:= SC5->(GetArea())
 aBotoes := {}
 AAdd(aBotoes,{ "NOTE", {|| Visual_Peso() }, "Calc. Peso" } )
+AAdd(aBotoes,{ "Rateio Cartao", {|| U_CP09RAT(cTpOp) }, "Rateio Cartao" } )
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 U_USORWMAKE(ProcName(),FunName())
+
+RestArea(alarea)
+RestArea(alareaSC5)
 
 Return(aBotoes)
 
@@ -64,3 +74,27 @@ oLBox1     := TListBox():New( 008,008,,aProdutos,272,128,,oDlg1,,CLR_BLACK,CLR_W
 oDlg1:Activate(,,,.T.)
 
 return
+
+/*/{Protheus.doc} CP09RAT
+Função para chamada do Rateio de Cartão
+@author Jonatas Oliveira | www.compila.com.br
+@since 03/01/2019
+@version 1.0
+/*/
+User Function CP09RAT(cTpOp) 	
+	
+	IF cTpOp == "1"
+		DBSELECTAREA("ZE1")
+		ZE1->(DBSETORDER(1))
+
+		IF ZE1->(DBSEEK(M->C5_FILIAL + M->C5_NUM ))
+			FWExecView("Rateio Cartao",  "CP09005",  4,  /*oDlg*/, {|| .T. } /*bCloseOnOk*/,  {|| lFIN072 := .T. } /*bOk*/, /* nPercReducao*/, /*aEnableButtons*/, {|| lFIN072 := .F.,.T. } /*bCancel*/ )
+		ELSE
+			FWExecView("Rateio Cartao",  "CP09005",  4,  /*oDlg*/, {|| .T. } /*bCloseOnOk*/,  {|| lFIN072 := .T. } /*bOk*/, /* nPercReducao*/, /*aEnableButtons*/, {|| lFIN072 := .F.,.T. } /*bCancel*/ )
+		ENDIF 
+
+	ELSE
+		FWExecView("Rateio Cartao",  "CP09005",  1,  /*oDlg*/, {|| .T. } /*bCloseOnOk*/,  {|| lFIN072 := .T. } /*bOk*/, /* nPercReducao*/, /*aEnableButtons*/, {|| lFIN072 := .F.,.T. } /*bCancel*/ )
+	ENDIF  
+	
+Return()

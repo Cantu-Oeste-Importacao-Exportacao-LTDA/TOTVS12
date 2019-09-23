@@ -21,7 +21,10 @@ User Function XMLCTE09()
 	Local	nPosCodPrd	:= 	aScan(aItem,{|x| AllTrim(x[1]) == "D1_COD"})
 	Local	nPosClVl	:=  aScan(aItem,{|x| AllTrim(x[1]) == "D1_CLVL"})
 	Local	nPosCC		:=  aScan(aItem,{|x| AllTrim(x[1]) == "D1_CC"})
-	Local	nLenItem	:= Len(aItem)
+	Local	nLenItem	:=  Len(aItem)
+	Local	nValIcmCte	:=  Iif(Len(aInfIcmsCte) > 0 .And. aInfIcmsCte[1,1] == "ICM" ,aInfIcmsCTe[1,5], 0 )
+	
+
 	// Variável aInfIcmsCte existe por causa da função sfVldAlqIcms que alimenta o array Private
 	//aInfIcmsCte	:= {{"ICM","ICMS",nBaseIcms,nAliqIcms,nValIcms}}
 	
@@ -45,11 +48,11 @@ User Function XMLCTE09()
 		If DbSeek(aNfOri[1]+aNfOri[2]+aNfOri[3]+aNfOri[4]+aNfOri[5])
 			// Regra 1 - Valor de ICMS destacado no CTe e valor de ICMS destacado na Nota fiscal
 			// TES 038
-			If aInfIcmsCTe[1,5] > 0 .And. SF2->F2_VALICM > 0				
+			If nValIcmCte > 0 .And. SF2->F2_VALICM > 0				
 				aItem[nPosTes,2] := "038"
 			// Regra 2 - Se o CTe ou a nota não tiverem ICMS destacado não toma crédito de ICMS
 			// TES 039
-			ElseIf  aInfIcmsCTe[1,5] == 0 .Or. SF2->F2_VALICM == 0
+			ElseIf  nValIcmCte == 0 .Or. SF2->F2_VALICM == 0
 				aItem[nPosTes,2] := "039"
 			Endif			
 			If nPosOper <> 0			

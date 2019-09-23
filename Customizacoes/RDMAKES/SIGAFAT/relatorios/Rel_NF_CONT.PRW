@@ -227,7 +227,7 @@ cSql += "F2_EMISSAO BETWEEN '"+dDtIni+"' AND '"+dDtFim+"' AND " + cEol
 cSql += "F2_CARGA BETWEEN '"+cCaIni+"' AND '" + cCaFim +"' AND " + cEol
 cSql += "F2_FILIAL BETWEEN '"+cFiIni+"' AND '" + cFiFim +"' AND " + cEol
 cSql += "F2_HORA BETWEEN '"+cHoIni+"' AND '"+cHoFim+"'" + cEol
-cSql += "ORDER BY F2_CARGA, F2_EMISSAO,F2_DOC,F2_SERIE " + cEol
+cSql += "ORDER BY F2_EMISSAO,F2_DOC,F2_SERIE " + cEol
 cSql := ChangeQuery(cSql)
 
 TcQuery cSql NEW ALIAS "TMPF2"
@@ -246,7 +246,7 @@ While !TMPF2->(EOF())
       Cabec(Titulo,Cabec1,Cabec2,NomeProg,Tamanho,nTipo)
       nLin := 9
    Endif
-   
+   //edison ajuste espaço entre notas para colar canhoto fisico
    if cOldCarg != TMPF2->F2_CARGA
    		@nLin, 000 Psay Replicate("-", 80)
    		nLin := nLin + 1
@@ -273,20 +273,23 @@ While !TMPF2->(EOF())
                 
    @nLin, 000 Psay Replicate("-", 80)
    nLin := nLin + 1
-   /*@nLin, 000 Psay "|"
+   @nLin, 000 Psay "|"
    @nLin, 080 Psay "|"
    nLin := nLin + 1
    @nLin, 000 Psay "|"
    @nLin, 080 Psay "|"
 	 nLin := nLin + 1
-   @nLin, 000 Psay "|"*/
+   @nLin, 000 Psay "|"
+   @nLin, 080 Psay "|"
+	 nLin := nLin + 1 
+   @nLin, 000 Psay "|"
    @nLin, 053 Psay "NF:"
    @nLin, 058 Psay TMPF2->F2_DOC
    @nLin, 068 Psay "SERIE:"
    @nLin, 076 Psay TMPF2->F2_SERIE
-   /*@nLin, 080 Psay "|"
-   nLin := nLin + 1   
-   @nLin, 000 Psay Replicate("-", 80)*/
+   @nLin, 080 Psay "|"
+   nLin := nLin + 1  
+   //@nLin, 000 Psay Replicate("-", 80)
    nLin := nLin + 1 
            
    dbSkip()

@@ -112,13 +112,13 @@ if cTabela == "1"
 	aFields := {"E1_MSEMP", "E1_FILIAL", "E1_PREFIXO", "E1_NUM", "E1_PARCELA", "E1_TIPO", "E1_NATUREZ", ;
 	"E1_PORTADO", "E1_VALOR", "E1_SALDO", "E1_MULTA", "E1_CLVLCR", "E1_CCC", "E1_CLIENTE", "E1_NOMCLI",;
 	"E1_LOJA", "E1_EMISSAO", "E1_EMIS1", "E1_VENCREA", "E1_BAIXA", "E1_DESCONT", "E1_DECRESC", "E1_SITUACA",;
-	"E1_AGEDEP","E1_CONTA","E1_MOEDA","E1_NUMBOR","E1_DATABOR","E1_MULTNAT"}
+	"E1_AGEDEP","E1_CONTA","E1_MOEDA","E1_NUMBOR","E1_DATABOR","E1_MULTNAT", "E1_HIST"}
 	cAlias := "SE1"
 Else
 	aFields := {"E1_MSEMP", "E2_FILIAL", "E2_PREFIXO", "E2_NUM", "E2_PARCELA", "E2_TIPO", "E2_NATUREZ",;
 	"E2_PORTADO", "E2_VALOR", "E2_SALDO", "E2_MULTA", "E2_CLVLDB", "E2_CCD", "E2_FORNECE", "E2_NOMFOR",;
 	"E2_LOJA", "E2_EMISSAO", "E2_EMIS1", "E2_VENCREA", "E2_BAIXA", "E2_DESCONT", "E2_DECRESC", "' '",;
-	"' '", "' '","E2_MOEDA","E2_NUMBOR","E2_DTBORDE","E2_MULTNAT"}
+	"' '", "' '","E2_MOEDA","E2_NUMBOR","E2_DTBORDE","E2_MULTNAT", "E2_HIST"}
 	cAlias := "SE2"
 EndIf
 
@@ -217,7 +217,9 @@ for i := 1 to len(aEmp)
 			case j == 28
 				cQuery += " AS DATABOR " 				
 			case j == 29
-				cQuery += " AS MULTNAT " 				
+				cQuery += " AS MULTNAT " 	
+			case j == 30
+				cQuery += " AS HIST " 			
 		EndCase
 	Next j 
 
@@ -390,7 +392,7 @@ If nHandle > 0
 																	SETMP->PORTADOR +";"+ cValor         +";"+ cSaldo         +";"+ cMulta         +";"+ cCLVL  		+";"+ cCC      		 +";"+;
 																	SETMP->CLIFOR   +";"+ SETMP->RAZAO   +";"+ SETMP->LOJA    +";"+ SETMP->EMISSAO +";"+ SETMP->EMIS1   +";"+ SETMP->VENCREA +";"+;
 																	SETMP->BAIXA    +";"+ cDesco         +";"+ cDecre         +";"+ SETMP->SITUACAO+";"+ SETMP->AGENCIA +";"+ SETMP->CONTA   +";"+ AllTrim(Str(SETMP->MOEDA,0))+";" +;
-																	SETMP->NUMBOR   +";"+ SETMP->DATABOR +";")
+																	SETMP->NUMBOR   +";"+ SETMP->DATABOR +";"+ SETMP->HIST  +";")
 									
 									fWrite(nHandle, cCrLf ) // Pula linha
 						
@@ -412,7 +414,7 @@ If nHandle > 0
 											SETMP->PORTADOR +";"+ cValor         +";"+ cSaldo         +";"+ cMulta         +";"+ SETMP->CLVL    +";"+ SETMP->CC      +";"+;
 											SETMP->CLIFOR   +";"+ SETMP->RAZAO   +";"+ SETMP->LOJA    +";"+ SETMP->EMISSAO +";"+ SETMP->EMIS1   +";"+ SETMP->VENCREA +";"+;
 											SETMP->BAIXA    +";"+ cDesco         +";"+ cDecre         +";"+ SETMP->SITUACAO+";"+ SETMP->AGENCIA +";"+ SETMP->CONTA   +";"+ AllTrim(Str(SETMP->MOEDA,0))+";" +;
-											SETMP->NUMBOR   +";"+ SETMP->DATABOR +";")
+											SETMP->NUMBOR   +";"+ SETMP->DATABOR +";"+ SETMP->HIST  +";")
 		
 			fWrite(nHandle, cCrLf ) // Pula linha
 			

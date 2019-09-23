@@ -25,6 +25,7 @@ U_USORWMAKE(ProcName(),FunName())
 aRetorno := {}
 	AAdd( aRetorno, { "Contatos RJU", "U_RJM020CT", 2, 0 } )
 	AAdd( aRetorno, { "Log Alteração", "U_RJM020LG", 2, 0 } )
+	
 Return( aRetorno )                   
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -76,3 +77,8 @@ U_USORWMAKE(ProcName(),FunName())
 	U_RJLOGVIS("SA2",SA2->(A2_FILIAL+A2_COD+A2_LOJA))
 	RestArea(aAreaTMP)
 Return
+
+
+
+
+

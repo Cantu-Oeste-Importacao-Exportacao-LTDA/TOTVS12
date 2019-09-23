@@ -235,29 +235,6 @@ While lContinua
 		cSql += " 	OR  ( A1_X_EB2B =  'S' AND A1_ULTCOM  <= '" + DtoS(dDATAB2B)  + "' ) ) "    + cEol
 		
 		
-		/*
-		cSql += " AND A1_COD || A1_LOJA NOT IN ( "                 + cEol 
-		
-		//旼컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴커
-		//쿘onta sql buscando dinamicamente as notas faturas de todas as empresas�
-		//읕컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴켸
-		
-		for i := 1 to len(aEmp)
-			
-			cSql += " SELECT DISTINCT F2_CLIENTE || F2_LOJA AS CLIENTE FROM " + "SF2" + AllTrim(aEmp[i]) + "0" + " F2 "   + cEol   
-			cSql += " WHERE F2_TIPO = 'N' "                                                                               + cEol
-			cSql += "   AND F2_EMISSAO >= '" + DtoS(dDataBloq) + "' "                                                     + cEol
-			cSql += "   AND F2_CLIENTE >= '" +cCliIniTmp+ "' "                                                            + cEol
-			cSql += "   AND F2_CLIENTE <= '" +cCliFinTmp+ "' "                                                            + cEol
-			cSql += "   AND F2.D_E_L_E_T_ <> '*' "                                                                        + cEol
-			
-			if i != len(aEmp)
-				cSql += " UNION ALL "                                                                                       + cEol  
-			Else
-				cSql += " )"                                                                                                + cEol
-			EndIf
-		Next i
-		*/
 		
 		Conout(cSql)
 		

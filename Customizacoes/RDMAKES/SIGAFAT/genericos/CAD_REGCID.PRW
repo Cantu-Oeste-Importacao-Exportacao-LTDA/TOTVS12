@@ -22,10 +22,10 @@ User Function CAD_REGCID()
 *-------------------------*
 
 PRIVATE aRotina := { { OemToAnsi("Pesquisar")  		,"AxPesqui"   , 0 , 1} ,;
-					 { OemToAnsi("Visualizar") 		,"U_MANUTCAD" , 0 , 2} ,;
-					 { OemToAnsi("Incluir")    		,"U_MANUTCAD" , 0 , 3} ,;
-					 { OemToAnsi("Alterar")    		,"U_MANUTCAD" , 0 , 4} ,;
-					 { OemToAnsi("Excluir")    		,"U_MANUTCAD" , 0 , 5} } 
+					 { OemToAnsi("Visualizar") 		,"U_MANUTECD" , 0 , 2} ,;
+					 { OemToAnsi("Incluir")    		,"U_MANUTECD" , 0 , 3} ,;
+					 { OemToAnsi("Alterar")    		,"U_MANUTECD" , 0 , 4} ,;
+					 { OemToAnsi("Excluir")    		,"U_MANUTECD" , 0 , 5} } 
 					 
 PRIVATE cCadastro  := OemToAnsi("Regiao")
 
@@ -65,7 +65,7 @@ Return(.T.)
 */
  
 *--------------------------------------------------------------*
-User Function MANUTCAD( cAlias, nReg, nOpc, xVar, nOper )       
+User Function MANUTECD( cAlias, nReg, nOpc, xVar, nOper )       
 *--------------------------------------------------------------*
 
 Local aArea      := GetArea()

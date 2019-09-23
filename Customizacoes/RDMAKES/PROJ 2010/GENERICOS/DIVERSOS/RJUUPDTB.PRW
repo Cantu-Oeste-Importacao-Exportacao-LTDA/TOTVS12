@@ -1250,8 +1250,8 @@ cSql += "                    SC5.C5_LOJACLI LOJA    ," + hEnter
 cSql += "                    SC5.C5_EMISSAO EMISSAO  " + hEnter
 cSql += "               FROM " + RetSQLName( "SC5" ) + " SC5 " + hEnter
 cSql += "              WHERE SC5.C5_FILIAL   = '"+xFilial("SC5")+"'" + hEnter
-cSql += "                AND SC5.C5_VEND1   IN ('" + MV_PAR01 + "') " + hEnter
-cSql += "                AND ( ( SC5.C5_EMISSAO >= '" + DTOS( MV_PAR02 ) + "' ) AND ( SC5.C5_EMISSAO <= '" + DTOS( MV_PAR03 ) + " ' ) )" + hEnter
+cSql += "                AND SC5.C5_VEND1   >= '" + MV_PAR01 + "' AND SC5.C5_VEND1   <= '" + MV_PAR02 + "'" + hEnter
+cSql += "                AND ( ( SC5.C5_EMISSAO >= '" + DTOS( MV_PAR03 ) + "' ) AND ( SC5.C5_EMISSAO <= '" + DTOS( MV_PAR04 ) + " ' ) )" + hEnter
 cSql += "                AND SC5.D_E_L_E_T_ != '*'" + hEnter
 cSql += " " + hEnter
 cSql += "    UNION ALL" + hEnter 
@@ -1266,17 +1266,17 @@ cSql += "                    SL1.L1_LOJA    LOJA    ," + hEnter
 cSql += "                    SL1.L1_EMISSAO EMISSAO  " + hEnter
 cSql += "               FROM " + RetSQLName( "SL1" ) + " SL1 " + hEnter
 cSql += "              WHERE SL1.L1_FILIAL   = '"+xFilial("SL1")+"'" + hEnter
-cSql += "                AND SL1.L1_VEND    IN ('" + MV_PAR01 + "') " + hEnter
-cSql += "                AND ( ( SL1.L1_EMISSAO >= '" + DTOS( MV_PAR02 ) + "' ) AND ( SL1.L1_EMISSAO <= '" + DTOS( MV_PAR03 ) + "' ) )  " + hEnter
+cSql += "                AND SL1.L1_VEND    >= '" + MV_PAR01 + "' AND SL1.L1_VEND    <= '" + MV_PAR02 + "' " + hEnter
+cSql += "                AND ( ( SL1.L1_EMISSAO >= '" + DTOS( MV_PAR03 ) + "' ) AND ( SL1.L1_EMISSAO <= '" + DTOS( MV_PAR04 ) + "' ) )  " + hEnter
 cSql += "                AND SL1.D_E_L_E_T_ != '*' )" + hEnter
 cSql += " ORDER BY FILIAL, " + hEnter
 cSql += "          VENDEDOR" + hEnter
 
 Memowrite( "FJUPCOM.sql", cSql )
 
-If Aviso("Conteúdo SQL",ChangeQuery(cSql),{"Continuar?","Abortar?"},3) != 1
-	Return
-EndIf
+//If Aviso("Conteúdo SQL",ChangeQuery(cSql),{"Continuar?","Abortar?"},3) != 1
+	//Return
+//EndIf
 
 TcQuery cSql New Alias "TMPSC5"
 
@@ -2724,7 +2724,8 @@ Return Nil
 static function ajustaSX1(cPerg)
 	
 	PutSx1(cPerg,"01","Vendedor"          ,"Vendedor"         ,"Vendedor"         ,"mv_ch1","C",TAMSX3("A3_COD")[1],0,0,"G","","SA3","","","mv_par01")
-	PutSx1(cPerg,"02","Data de"           ,"Data de"          ,"Data de"          ,"mv_ch2","D",                 08,0,0,"G","","   ","","","mv_par02")
-	PutSx1(cPerg,"03","Data até"          ,"Data até"         ,"Data até"         ,"mv_ch3","D",                 08,0,0,"G","","   ","","","mv_par03")
+	PutSx1(cPerg,"02","Vendedor"          ,"Vendedor"         ,"Vendedor"         ,"mv_ch2","C",TAMSX3("A3_COD")[1],0,0,"G","","SA3","","","mv_par02")
+	PutSx1(cPerg,"03","Data de"           ,"Data de"          ,"Data de"          ,"mv_ch3","D",                 08,0,0,"G","","   ","","","mv_par03")
+	PutSx1(cPerg,"04","Data até"          ,"Data até"         ,"Data até"         ,"mv_ch4","D",                 08,0,0,"G","","   ","","","mv_par04")
 	
 return

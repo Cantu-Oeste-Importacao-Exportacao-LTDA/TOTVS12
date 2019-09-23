@@ -9,8 +9,8 @@
 ±±ºPrograma  ³GesCtrl    ºAutor  ³Flavio Dias        º Data ³  10/04/12   º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍº±±
 ±±ºDesc.     ³Rotina desenvolvida para substituir a gestão de contrato    º±±
-±±           ³Neste fonte se localizará a manutenção do contrato 			    º±±
-±±           ³possibilitando a inclusão, alteração e exclusão do mesmo		º±±
+±±           ³Neste fonte se localizará a manutenção do contrato 		  º±±
+±±           ³possibilitando a inclusão, alteração e exclusão do mesmo	  º±±
 ±±º          ³                                                            º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºUso       ³RJU                                                         º±±
@@ -634,13 +634,13 @@ Private oGetTit
   
   DEFINE MSDIALOG oDlg2 TITLE "Parcelas do Contrato" FROM 000, 000  TO 400, 700 COLORS 0, 16777215 PIXEL
   
-  @ 015,004 Say "Contrato: " + M->Z39_NUM OF oDlg2 COLORS 0, 16777215 PIXEL
-  @ 015,080 Say "Parcelas Pendentes: " + Str(nParc, 3, 0)
-	@ 025,004 Say "Descrição: " + M->Z39_DESCRI OF oDlg2 COLORS 0, 16777215 PIXEL
-	@ 035,004 Say "Valor Contrato: " + Transform(nValCT, "@E 999,999,999.99") OF oDlg2 COLORS 0, 16777215 PIXEL
-	@ 045,004 Say "Valor Pendente: " + Transform(nValPag, "@E 999,999,999.99") OF oDlg2 COLORS 0, 16777215 PIXEL
+  @ 035,004 Say "Contrato: " + M->Z39_NUM OF oDlg2 COLORS 0, 16777215 PIXEL
+  @ 035,080 Say "Parcelas Pendentes: " + Str(nParc, 3, 0)
+	@ 045,004 Say "Descrição: " + M->Z39_DESCRI OF oDlg2 COLORS 0, 16777215 PIXEL
+	@ 055,004 Say "Valor Contrato: " + Transform(nValCT, "@E 999,999,999.99") OF oDlg2 COLORS 0, 16777215 PIXEL
+	@ 065,004 Say "Valor Pendente: " + Transform(nValPag, "@E 999,999,999.99") OF oDlg2 COLORS 0, 16777215 PIXEL
 
-  oGetTit := MsNewGetDados():New( 056, 003, 194, 344, GD_UPDATE+GD_DELETE, "AllwaysTrue", "AllwaysTrue", "+Field1+Field2", aAlterFields,, 999, "AllwaysTrue", "", "AllwaysTrue", oDlg2, aHeaderEx, aColsEx)
+  oGetTit := MsNewGetDados():New( 075, 003, 194, 344, GD_UPDATE+GD_DELETE, "AllwaysTrue", "AllwaysTrue", "+Field1+Field2", aAlterFields,, 999, "AllwaysTrue", "", "AllwaysTrue", oDlg2, aHeaderEx, aColsEx)
 
   ACTIVATE MSDIALOG oDlg2 CENTERED ON INIT EnchoiceBar(oDlg2, {|| Iif(!(_cOpcao $ "I/A") .Or.GctParOk(nValPag, nParc), (oDlg2:End(), lOk:=.T.), lOk:=.F.)  } , {||oDlg2:End()},,aButtons)
   
@@ -1267,7 +1267,7 @@ Private oGetTot
   
   aSize     := MsAdvSize( .F. )
   aObjects := {}
-	AAdd( aObjects, { 030, 030, .T., .F. } )
+	AAdd( aObjects, { 057, 057, .T., .F. } )
 	AAdd( aObjects, { 100, 100, .T., .T. } )
 	
 	aInfo   := { aSize[ 1 ], aSize[ 2 ], aSize[ 3 ], aSize[ 4 ], 3, 2 }
@@ -1276,11 +1276,11 @@ Private oGetTot
   
   DEFINE MSDIALOG oDlg TITLE cCadastro FROM aSize[7],00 TO aSize[6],aSize[5] OF oMainWnd PIXEL
 
-	@ 015,004 Say "Contrato: " + Z39->Z39_NUM OF oDlg COLORS 0, 16777215 PIXEL
-	@ 015,080 Say "Medições Pendentes: " + Str(Z39->Z39_QUANT - Z39->Z39_QTDMED, 3, 0) OF oDlg COLORS 0, 16777215 PIXEL
-	@ 015,190 Say "Total Lançado: " OF oDlg COLORS 0, 16777215 PIXEL
-	@ 014,240 MSGet oGetTot VAR nTotal Picture  "@E 999,999,999.99" Size 50, 10 WHEN .F. OF oDlg COLORS 0, 16777215 PIXEL
-	@ 025,004 Say "Descrição: " + AllTrim(Z39->Z39_DESCRI) OF oDlg COLORS 0, 16777215 PIXEL
+	@ 035,004 Say "Contrato: " + Z39->Z39_NUM OF oDlg COLORS 0, 16777215 PIXEL
+	@ 035,080 Say "Medições Pendentes: " + Str(Z39->Z39_QUANT - Z39->Z39_QTDMED, 3, 0) OF oDlg COLORS 0, 16777215 PIXEL
+	@ 035,190 Say "Total Lançado: " OF oDlg COLORS 0, 16777215 PIXEL
+	@ 033,240 MSGet oGetTot VAR nTotal Picture  "@E 999,999,999.99" Size 50, 10 WHEN .F. OF oDlg COLORS 0, 16777215 PIXEL
+	@ 046,004 Say "Descrição: " + AllTrim(Z39->Z39_DESCRI) OF oDlg COLORS 0, 16777215 PIXEL
 	
    
 	oGetMed:=MsGetDados():New(aPosObj[2,1],aPosObj[2,2],aPosObj[2,3],aPosObj[2,4], nOpcGrid,"U_MedCtrlLOK","AllwaysTrue","" ,.T., ;

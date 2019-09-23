@@ -91,6 +91,7 @@ If !ISINCALLSTACK("U_SCHCLACTE")
 	  	If SF1->F1_TIPO == "D"
 	  		fVctoNCC()
 	  	EndIf
+	  	
 		            
 		//--Processamento da rotina de calculo de bonificacao financeira		
 		If ALLTRIM(SuperGetMV("MV_X_APRBN",,"N")) == "S"

@@ -47,8 +47,8 @@ Private wnrel      	:= "ARECVEND"
 Private cPerg		    := "ARECVEND"
 Private cString 	  := "SE1"
 Private oSrv
-Private cIp         := "192.168.205.32"
-Private cPort       := "12090"
+Private cIp         := "192.168.49.138"
+Private cPort       := "11601"
 Private cEnv        := GetEnvServer()        
 Private aEmpTmp     := aEmps
 Private cReprIni    := cVendI

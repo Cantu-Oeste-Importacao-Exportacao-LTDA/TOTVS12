@@ -544,7 +544,7 @@ If Pergunte("NFSIGW",.T.)
 											aAdd(aPedXml, {SD2->D2_PEDIDO, SD2->D2_FILIAL, SA1->A1_CGC, AllTrim(SA1->A1_NOME), SubStr(SF2->F2_VEND1, 2), SF2->F2_TRANSP, SF2->F2_DOC, SF2->F2_EST, SA1->A1_MUN})
 										endIf
 										
-										aadd(aItPedXml, {SD2->D2_PEDIDO, SD2->D2_FILIAL, SD2->D2_ITEMPV, SD2->D2_COD, SD2->D2_QUANT, SD2->D2_LOTECTL})
+										aadd(aItPedXml, {SD2->D2_PEDIDO, SD2->D2_FILIAL, SD2->D2_ITEMPV, SD2->D2_COD, SD2->D2_QUANT})
 																				
 										SD2->(dbSkip())
 								  EndDo
@@ -563,7 +563,8 @@ If Pergunte("NFSIGW",.T.)
 										
 										cFilePDF := Trim(cEmpAnt) + Trim(SF2->F2_FILIAL) + Trim(SF2->F2_DOC) + ".rel"
 	
-										oDanfePDF := FWMSPrinter():New(cFilePDF, IMP_PDF, .F., cPathLoc, .T.)
+									
+										oDanfePDF := FWMSPrinter():New(cFilePDF, IMP_PDF, .F., , .T.)
 										
 										oDanfePDF:SetResolution(78)
 										oDanfePDF:SetPortrait()

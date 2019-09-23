@@ -106,24 +106,24 @@ conout("lista ZZJ="+ZZJ->ZZJ_CODLIS)
 conout("lista ZZI="+ZZI->ZZI_CODIGO)
 
 
-  DEFINE MSDIALOG oDlg TITLE cTit FROM 000, 000  TO 460, 750 COLORS 0, 16777215 PIXEL
+  DEFINE MSDIALOG oDlg TITLE cTit FROM 000, 000  TO 590, 750 COLORS 0, 16777215 PIXEL
     
-    @ 032, 005 FOLDER oFolder1 SIZE 366, 114 OF oDlg ITEMS "Titulos Vencidos","Titulos Pagos","Titulos a Vencer" COLORS 0, 16777215 PIXEL
+    @ 048, 005 FOLDER oFolder1 SIZE 380, 114 OF oDlg ITEMS "Titulos Vencidos","Titulos Pagos","Titulos a Vencer" COLORS 0, 16777215 PIXEL
 	fGD_TitPG()     
     fGD_TitAV()     
     fGD_TitAb(nOpc) 
-    @ 084, 017 BUTTON oButton3 PROMPT "Prorogar" SIZE 037, 012 ACTION Prorogar() OF oFolder1:aDialogs[1] PIXEL
-    @ 084, 069 BUTTON oButton4 PROMPT "Posição Tit" SIZE 037, 012 ACTION Posicao() OF oFolder1:aDialogs[1] PIXEL
-    @ 084, 121 BUTTON oButton1 PROMPT "Posicao Cli" SIZE 037, 012 ACTION FC010CON() OF oFolder1:aDialogs[1] PIXEL
-    @ 084, 173 BUTTON oButton2 PROMPT "Calc. Juros" SIZE 037, 012 ACTION FCALCJUR() OF oFolder1:aDialogs[1] PIXEL
-    @ 148, 005 MSPANEL oPanel1 SIZE 366, 078 OF oDlg COLORS 0, 16777215 RAISED
+    @ 082, 017 BUTTON oButton3 PROMPT "Prorogar" SIZE 037, 012 ACTION Prorogar() OF oFolder1:aDialogs[1] PIXEL
+    @ 082, 069 BUTTON oButton4 PROMPT "Posição Tit" SIZE 037, 012 ACTION Posicao() OF oFolder1:aDialogs[1] PIXEL
+    @ 082, 121 BUTTON oButton1 PROMPT "Posicao Cli" SIZE 037, 012 ACTION FC010CON() OF oFolder1:aDialogs[1] PIXEL
+    @ 082, 173 BUTTON oButton2 PROMPT "Calc. Juros" SIZE 037, 012 ACTION FCALCJUR() OF oFolder1:aDialogs[1] PIXEL
+    @ 160, 005 MSPANEL oPanel1 SIZE 380, 078 OF oDlg COLORS 0, 16777215 RAISED
     @ 012, 007 GET oObsCob VAR cObsCob WHEN (nOpc == 3) OF oPanel1 MULTILINE SIZE 352, 044 COLORS 0, 16777215 HSCROLL PIXEL
     
-	@ 059, 007 Say oSay4 PROMPT "Situação Cliente:"  SIZE 071, 007 OF oPanel1 COLORS 0, 16777215 PIXEL
-	@ 058, 070 COMBOBOX oGetSCli VAR cSitCli ITEMS oISitCli WHEN (nOpc == 3) OF oPanel1 SIZE 060, 007 COLORS 0, 16777215 PIXEL
+	@ 069, 007 Say oSay4 PROMPT "Situação Cliente:"  SIZE 071, 007 OF oPanel1 COLORS 0, 16777215 PIXEL
+	@ 068, 070 COMBOBOX oGetSCli VAR cSitCli ITEMS oISitCli WHEN (nOpc == 3) OF oPanel1 SIZE 060, 007 COLORS 0, 16777215 PIXEL
                                                                                      
-    @ 004, 007 SAY oSay1 PROMPT "Dados da cobrança" SIZE 071, 007 OF oPanel1 COLORS 0, 16777215 PIXEL
-    @ 010, 005 MSPANEL oPanel2 SIZE 366, 022 OF oDlg COLORS 0, 16777215 RAISED
+    @ 006, 006 SAY oSay1 PROMPT "Dados da cobrança" SIZE 071, 007 OF oPanel1 COLORS 0, 16777215 PIXEL
+    @ 030, 005 MSPANEL oPanel2 SIZE 390, 022 OF oDlg COLORS 0, 16777215 RAISED
     @ 005, 005 SAY oSay2 PROMPT "Nome Fantasia" SIZE 042, 007 OF oPanel2 COLORS 0, 16777215 PIXEL
     @ 005, 046 MSGET oCliente  VAR cCliente     SIZE 114, 007 WHEN .F. OF oPanel2 COLORS 0, 16777215 PIXEL
     @ 005, 170 SAY oSay3 PROMPT "Telefones:"     SIZE 030, 007 OF oPanel2 COLORS 0, 16777215 PIXEL
@@ -621,11 +621,11 @@ if (!ZZO->ZZO_REAGEN)
 	Return
 EndIf
 
-DEFINE MSDIALOG oDlgP TITLE "Reagendar Atendimento" FROM 000, 000  TO 070, 350 COLORS 0, 16777215 PIXEL
+DEFINE MSDIALOG oDlgP TITLE "Reagendar Atendimento" FROM 000, 000  TO 150, 500 COLORS 0, 16777215 PIXEL
 
-	@ 012, 005 MSPANEL oPanel1 SIZE 340, 055 OF oDlgP COLORS 0, 16777215 RAISED
-	@ 007, 007 SAY oSay1 PROMPT "Reagendar para" SIZE 060, 007 OF oPanel1 COLORS 0, 16777215 PIXEL
-	@ 005, 050 GET oDataTit VAR dDataReag OF oPanel1 SIZE 60, 010 COLORS 0, 16777215 PIXEL
+	@ 022, 005 MSPANEL oPanel1 SIZE 340, 055 OF oDlgP COLORS 0, 16777215 RAISED
+	@ 017, 007 SAY oSay1 PROMPT "Reagendar para" SIZE 060, 007 OF oPanel1 COLORS 0, 16777215 PIXEL
+	@ 015, 050 GET oDataTit VAR dDataReag OF oPanel1 SIZE 60, 010 COLORS 0, 16777215 PIXEL
 
 ACTIVATE MSDIALOG oDlgP CENTERED ON INIT ;
 EnchoiceBar(oDlgP,{|| lCont := .T., oDlgP:End(), Nil }, {|| oDlgP:End() })
@@ -836,8 +836,8 @@ Private oPercJuro
 	@ 011, 017 SAY oSay1 PROMPT "Valor Calculado:" SIZE 050, 007 OF oDlgJuros
 	@ 011, 024 GET oSaldoNew VAR nSaldoNew PICTURE "@E 999,999,999.99" WHEN .F. SIZE 60, 010 OF oDlgJuros 
 	
-	oGD_Juros := MsNewGetDados():New( 005, 005, 100, 362, GD_UPDATE+GD_DELETE, 				"AllwaysTrue", "AllwaysTrue", "" , aAltFJUR,, 999, "AllwaysTrue", "", "AllwaysTrue", oDlgJuros, aHeadJUR, aColsJUR)
-	oGD_Venct := MsNewGetDados():New( 110, 005, 200, 120, GD_INSERT+GD_UPDATE+GD_DELETE, 	"AllwaysTrue", "AllwaysTrue", "" , aAltFVCT,, 999, "AllwaysTrue", "", "AllwaysTrue", oDlgJuros, aHeadVCT, aColsVCT)
+	oGD_Juros := MsNewGetDados():New( 040, 005, 100, 362, GD_UPDATE+GD_DELETE, 				"AllwaysTrue", "AllwaysTrue", "" , aAltFJUR,, 999, "AllwaysTrue", "", "AllwaysTrue", oDlgJuros, aHeadJUR, aColsJUR)
+	oGD_Venct := MsNewGetDados():New( 150, 005, 200, 120, GD_INSERT+GD_UPDATE+GD_DELETE, 	"AllwaysTrue", "AllwaysTrue", "" , aAltFVCT,, 999, "AllwaysTrue", "", "AllwaysTrue", oDlgJuros, aHeadVCT, aColsVCT)
 
 	@ 017, 040 BUTTON oButton1 PROMPT "Calcular Juros" 	SIZE 040, 012 ACTION FCALCJ() OF oDlgJuros
 	@ 017, 052 BUTTON oButton2 PROMPT "Limpar Dados" 	SIZE 040, 012 ACTION FCLEAR() OF oDlgJuros

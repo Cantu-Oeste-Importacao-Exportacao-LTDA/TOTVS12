@@ -14,12 +14,12 @@
 ฑฑบDesc.     ณ Workflow de Notas Denegadas (edi็ใo do fonte WFNotaNaoTans บฑฑ
 ฑฑบ          ณ mitida;                                                    บฑฑ
 ฑฑฬออออออออออุออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออนฑฑ
-ฑฑบUso       ณ Workflow									                     บฑฑ
+ฑฑบUso       ณ Workflow									                  บฑฑ
 ฑฑศออออออออออฯออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผฑฑ
 ฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑ
 ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
 */
-
+/*
 User function wfnts1001() 
 Local cEmpAtu		:= "10"
 Local cFilAtu		:= "01"	
@@ -226,34 +226,90 @@ PREPARE ENVIRONMENT EMPRESA cEmpAtu FILIAL cFilAtu MODULO "FAT" TABLES "SF1,SF2"
 	U_WfNotaDN()		
 RpcClearEnv()
 
-Return()
+Return()   
+
+*/
+
+
+/*
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+ฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑ
+ฑฑษออออออออออัออออออออออหอออออออัออออออออออออออออออออหออออออัอออออออออออออปฑฑ
+ฑฑบPrograma  ณWfNotaEr   บAutor  ณGustavo Lattmann   บ Data ณ  11/05/17   บฑฑ
+ฑฑฬออออออออออุออออออออออสอออออออฯออออออออออออออออออออสออออออฯอออออออออออออนฑฑ
+ฑฑบDesc.     ณ Envia workflow de notas com erros.					      บฑฑ
+ฑฑบ          ณ                                                            บฑฑ
+ฑฑฬออออออออออุออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออนฑฑ
+ฑฑบUso       ณ Cantu	                                                  บฑฑ
+ฑฑศออออออออออฯออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผฑฑ
+ฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑ
+฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+*/
+
+User Function WfNotaEr()
+
+Local cEmpIni 	:= "40"
+Local cFilIni 	:= "01"  
+Local cCod 		:= ""
+Local aEmp 		:= {}
+
+RpcClearEnv()
+RpcSetType(3)
+RpcSetEnv(cEmpIni, cFilIni,,,,GetEnvServer(),{"SF1", "SF2"})
+
+//-- Abre a tabela de empresas do sistema e adiciona o c๓digo da empresa no aEmp
+DbSelectArea("SM0")
+DbSetOrder(01)
+DbGoTop()
+       
+While !SM0->(EOF())
+	if cCod != SM0->M0_CODIGO
+		cCod := SM0->M0_CODIGO
+		aAdd(aEmp, {SM0->M0_CODIGO, SM0->M0_CODFIL})
+	EndIf
+	SM0->(dbSkip())
+End
+
+//ฺฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฟ
+//ณEfetua a montagem do comando SQL que vai fazer a busca das informa็๕es ณ
+//ภฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤู
+
+For nI := 1 to Len(aEmp)
+	RpcClearEnv()
+	RpcSetType(3)
+	RpcSetEnv(aEmp[nI][1], aEmp[nI][2],,,,GetEnvServer(),{"SF1", "SF2"})
+	
+	Conout("WFNOTADN - Chamando envio de workflow empresa " + cEmpAnt)
+	U_WfNotaDN()
+	
+Next nI
+
+Return
+
 /********************************************************
  Workflow de notas Denegadas.
  
 /********************************************************/
-User Function WfNotaDN()
+User Function WfNotaDN() 
+
 Local cDataInic := transform(DTOS(DATE(dDataBase)), "@! 999999") + '01'
 Local cDataFina := transform(DTOS(DATE(dDataBase)), "@! 99999999")
-Local cSql := ""
+Local cSql := "" 
+
 cSql := "select SF2.F2_FILIAL AS FILIAL, SF2.F2_SERIE AS SERIE , SF2.F2_DOC AS NUMERO, F2_EMISSAO AS EMISSAO, SF2.F2_FIMP AS STATUS from " + RetSqlName("SF2") + " SF2 "
-cSql += "where SF2.F2_ESPECIE =   'SPED' AND SF2.F2_FIMP = 'D' AND SF2.D_E_L_E_T_ <> '*' AND SF2.F2_EMISSAO BETWEEN '" + cDataInic + "' AND '" + cDataFina + "'"
+cSql += "where SF2.F2_ESPECIE =   'SPED' AND SF2.F2_FIMP <> 'S' AND SF2.D_E_L_E_T_ <> '*' AND SF2.F2_EMISSAO BETWEEN '" + cDataInic + "' AND '" + cDataFina + "'"
 cSql += " union "
 cSql += "select SF1.F1_FILIAL, SF1.F1_SERIE, SF1.F1_DOC, F1_EMISSAO, SF1.F1_FIMP from " + RetSqlName("SF1") + " SF1 "
-cSql += "where SF1.F1_ESPECIE =   'SPED' AND SF1.F1_FIMP = 'D' AND SF1.D_E_L_E_T_ <> '*' and SF1.F1_FORMUL = 'S' AND SF1.F1_EMISSAO BETWEEN '" + cDataInic + "' AND '" + cDataFina + "'"
+cSql += "where SF1.F1_ESPECIE =   'SPED' AND SF1.F1_FIMP <> 'S' AND SF1.D_E_L_E_T_ <> '*' and SF1.F1_FORMUL = 'S' AND SF1.F1_EMISSAO BETWEEN '" + cDataInic + "' AND '" + cDataFina + "'"
 
 
 TcQuery cSql New Alias "TMPSF1"
 // Envia o workflow
 
-//ฺฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤ
-//ณChama fun็ใo para monitor uso de fontes customizadosณ
-//ภฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤ
-U_USORWMAKE(ProcName(),FunName())
-
 If TMPSF1->(!Eof())
-	oProcess := TWFProcess():New( "wfnotas_nt", "Bloqueio de Clientes")
+	oProcess := TWFProcess():New( "wfnotas_nt", "Notas Denegadas")
 	oProcess:NewTask( "wfnotas_nt", "\workflow\wfnotas_nt.html" )
-	oProcess:cSubject := "Workflow de Notas Denegadas em  " + DTOC(DDATABASE) + " - Empresa - " + SM0->M0_NOME
+	oProcess:cSubject := "Workflow de Notas Com Problema em  " + DTOC(DDATABASE) + " - Empresa - " + SM0->M0_NOME
 	oHTML := oProcess:oHTML
 	
 	While TMPSF1->(!Eof())
@@ -263,8 +319,16 @@ If TMPSF1->(!Eof())
 		AAdd((oHtml:ValByName( "IT.EMISSAO" )), DToC(StoD(TMPSF1->EMISSAO)))
 		
 		cStatus := TMPSF1->STATUS
-		if (cStatus == "D")
-			cStDesc := "D - Uso Denegado"				//Foi retirado os elseif para manter apenas a op็ใo de denegadas
+		if (cStatus == "N")
+			cStDesc := "N - Com erro"
+		elseif (cStatus == "T")
+			cStDesc := "T - Transmitida (Nao verificada)"
+		elseif (cStatus == "D")
+			cStDesc := "D - Uso Denegado"
+		elseif (cStatus == " ")
+			cStDesc := "Nใo transmitida"
+		else
+			cStDesc	:= cStatus + " - Outro"
 		EndIf
 		
 		AAdd((oHtml:ValByName( "IT.STATUS" )), cStDesc)
@@ -272,8 +336,7 @@ If TMPSF1->(!Eof())
 	EndDo
 	
 	// envia o email com a lista de clientes bloqueados
- 	oProcess:cTo  := AllTrim(SuperGetMV("MV_X_NFDN", , 'suporte.ti@grupocantu.com.br'))
-	//oProcess:cTo  := 'suporte.ti@grupocantu.com.br;suporte.microsiga@grupocantu.com.br'
+ 	oProcess:cTo  := AllTrim(SuperGetMV("MV_X_NFDN", , 'microsiga@cantu.com.br'))
   	oProcess:Start()
   	oProcess:Finish() 
   	oProcess:Free() 

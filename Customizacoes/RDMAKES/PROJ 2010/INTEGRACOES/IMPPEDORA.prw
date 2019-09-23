@@ -253,16 +253,10 @@ Private lConsFin := .F.
 	
 	For nX := 1 to len(aPedidos)   
 	    
-		cFilNew := aPedidos[nX, 07]  
-		lConsFin := Iif(aPedidos[nX, 14] == "F",.T.,.F.)     
+		cFilNew := aPedidos[nX, 07]
 		
-		dbSelectArea("SA1")
-		SA1->(dbSetOrder(1))
-		SA1->(dbSeek(xFilial("SA1") + aPedidos[nX, 11] + aPedidos[nX, 12]))
-		
-		//-- Valida se o pedido deste vendedor deve cair em outra filial (PROJETO VASO STR)  
-		//-- Gustavo 17/05/17 - Se for pessoa juridica e pedido de vinho, deve avaliar em qual filial o pedido entrará
-	/*	If (aPedidos[nX, 04] == "001001001") .or. (Substr(aPedidos[nX, 04],1,3) == "003" .and. (SA1->A1_PESSOA == "J"))
+		//-- Valida se o pedido deste vendedor deve cair em outra filial (PROJETO VASO STR)
+		If aPedidos[nX, 04] == "001001001" 
 			dbSelectArea("SA3")
 			SA3->(dbSetOrder(1))
 			SA3->(dbGoTop())
@@ -282,8 +276,7 @@ Private lConsFin := .F.
 	            EndIf
 			EndIf			
 		    SA3->(dbCloseArea())
-		Endif 
-		*/
+		Endif
 		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Valida se já existe algum pedido cadastrado no sistema com o mesmo código de Licitação.³
@@ -334,14 +327,13 @@ Private lConsFin := .F.
 		aAdd(aCabPed, {"C5_LOJAENT", aPedidos[nX, 12],Nil})
         
     	cOper    := aPedidos[nX, 13]
-  
-		//-- Gustavo - Aberta tabela pra cima
-		//dbSelectArea("SA1")
-		//SA1->(dbSetOrder(01))
-
+		lConsFin := Iif(aPedidos[nX, 14] == "F",.T.,.F.)
+        
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Avalia bloqueio do cliente³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		dbSelectArea("SA1")
+		SA1->(dbSetOrder(01))
 		If SA1->(dbSeek(xFilial("SA1") + aPedidos[nX, 11] + aPedidos[nX, 12]))
 			If SA1->A1_MSBLQL == '1'
 				cErro := "CLIENTE "+ aPedidos[nX, 11] +"/"+ aPedidos[nX, 12] +" - "+ SubStr(SA1->A1_NOME, 01, 30) +" ESTA BLOQUEADO."                    
@@ -701,7 +693,6 @@ Return Nil
 //³Faz o processo de enviar o email para o vendedor confirmando da sincronização³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 *------------------------------------*
-/*
 Static Function EnviaPedOk(cPedSiga, aCabPed, aItemPed)  
 *------------------------------------*
 
@@ -753,12 +744,11 @@ cNomeVend := SA3->A3_COD + " - " + AllTrim(SA3->A3_NREDUZ)
 
 oProcess:cTo := ALLTRIM(cEmail) 
 oProcess:cCC := "sfa2@cantu.com.br" 
-       
-       */                             
+                                    
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ0¿
 //³Preenchimento do cabeçalho do pedido³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ0Ù
-/*
+
 oHTML:= oProcess:oHTML		
 oHtml:ValByName("DATA"      ,DTOC(dDataBase) + " " + SubStr(Time(), 1, 5))
 oHtml:ValByName("CLIENTE"   ,cCli + "/" + cLojaCli + " - " + cNomeCli)
@@ -771,7 +761,7 @@ oProcess:Start()
 oProcess:Finish()                                              
 
 Return Nil
-*/
+
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -885,7 +875,7 @@ If lSincr
 		    SC6->(MsSeek(xFilial("SC6")+SC5->C5_NUM))
 		    Begin Transaction
 		    	While SC6->C6_NUM == SC5->C5_NUM .AND. SC6->(!EOF())
-		        	MaLibDoFat(SC6->(RecNo()),SC6->C6_QTDVEN,.T.,.F.,.F.,.T.) //Libera crédito e avalia estoque
+		        	MaLibDoFat(SC6->(RecNo()),SC6->C6_QTDVEN,.T.,.F.,.F.,.F.) //Apenas Credito!
        			SC6->(dBSkip())
 			    EndDo
      

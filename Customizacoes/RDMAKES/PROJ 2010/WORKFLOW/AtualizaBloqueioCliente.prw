@@ -31,11 +31,35 @@ StartJob("U_AtuBlCli",GetEnvServer(), .T.,aEmpr, lAuto)
 
 Return Nil
 
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³Bloqueio para Agroindustrial³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ  
+
+User Function WFBlCl02()
+Local aEmpr := {"02","01"}
+Local lAuto := .T.
+
+StartJob("U_AtuBlCli",GetEnvServer(), .T.,aEmpr, lAuto)
+
+Return Nil
+
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Bloqueio para Importadora³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-User Function WFBlCl02()
-Local aEmpr := {"02","01"}
+User Function WFBlCl03()
+Local aEmpr := {"03","01"}
+Local lAuto := .T.
+
+StartJob("U_AtuBlCli",GetEnvServer(), .T.,aEmpr, lAuto)
+
+Return Nil
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³Bloqueio para Agroindustrial³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ  
+
+User Function WFBlCl04()
+Local aEmpr := {"04","01"}
 Local lAuto := .T.
 
 StartJob("U_AtuBlCli",GetEnvServer(), .T.,aEmpr, lAuto)
@@ -94,6 +118,41 @@ StartJob("U_AtuBlCli",GetEnvServer(), .T.,aEmpr, lAuto)
 
 Return Nil
 
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+//³Bloqueio para Cantu Oeste³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+User Function WFBlCl41()
+Local aEmpr := {"41","01"}
+Local lAuto := .T.
+
+StartJob("U_AtuBlCli",GetEnvServer(), .T.,aEmpr, lAuto)
+
+Return Nil
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+//³Bloqueio para Cantu Oeste³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+User Function WFBlCl42()
+Local aEmpr := {"42","01"}
+Local lAuto := .T.
+
+StartJob("U_AtuBlCli",GetEnvServer(), .T.,aEmpr, lAuto)
+
+Return Nil
+ 
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+//³Bloqueio para Cantu Oeste³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+User Function WFBlCl43()
+Local aEmpr := {"43","01"}
+Local lAuto := .T.
+
+StartJob("U_AtuBlCli",GetEnvServer(), .T.,aEmpr, lAuto)
+
+Return Nil 
  
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Função que desbloqueia todos os clientes e                                                           ³
@@ -163,7 +222,7 @@ nRiscoB := GetMV("MV_RISCOB")
 nRiscoC := GetMV("MV_RISCOC")
 nRiscoD := GetMV("MV_RISCOD")    
 
-nTipoCH := 15
+nTipoCH := 2
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Ajusta os SX1³
@@ -209,45 +268,23 @@ ConOut("BUSCANDO CLIENTES COM DUPLICATA EM ATRASO...")
 //³alterado para fazer a manutencao apenas nos clientes do risco B e D    ³ 
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-if (cEmpAnt == "10" .or. cEmpAnt == "40")
 
-BeginSql Alias cAliasSE1 
-select a1_filial, e1_cliente, e1_loja, e1_emissao, e1_vencrea, e1_valor, e1_saldo, a1_risco, e1_filial,; 
+  BeginSql Alias cAliasSE1 
+  	select a1_filial, e1_cliente, e1_loja, e1_emissao, e1_vencrea, e1_valor, e1_saldo, a1_risco, e1_filial,; 
 		e1_prefixo, e1_parcela, e1_num, e1_tipo
-	from %table:SE1% se1	
-	inner join %table:SA1% sa1 on e1_cliente = a1_cod and a1_loja = e1_loja
-	where e1_saldo >= 50
-		and e1_vencrea < %Exp:DToS(Date())%
-		and sa1.d_e_l_e_t_ = ' '
-		and se1.d_e_l_e_t_ = ' '
-		and a1_risco in ("B", "D")
-		and e1_tipo in ("FT", "NF", "DP", "CH", "FI") 
-		and e1_filial >= %Exp:mv_par01%
-		and e1_filial <= %Exp:mv_par02%
-	order by e1_cliente, e1_loja, e1_filial, e1_vencrea 
-	   
-EndSql
-
-    else
-    
-BeginSql Alias cAliasSE1 
-select a1_filial, e1_cliente, e1_loja, e1_emissao, e1_vencrea, e1_valor, e1_saldo, a1_risco, e1_filial,; 
-		e1_prefixo, e1_parcela, e1_num, e1_tipo
-	from %table:SE1% se1	
-	inner join %table:SA1% sa1 on e1_cliente = a1_cod and a1_loja = e1_loja
-	where e1_saldo > 0
-		and e1_vencrea < %Exp:DToS(Date())%
-		and sa1.d_e_l_e_t_ = ' '
-		and se1.d_e_l_e_t_ = ' '
-		and a1_risco in ("B", "D")
-		and e1_tipo in ("FT", "NF", "DP", "CH", "FI") 
-		and e1_filial >= %Exp:mv_par01%
-		and e1_filial <= %Exp:mv_par02%
-	order by e1_cliente, e1_loja, e1_filial, e1_vencrea 
+			from %table:SE1% se1	
+			inner join %table:SA1% sa1 on e1_cliente = a1_cod and a1_loja = e1_loja
+			where e1_saldo > 0
+			and e1_vencrea < %Exp:DToS(Date())%
+			and sa1.d_e_l_e_t_ = ' '
+			and se1.d_e_l_e_t_ = ' '
+			and a1_risco in ("B", "D")
+			and e1_tipo in ("FT", "NF", "DP", "CH", "FI") 
+			and e1_filial >= %Exp:mv_par01%
+			and e1_filial <= %Exp:mv_par02%
+			order by e1_cliente, e1_loja, e1_filial, e1_vencrea 
 		   
 EndSql	             
-    EndIf
-
 
 
 ConOut("INICIANDO BLOQUEIO...")

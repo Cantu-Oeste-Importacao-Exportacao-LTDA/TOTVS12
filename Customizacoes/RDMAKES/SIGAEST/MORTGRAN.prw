@@ -152,14 +152,14 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	//Declaração componentes TSAY/TGET para os campos do cabeçalho da interface		³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oSay2 := TSay():New(040,010,{||"Dia"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
+	oSay2 := TSay():New(010,010,{||"Dia"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
 	
-	oGet2 := TGet():New(040,040,{|u|if(PCount()>0, dDia:=u, dDia)},oDlg,030,004,"@D",,CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.T.,.F.,"","dDia",,)
+	oGet2 := TGet():New(010,040,{|u|if(PCount()>0, dDia:=u, dDia)},oDlg,030,004,"@D",,CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.T.,.F.,"","dDia",,)
 	
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	// Declaração do MSNEWGETDADOS referente ao grid de itens da interface			³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oBrw1 := MsNewGetDados():New(060,002,aPosObj[2][3],aPosObj[2][4],/*GD_INSERT + GD_UPDATE + GD_DELETE*/,'AllwaysTrue()','AllwaysTrue()',"",,0,99,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
+	oBrw1 := MsNewGetDados():New(030,002,aPosObj[2][3],aPosObj[2][4],/*GD_INSERT + GD_UPDATE + GD_DELETE*/,'AllwaysTrue()','AllwaysTrue()',"",,0,99,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Executa método de apresesntação de tela criando à barra de botões				³
@@ -226,14 +226,14 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	//Declaração componentes TSAY/TGET para os campos do cabeçalho da interface		³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oSay2 := TSay():New(040,010,{||"Dia"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
+	oSay2 := TSay():New(010,010,{||"Dia"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
 	
-	oGet2 := TGet():New(040,040,{|u|if(PCount()>0, dDia:=u, dDia)},oDlg,030,004,"@D",{||U_MORTVCB()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","dDia",,.T.,,.T.)
+	oGet2 := TGet():New(010,040,{|u|if(PCount()>0, dDia:=u, dDia)},oDlg,030,004,"@D",{||U_MORTVCB()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","dDia",,.T.,,.T.)
 	
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	// Declaração do MSNEWGETDADOS referente ao grid de itens da interface			³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oBrw1 := MsNewGetDados():New(060,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,'U_MORTLOK()','AllwaysTrue()',"+Z77_COD",,0,99,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
+	oBrw1 := MsNewGetDados():New(030,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,'U_MORTLOK()','AllwaysTrue()',"+Z77_COD",,0,99,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Executa método de apresesntação de tela criando à barra de botões				³
@@ -245,8 +245,7 @@ oDlg:Activate(,,,.T.,,,{||EnchoiceBar(oDlg, bOk, bCancel)})
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 If nOpcao == 1
    	MORTGRV() 
-   	//fAtSaldo()
-   	
+   	fAtSaldo()
 EndIf
 
 Return   
@@ -342,14 +341,14 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	//Declaração componentes TSAY/TGET para os campos do cabeçalho da interface		³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oSay2 := TSay():New(040,010,{||"Dia"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
+	oSay2 := TSay():New(010,010,{||"Dia"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
 	
-	oGet2 := TGet():New(040,040,{|u|if(PCount()>0, dDia:=u, dDia)},oDlg,030,004,"@D",,CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.T.,.F.,"","dDia",,)
+	oGet2 := TGet():New(010,040,{|u|if(PCount()>0, dDia:=u, dDia)},oDlg,030,004,"@D",,CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.T.,.F.,"","dDia",,)
 	
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	// Declaração do MSNEWGETDADOS referente ao grid de itens da interface			³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oBrw1 := MsNewGetDados():New(060,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,'U_MORTLOK()','AllwaysTrue()',"+Z77_COD",,0,99,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
+	oBrw1 := MsNewGetDados():New(030,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,'U_MORTLOK()','AllwaysTrue()',"+Z77_COD",,0,99,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Executa método de apresesntação de tela criando à barra de botões				³
@@ -362,7 +361,6 @@ oDlg:Activate(,,,.T.,,,{||EnchoiceBar(oDlg, bOk, bCancel)})
 
 If nOpcao == 1
 	MORTGRV()
-	//fAtSaldo()
 EndIf
 
 Return      
@@ -559,8 +557,7 @@ Do Case
 		END TRANSACTION
 
 	EndCase
-	//-- Chama função para recalcular saldo
-	RepSaldo()
+
 Return 
 
 
@@ -578,7 +575,7 @@ Return
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-/*
+
 Static Function fAtSaldo()
 
 Local aCols		:= oBrw1:aCols
@@ -599,7 +596,7 @@ For nI := 1 to Len(aCols)
 	//-- Busca o saldo do dia anterior
 	If Z80->(dbSeek(xFilial("Z80") + PADR(aCols[nI][nPosAvi],2) + DTOS(dDia -1))) 
 		nSaldo := Z80->Z80_SALDO - aCols[nI][nPosMor]
-	*                                               
+	*/                                               
 	
 	cSql := "SELECT Z76_SALINI, Z76_LOTE FROM Z76010 "
 	cSql += " WHERE Z76_AVIARI = '" + aCols[nI][nPosAvi] + "'"
@@ -622,7 +619,7 @@ For nI := 1 to Len(aCols)
 	dbSelectArea(cAlias2)
 	(cAlias2)->(dbGoTop())  
    
-	If !(cAlias2)->(Eof()) .and. !Empty((cAlias2)->(SALDO))
+	If !(cAlias2)->(Eof())
    		nSaldo := (cAlias2)->(SALDO) - aCols[nI][nPosMor]
 	Else
 		//-- Caso seja o primeiro lançado do lote, busca o saldo inicial		
@@ -643,11 +640,10 @@ For nI := 1 to Len(aCols)
 	EndIf
 	(cAlias)->(dbCloseArea())  
 	(cAlias2)->(dbCloseArea())
-	
 Next nI	
 	
 Return
-*/
+
 
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -701,92 +697,3 @@ If SX3->(dbSeek(cTabela))
 	EndDo
 EndIf
 Return aCampos  
-
-/*
-ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma  ³RepSaldo        ºAutor  ³Gustavo      º Data ³ 20/09/2018   º±±
-±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
-±±ºDesc.     ³Função utilizada para recalcular os saldos das aves.        º±± 
-±±º          ³													          º±±
-±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
-±±ºUso       ³ Especifico Cantu                                           º±±
-±±ÈÍÍÍÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼±±
-±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
-*/
-Static Function RepSaldo()
-
-Local aCols		:= oBrw1:aCols
-Local aHeader	:= oBrw1:aHeader  
-Local nPosAvi	:= aScan(aHeader,{|x| ALLTRIM(x[2]) == "Z77_AVIARI"})
-Local nPosMor	:= aScan(aHeader,{|x| ALLTRIM(x[2]) == "Z77_MORTAL"})
-
-Local cSql  := ""
-Local cSql2 := ""
-Local cAlias	:= GetNextAlias()
-Local cAlias2	:= GetNextAlias()
-
-Local nSaldo := 0
-
-//-- Cada execução do for é para um aviário
-For nI := 1 to Len(aCols)
-	cSql := "SELECT Z76.Z76_AVIARI, " 
-	cSql += "       Z76.Z76_SALINI " 
-	cSql += "  FROM Z76010 Z76 "
-	cSql += " WHERE Z76.D_E_L_E_T_ = ' ' "
-	cSql += "   AND Z76.Z76_AVIARI = " + aCols[nI][nPosAvi]
-	
-	TCQUERY cSql NEW ALIAS (cAlias) 
-	dbSelectArea(cAlias)
-	(cAlias)->(dbGoTop())
-	
-	nSalIni := (cAlias)->(Z76_SALINI)
-	
-	cSql2 := "SELECT Z80.Z80_FILIAL, " 
-	cSql2 += "       Z80.Z80_LOTE, "
-	cSql2 += "       Z80.Z80_AVIARI, "
-	cSql2 += "       Z80.Z80_DIAINI, " 
-	cSql2 += "       Z80.Z80_SALDO, "
-	cSql2 += "       Z77.Z77_MORTAL "
-	cSql2 += "  FROM Z80010 Z80 "
-	cSql2 += " INNER JOIN Z77010 Z77 "
-	cSql2 += "    ON Z77.Z77_FILIAL = Z80.Z80_FILIAL "
-	cSql2 += "   AND Z77.Z77_AVIARI = Z80.Z80_AVIARI "
-	cSql2 += "   AND Z77.Z77_DIA = Z80.Z80_DIAINI "
-	cSql2 += "   AND Z77.D_E_L_E_T_ = ' ' "
-	cSql2 += " WHERE Z80.D_E_L_E_T_ = ' ' "
-	cSql2 += "   AND Z80.Z80_AVIARI = " + aCols[nI][nPosAvi]
-	cSql2 += " ORDER BY 1,2,4 "
-	
-	TCQUERY cSql2 NEW ALIAS (cAlias2) 
-	dbSelectArea(cAlias)
-	(cAlias2)->(dbGoTop())
-	
-	While !(cAlias2)->(Eof())
-		//-- Primeira vez que esta executando
-		If nSaldo == 0
-			nSaldo := nSalIni - (cAlias2)->(Z77_MORTAL)
-		Else
-			nSaldo := nSaldo - (cAlias2)->(Z77_MORTAL)
-		EndIf
-		
-		dbSelectArea("Z80")
-		Z80->(dbSetOrder(2)) //FILIAL + AVIARIO + DATA
-		Z80->(dbGoTop())
-		Z80->(dbSeek(xFilial("Z80")+(cAlias2)->(Z80_AVIARI)+(cAlias2)->(Z80_DIAINI)))
-		//BEGIN TRANSACTION
-			RecLock("Z80", .F.)
-				Z80->Z80_SALDO	:= nSaldo
-			Z80->(MSUNLOCK())
-		//END TRANSACTION
-		
-		(cAlias2)->(dbSkip())
-	EndDo
-	nSaldo := 0
-	(cAlias)->(dbCloseArea())  
-	(cAlias2)->(dbCloseArea())
-Next nI
-
-Return

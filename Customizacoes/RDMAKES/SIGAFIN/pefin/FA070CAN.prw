@@ -2,6 +2,15 @@ User Function FA070CAN()
 
 local lMVXINTSF	:= .F.
 local lMVXSFJOB	:= .F.
+
+
+/*------------------------------------------------------ Augusto Ribeiro | 30/10/2017 - 5:40:58 PM
+	BAIXA CARTAO DE CREDITO
+	Estorno da baixa
+------------------------------------------------------------------------------------------*/
+U_CP11ESTF("SE1", SE1->(RECNO()), SE5->E5_MOTBX, SE5->E5_VALOR)
+
+
                     
 // Se o titulo foi enviado ao SERASA PEFIN e houver um motivo de BAIXA DO SERASA e 
 // ainda não foi solicitado ao SERASA a exclusão do titulo, libero novamente o preenchimento to motivo de baixa PEFIN.
@@ -32,5 +41,9 @@ Endif
 			U_SFTIT001()
 		endif
 	endif
+
+
+
+
 
 Return Nil

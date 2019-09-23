@@ -221,7 +221,7 @@ cSql += "     				AND 	E.E1_CLVLCR BETWEEN '" + MV_PAR06 + "' AND '" + MV_PAR07 
 cSql += "     				AND 	((E.E1_VEND1 BETWEEN '" + MV_PAR08 + "' AND '" + MV_PAR09 + "') OR " + "(E.E1_VEND1 = ' ')) 	"
 // Se a pergunta Situações de Títulos for preenchida, adiciona filtro no sql.
 If !Empty(cSitua)
-	cSql += "     			AND 	E.E1_SITUACA NOT IN (" + cSitua + ") 															"
+	cSql += "     			AND 	E.E1_SITUACA IN (" + cSitua + ") 															"
 EndIf                                               
 // Se a pergunta Tipos de Títulos for preenchida, adiciona filtro no sql.
 if !Empty(cTp)
@@ -239,7 +239,7 @@ cSql += " 				WHERE 	SE1.E1_FILIAL 	BETWEEN '" + MV_PAR03 + "' AND '" + MV_PAR04
 cSql += "  				AND 	SE1.E1_VENCREA 	BETWEEN '" + DtoS(MV_PAR01) + "' AND '" + DtoS(MV_PAR02) + "' 						"
 cSql += "  				AND 	SE1.E1_CLVLCR 	BETWEEN '" + MV_PAR06 + "' AND '" + MV_PAR07 + "' 									"
 If !Empty(cSitua)
-	cSql += "  			AND 	SE1.E1_SITUACA 	NOT IN (" + cSitua + ") 															"
+	cSql += "  			AND 	SE1.E1_SITUACA  IN (" + cSitua + ") 															"
 EndIf
 If !Empty(cTp)
 	cSql += "  			AND 	SE1.E1_TIPO 	NOT IN (" + cTp + ") 																"
@@ -527,7 +527,8 @@ U_USORWMAKE(ProcName(),FunName())
                            
 // Busca qual cobrança é a primeira para o usuário executar
 //cUserCob := SubStr(cUsuario, 7, 15)       
-cUserCob := PADR(UsrRetName(__cUserId), TAMSX3("ZZI_USUARI")[1])
+//cUserCob := PADR(UsrRetName(__cUserId), TAMSX3("ZZI_USUARI")[1])
+cUserCob := PADR(cUserName, TAMSX3("ZZI_USUARI")[1])
 
 
 // avalia se tem atendimentos agendados para realizar
@@ -1007,22 +1008,22 @@ U_USORWMAKE(ProcName(),FunName())
 	EndIf 
  Aadd( aButtons, {"Contatos", {|| fContatos()}, "Contatos...", "Contatos" , {|| .T.}} )
 
-  DEFINE MSDIALOG oDlgCli TITLE "Informações Cob. Clientes" FROM 000, 000  TO 400, 700 COLORS 0, 16777215 PIXEL
+  DEFINE MSDIALOG oDlgCli TITLE "Informações Cob. Clientes" FROM 000, 000  TO 450, 700 COLORS 0, 16777215 PIXEL
 
-    @ 019, 003 SAY oSay1 PROMPT "Cliente: " SIZE 025, 007 OF oDlgCli COLORS 0, 16777215 PIXEL
-    @ 017, 034 MSGET oCliente VAR cCliente SIZE 135, 010 VALID VldCli() OF oDlgCli COLORS 0, 16777215 F3 "SA1" PIXEL // ON CHANGE (nOpc:=0,cNomeCli:="", cObsCob:="",cSitCli:="")
-    @ 019, 198 SAY oSay2 PROMPT "Loja: " SIZE 025, 007 OF oDlgCli COLORS 0, 16777215 PIXEL
-    @ 017, 231 MSGET oLoja VAR cLoja SIZE 035, 010 VALID VldCli() OF oDlgCli COLORS 0, 16777215 PIXEL
+    @ 042, 003 SAY oSay1 PROMPT "Cliente: " SIZE 025, 007 OF oDlgCli COLORS 0, 16777215 PIXEL
+    @ 040, 034 MSGET oCliente VAR cCliente SIZE 135, 010 VALID VldCli() OF oDlgCli COLORS 0, 16777215 F3 "SA1" PIXEL // ON CHANGE (nOpc:=0,cNomeCli:="", cObsCob:="",cSitCli:="")
+    @ 042, 198 SAY oSay2 PROMPT "Loja: " SIZE 025, 007 OF oDlgCli COLORS 0, 16777215 PIXEL
+    @ 040, 231 MSGET oLoja VAR cLoja SIZE 035, 010 VALID VldCli() OF oDlgCli COLORS 0, 16777215 PIXEL
 //    DEFINE SBUTTON FROM 015, 287 TYPE 01 ACTION(cObsCob:=DadosCli(cCliente,cLoja,2), ;
 //		 			    																	cNomeCli:=DadosCli(cCliente,cLoja,1), ;
 //						    																cSitCli:=DadosCli(cCliente,cLoja,3), ;
 //						    																iif(!DadosCli(cCliente,cLoja,4),nOpc:=0,nOpc:=1)) ENABLE OF oDlgCli
-    @ 052, 000 GROUP oGroup1 TO 200, 350 PROMPT "Cobrança Cliente: " OF oDlgCli COLOR 0, 16777215 PIXEL
-		@ 067, 004 GET oObsCob VAR cObsCob WHEN lEdita OF oDlgCli MULTILINE SIZE 341, 107 COLORS 0, 16777215 HSCROLL PIXEL
-    @ 181, 041 COMBOBOX oSitCli VAR cSitCli ITEMS aSitua WHEN lEdita SIZE 072, 010 OF oDlgCli COLORS 0, 16777215 PIXEL
-    @ 183, 009 SAY oSay3 PROMPT "Situação: " SIZE 025, 007 OF oDlgCli COLORS 0, 16777215 PIXEL
-    @ 032, 034 MSGET oNomeCli VAR cNomeCli SIZE 232, 010 OF oDlgCli COLORS 0, 16777215 READONLY PIXEL
-    @ 035, 004 SAY oSay4 PROMPT "Nome: " SIZE 025, 007 OF oDlgCli COLORS 0, 16777215 PIXEL
+    @ 075, 000 GROUP oGroup1 TO 200, 350 PROMPT "Cobrança Cliente: " OF oDlgCli COLOR 0, 16777215 PIXEL
+	@ 090, 004 GET oObsCob VAR cObsCob WHEN lEdita OF oDlgCli MULTILINE SIZE 341, 107 COLORS 0, 16777215 HSCROLL PIXEL
+    @ 204, 041 COMBOBOX oSitCli VAR cSitCli ITEMS aSitua WHEN lEdita SIZE 072, 010 OF oDlgCli COLORS 0, 16777215 PIXEL
+    @ 206, 009 SAY oSay3 PROMPT "Situação: " SIZE 025, 007 OF oDlgCli COLORS 0, 16777215 PIXEL
+    @ 055, 034 MSGET oNomeCli VAR cNomeCli SIZE 232, 010 OF oDlgCli COLORS 0, 16777215 READONLY PIXEL
+    @ 057, 004 SAY oSay4 PROMPT "Nome: " SIZE 025, 007 OF oDlgCli COLORS 0, 16777215 PIXEL
                                                                                                    
     oGroup1:Align := CONTROL_ALIGN_BOTTOM
 

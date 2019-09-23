@@ -1,5 +1,6 @@
-#INCLUDE "PROTHEUS.CH"
-#INCLUDE "TOPCONN.CH"
+#include "rwmake.ch"
+#include "topconn.ch"
+#include "protheus.ch"
 
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -16,65 +17,56 @@
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-*-------------------------*
 User Function FIN150_3()   
-*-------------------------*
 
 Private lStatus := .F.
 
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 
-
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 U_USORWMAKE(ProcName(),FunName())
 
 If !Empty(cArqTemp) //Verificar se é chamado pelo programa certo
 	
-	cDiret   := cArqAux     //Variavel recebe o valor no programa GETARQFIN e valoriza no P.E em questão.
-	cArq 	   := cArqTemp    //Variavel recebe o valor no programa GETARQFIN e valoriza no P.E em questão.
+	cDiret	 := cArqAux     //Variavel recebe o valor no programa GETARQFIN e valoriza no P.E em questão.
+	cArq	 := cArqTemp    //Variavel recebe o valor no programa GETARQFIN e valoriza no P.E em questão.
 	cSubCta	 := cTipo       //Variavel recebe o valor no programa GETARQFIN e valoriza no P.E em questão. 
 	cCaminho := iif(cSubCta == "001","\CNABS\RECEBER\OUTBOX\",iif(cSubCta == "003", "\CNABS\PAGAR\OUTBOX\", ""))
 	
 	If !Empty(Alltrim(cDiret))  
-	
-		If cSubCta == "001"
-			
-			if !ExistDir("\CNABS\RECEBER\")
-				MakeDir("\CNABS\RECEBER")
-			EndIf 
-			
-			if !ExistDir("\CNABS\RECEBER\OUTBOX\")
-				MakeDir("\CNABS\RECEBER\OUTBOX")
-			EndIf
-			
-		If cSubCta == "003"
-			
-			if !ExistDir("\CNABS\PAGAR\")
-				MakeDir("\CNABS\PAGAR")
-			EndIf 
-			
-			if !ExistDir("\CNABS\PAGAR\OUTBOX\")
-				MakeDir("\CNABS\PAGAR\OUTBOX")
-			EndIf
+		
+		Do Case
+			Case cSubCta == "001"
+				if !ExistDir("\CNABS\RECEBER\")
+					MakeDir("\CNABS\RECEBER")
+				EndIf 
 				
+				if !ExistDir("\CNABS\RECEBER\OUTBOX\")
+					MakeDir("\CNABS\RECEBER\OUTBOX")
+				EndIf
 			
-			
-			cArqIn   := Alltrim(cDiret)+Alltrim(cArq)
-			cArqDest := Alltrim(cCaminho)+Alltrim(cArq)
-			
-			lStatus := FRename(AllTrim(cArqAux)+Alltrim(cArq),AllTrim(cCaminho)+Alltrim(cArq)) 
-			If lStatus != -1	
-				CONOUT("FIN150_3 - "+cArq+" COPIADO DO DIR. "+cDiret+" PARA "+cCaminho)			
-			Else
-				CONOUT("FIN150_3 - ERRO AO COPIAR O ARQUIVO!")
-			EndIf		
-			EndIf
+			Case cSubCta == "003"
+				if !ExistDir("\CNABS\PAGAR\")
+					MakeDir("\CNABS\PAGAR")
+				EndIf 
+				
+				if !ExistDir("\CNABS\PAGAR\OUTBOX\")
+					MakeDir("\CNABS\PAGAR\OUTBOX")
+				EndIf
+		EndCase	
+		
+		cArqIn   := Alltrim(cDiret)+Alltrim(cArq)
+		cArqDest := Alltrim(cCaminho)+Alltrim(cArq)
+		
+		lStatus := FRename(AllTrim(cArqAux)+Alltrim(cArq),AllTrim(cCaminho)+Alltrim(cArq)) 
+		If lStatus != -1	
+			CONOUT("FIN150_3 - " + cArq + " COPIADO DO DIR. " + cDiret + " PARA " + cCaminho)			
+		Else
+			CONOUT("FIN150_3 - ERRO AO COPIAR O ARQUIVO!")
 		EndIf
-	
 	Else
 		CONOUT("FIN150_3 - DIRETORIO VAZIO, NÃO SERÁ EFETUADA A CÓPIA!")
-	EndIf	
-	
+	EndIf
 EndIf
 
 Return  

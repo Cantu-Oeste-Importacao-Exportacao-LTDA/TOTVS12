@@ -27,7 +27,7 @@ Return
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma  ³MENUDEF     ºAutor  ³Gustavo          º Data ³ 16/02/2015   º±±
+±±ºPrograma  ³MENUDEF     ºAutor  ³Edison          º Data ³ 16/02/2015   º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºDesc.     ³ Opções que irão compor o menu na tela.                     º±±
 ±±º          ³                                                            º±±
@@ -41,9 +41,9 @@ Static Function MENUDEF()
 Local aOpcoes := {}
 
 AADD(aOpcoes, {"Pesquisar"	, "AxPesqui"   		, 0, 1})
-AADD(aOpcoes, {"Visualizar"	, "U_Z84VIS()"		, 0, 2})
-AADD(aOpcoes, {"Incluir"	, "U_Z84INC()"		, 0, 3})
-AADD(aOpcoes, {"Alterar"	, "U_Z84ALT()"		, 0, 4})
+AADD(aOpcoes, {"Visualizar"	, "U_SZ4VIS()"		, 0, 2})
+AADD(aOpcoes, {"Incluir"	, "U_SZ4INC()"		, 0, 3})
+AADD(aOpcoes, {"Alterar"	, "U_SZ4ALT()"		, 0, 4})
 AADD(aOpcoes, {"Excluir"	, "AxDeleta" 	 	, 0, 5})
 
 Return aOpcoes  
@@ -52,7 +52,7 @@ Return aOpcoes
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma  ³MONTAHEADER     ºAutor  ³Gustavo      º Data ³ 04/06/2014   º±±
+±±ºPrograma  ³MONTAHEADER     ºAutor  ³Edison      º Data ³ 04/06/2014   º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºDesc.     ³Função utilizada para efetuar à composição do Array com os  º±± 
 ±±º          ³detalhes de campos para o componente MsNewGetDados          º±±
@@ -105,7 +105,7 @@ Return aCampos
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma  ³CAD04INC     ºAutor  ³Gustavo         º Data ³ 04/06/2014   º±±
+±±ºPrograma  ³CAD04INC     ºAutor  ³Edison         º Data ³ 04/06/2014   º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºDesc.     ³ Função para realizar a inclusão de interface modelo 2.     º±±
 ±±º          ³                                                            º±±
@@ -117,11 +117,11 @@ Return aCampos
 */
 //Parametros passados pelo mBrowse por padrão
 //Tabela que esta sendo manipulada, r_e_c_n_o, opção do browse.
-User Function Z84INC(cAlias, nReg, nOpc) 
+User Function SZ4INC(cAlias, nReg, nOpc) 
 
 Local nOpcao		:= 2 //Variavel que será o controle de o usuário confirmou ou não a inclusão
 Local oDlg			//Objeto da tela que esta sendo montada
-Local bOk			:= {||Iif(U_Z84LOK(),(nOpcao := 1, oDlg:End()),)}
+Local bOk			:= {||Iif(U_SZ4LOK(),(nOpcao := 1, oDlg:End()),)}
 Local bCancel		:= {||oDlg:End()}   
 Local cAlias2		:= "SZ4"
 Local cTitulo		:= "Busca Tabelas da Regiao"
@@ -162,8 +162,8 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	//Declaração componentes TSAY/TGET para os campos do cabeçalho da interface		³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oGet1 := TGet():New(035,005,{|u|if(PCount()>0, cCod:=u, cCod)},oDlg,020,010,"@!",/*{||U_MORTVCB()}*/,CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cCod",,.T.,,.T.,,,"Código",1)
-	oGet2 := TGet():New(035,055,{|u|if(PCount()>0, cDesc:=u, cDesc)},oDlg,090,010,"@!",{||U_Z84TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cDesc",,.T.,,.T.,,,"Nome Regiao",1)
+	oGet1 := TGet():New(035,005,{|u|if(PCount()>0, cCod:=u, cCod)},oDlg,020,010,"@!",/*{||U_MORTVCB()}*/,CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cCod",,.T.,,.T.,,,"Cód. Regiao",1)
+	oGet2 := TGet():New(035,055,{|u|if(PCount()>0, cDesc:=u, cDesc)},oDlg,090,010,"@!",{||U_SZ4TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cDesc",,.T.,,.T.,,,"Nome Regiao",1)
 	cAtivo := aItens[1]
 	
 	oCombo1 := TComboBox():New(035,300,{|u|if(PCount()>0,cAtivo:=u,cAtivo)},aItens,030,13,oDlg,,,,,,.T.,,,,,,,,,'cAtivo',"Ativo?",1)		
@@ -171,7 +171,7 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	// Declaração do MSNEWGETDADOS referente ao grid de itens da interface			³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oBrw1 := MsNewGetDados():New(070,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,"U_Z84LOK()","U_Z84TOK()","+Z4_ITEM",,0,999,,'',,oDlg,aHeader,aCols)
+	oBrw1 := MsNewGetDados():New(070,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,"U_SZ4LOK()","U_SZ4TOK()","+Z4_ITEM",,0,999,,'',,oDlg,aHeader,aCols)
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Executa método de apresesntação de tela criando à barra de botões				³
@@ -184,7 +184,7 @@ oDlg:Activate(,,,.T.,,,{||EnchoiceBar(oDlg,bOk,bCancel,,@aButtons)})
 //Caso confirmou os dados, grava a inclusão										³
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 If nOpcao == 1
-   	Z84GRV() 
+   	SZ4GRV() 
 EndIf
 
 Return   
@@ -193,7 +193,7 @@ Return
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma  ³CAD04VIS     ºAutor  ³Gustavo         º Data ³ 04/06/2014   º±±
+±±ºPrograma  ³CAD04VIS     ºAutor  ³Edison         º Data ³ 04/06/2014   º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºDesc.     ³ Função para realizar a alteração de interface modelo 2.    º±±
 ±±º          ³                                                            º±±
@@ -205,11 +205,11 @@ Return
 */
 //Parametros passados pelo mBrowse por padrão
 //Tabela que esta sendo manipulada, r_e_c_n_o, opção do browse.
-User Function Z84VIS(cAlias, nReg, nOpc) 
+User Function SZ4VIS(cAlias, nReg, nOpc) 
 
 Local nOpcao		:= 2 //Variavel que será o controle de o usuário confirmou ou não a inclusão
 Local oDlg			//Objeto da tela que esta sendo montada
-Local bOk			:= {||Iif(U_Z84LOK(),(nOpcao := 1, oDlg:End()),)}
+Local bOk			:= {||Iif(U_SZ4LOK(),(nOpcao := 1, oDlg:End()),)}
 Local bCancel		:= {||oDlg:End()}   
 Local cAlias2		:= "SZ4"
 Local cTitulo		:= "Busca Tabelas da Regiao"
@@ -223,9 +223,9 @@ Local aPosObj		:= {}
 Local aButtons 		:= {}
 
 Private oBrw1
-Private cCod		:= Space(9)			//-- Código Regiao
-Private cDesc		:= Space(60)		//-- Nome Regiao
-Private cAtivo		:= Space(1)			//-- Tabela Ativa Sim ou Não
+Private cCod		:= SZ4->Z4_REGIAO		//-- Código tabela
+Private cDesc		:= SZ4->Z4_NOMEREG		//-- Nome da Regiao
+Private cAtivo		:= SZ4->Z4_ATIVO		//-- Tabela Ativa Sim ou Não
 Private aItens		:= {"Sim","Não"}		//-- Itens para compor Sim e não combos
 
 Private VISUAL		:= .T.
@@ -287,8 +287,8 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	//Declaração componentes TSAY/TGET para os campos do cabeçalho da interface		³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oGet1 := TGet():New(035,005,{|u|if(PCount()>0, cCod:=u, cCod)},oDlg,020,010,"@!",{||U_Z84TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cCod",,.T.,,.T.,,,"Código",1)
-	oGet2 := TGet():New(035,055,{|u|if(PCount()>0, cDesc:=u, cDesc)},oDlg,090,010,"@!",{||U_Z84TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cDesc",,.T.,,.T.,,,"Nome regiao",1)
+	oGet1 := TGet():New(035,005,{|u|if(PCount()>0, cCod:=u, cCod)},oDlg,020,010,"@!",{||U_SZ4TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cCod",,.T.,,.T.,,,"Código",1)
+	oGet2 := TGet():New(035,055,{|u|if(PCount()>0, cDesc:=u, cDesc)},oDlg,090,010,"@!",{||U_SZ4TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cDesc",,.T.,,.T.,,,"Nome regiao",1)
 	
 	cAtivo := aItens[1]
 	
@@ -298,7 +298,7 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	// Declaração do MSNEWGETDADOS referente ao grid de itens da interface			³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-		oBrw1 := MsNewGetDados():New(070,002,aPosObj[2][3],aPosObj[2][4],/*GD_INSERT + GD_UPDATE + GD_DELETE*/,"U_Z84LOK()","U_Z84TOK()","+Z4_ITEM",,0,999,,'',,oDlg,aHeader,aCols)
+		oBrw1 := MsNewGetDados():New(070,002,aPosObj[2][3],aPosObj[2][4],/*GD_INSERT + GD_UPDATE + GD_DELETE*/,"U_SZ4LOK()","U_SZ4TOK()","+Z4_ITEM",,0,999,,'',,oDlg,aHeader,aCols)
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Executa método de apresesntação de tela criando à barra de botões				³
@@ -314,7 +314,7 @@ Return
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma  ³CAD04ALT     ºAutor  ³Gustavo         º Data ³ 04/06/2014   º±±
+±±ºPrograma  ³CAD04ALT     ºAutor  ³Edison         º Data ³ 04/06/2014   º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºDesc.     ³ Função para realizar a alteração de interface modelo 2.    º±±
 ±±º          ³                                                            º±±
@@ -326,11 +326,11 @@ Return
 */
 //Parametros passados pelo mBrowse por padrão
 //Tabela que esta sendo manipulada, r_e_c_n_o, opção do browse.
-User Function Z84ALT(cAlias, nReg, nOpc) 
+User Function SZ4ALT(cAlias, nReg, nOpc) 
 
 Local nOpcao		:= 2 //Variavel que será o controle de o usuário confirmou ou não a inclusão
 Local oDlg			//Objeto da tela que esta sendo montada
-Local bOk			:= {||Iif(U_Z84LOK(),(nOpcao := 1, oDlg:End()),)}
+Local bOk			:= {||Iif(U_SZ4LOK(),(nOpcao := 1, oDlg:End()),)}
 Local bCancel		:= {||oDlg:End()}   
 Local cAlias2		:= "SZ4"
 Local cTitulo		:= "Busca Tabelas da Regiao"
@@ -408,8 +408,8 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	//Declaração componentes TSAY/TGET para os campos do cabeçalho da interface		³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oGet1 := TGet():New(035,005,{|u|if(PCount()>0, cCod:=u, cCod)},oDlg,020,010,"@!",{||U_Z84TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.T.,.F.,"","cCod",,.T.,,.T.,,,"Código",1)
-	oGet2 := TGet():New(035,055,{|u|if(PCount()>0, cDesc:=u, cDesc)},oDlg,090,010,"@!",{||U_Z84TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cDesc",,.T.,,.T.,,,"Nome Regiao",1)
+	oGet1 := TGet():New(035,005,{|u|if(PCount()>0, cCod:=u, cCod)},oDlg,020,010,"@!",{||U_SZ4TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.T.,.F.,"","cCod",,.T.,,.T.,,,"Código",1)
+	oGet2 := TGet():New(035,055,{|u|if(PCount()>0, cDesc:=u, cDesc)},oDlg,090,010,"@!",{||U_SZ4TOK()},CLR_HRED,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.F.,.F.,"","cDesc",,.T.,,.T.,,,"Nome Regiao",1)
 	cAtivo := aItens[1]
 	
 	oCombo1 := TComboBox():New(035,300,{|u|if(PCount()>0,cAtivo:=u,cAtivo)},aItens,030,13,oDlg,,,,,,.T.,,,,,,,,,'cAtivo',"Ativo?",1)		
@@ -417,7 +417,7 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	// Declaração do MSNEWGETDADOS referente ao grid de itens da interface			³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oBrw1 := MsNewGetDados():New(070,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,"U_Z84LOK()","U_Z84TOK()","+Z4_ITEM",,0,999,,'',,oDlg,aHeader,aCols)
+	oBrw1 := MsNewGetDados():New(070,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,"U_SZ4LOK()","U_SZ4TOK()","+Z4_ITEM",,0,999,,'',,oDlg,aHeader,aCols)
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Executa método de apresesntação de tela criando à barra de botões				³
@@ -430,7 +430,7 @@ oDlg:Activate(,,,.T.,,,{||EnchoiceBar(oDlg,bOk,bCancel,,@aButtons)})
 //Caso confirmou os dados, grava a inclusão										³
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 If nOpcao == 1
-   	Z84GRV() 
+   	SZ4GRV() 
 EndIf
 
 Return  
@@ -439,7 +439,7 @@ Return
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma ³Z84LOK    ºAutor  ³Gustavo Lattmann   º Data ³ 16/06/2017    º±±
+±±ºPrograma ³SZ4LOK    ºAutor  ³Edison G. Barbieri   º Data ³ 16/06/2017    º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºDesc.    ³Função responsável pela validação das linhas no MsNewGetDadosº±±
 ±±º         ³alteração e exclusão de dados na base.                       º±±
@@ -449,7 +449,7 @@ Return
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-User Function Z84LOK()
+User Function SZ4LOK()
 
 Local lRet		:= .T.
 Local nPos		:= oBrw1:nAt //Retorna a posição atual do meu grid (MsNewGetDados)
@@ -471,7 +471,7 @@ Return lRet
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma ³Z84TOK    ºAutor  ³Gustavo Lattmann   º Data ³ 19/06/2017    º±±
+±±ºPrograma ³SZ4TOK    ºAutor  ³Edison G. Barbieri   º Data ³ 19/06/2017    º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºDesc.    ³Função responsável pela validação na confirmação.			  º±±
 ±±º         ³										                      º±±
@@ -481,7 +481,7 @@ Return lRet
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-User Function Z84TOK()
+User Function SZ4TOK()
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Verifica se existe alguma tabela com o mesmo código já cadastrada.   	³
@@ -502,7 +502,7 @@ Return lRet
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma  ³Z84GRV    ºAutor  ³Gustavo Lattmann   º Data ³ 16/06/2017   º±±
+±±ºPrograma  ³SZ4GRV    ºAutor  ³Edison G. Barbieri º Data ³ 16/06/2017   º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºDesc.     ³Função responsável pela execução de regras de inclusão,     º±±
 ±±º          ³alteração e exclusão de dados na base.                      º±±
@@ -512,7 +512,7 @@ Return lRet
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-Static Function Z84GRV()
+Static Function SZ4GRV()
 
 Local aCols		:= oBrw1:aCols
 Local aHeader	:= oBrw1:aHeader
@@ -541,7 +541,7 @@ Do Case
 						SZ4->Z4_FILIAL	:= xFilial("SZ4")
 						SZ4->Z4_REGIAO	:= cCod
 						SZ4->Z4_NOMEREG := cDesc
-						Z84->Z84_ATIVO	:= cAtivo							
+						SZ4->Z4_ATIVO	:= cAtivo							
 						
 					SZ4->(MSUNLOCK())
 				EndIf
@@ -594,8 +594,8 @@ Do Case
 						SZ4->Z4_FILIAL	:= xFilial("SZ4")
 						SZ4->Z4_REGIAO	:= cCod
 						SZ4->Z4_NOMEREG := cDesc
-						Z84->Z84_ATIVO	:= cAtivo							
-					Z84->(MSUNLOCK())
+						SZ4->Z4_ATIVO	:= cAtivo							
+					SZ4->(MSUNLOCK())
 				EndIf
 			Next nI	
 					

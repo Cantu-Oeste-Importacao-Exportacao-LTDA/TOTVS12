@@ -34,7 +34,7 @@ cQuery += "SELECT SUM(E1_VALOR) nSoma FROM " + RetSqlName("SE1") +   " E1  " + h
 cQuery += "WHERE E1_FILIAL = '" + xFilial("SE1")  +"'             " + hEnter
 
 if cPar $ "CC/CD"
- cQuery += "  AND E1_ORIGEM  = 'LOJA701'                  " + hEnter
+ cQuery += "  AND (E1_ORIGEM  = 'LOJA701' OR E1_ORIGEM = 'LOJA010')                  " + hEnter
 Else
  cQuery += "  AND E1_CLIENTE = '" + SF2->F2_CLIENTE +"'           " + hEnter
  cQuery += "  AND E1_LOJA  = '" + SF2->F2_LOJA   +"'           " + hEnter  

@@ -33,7 +33,7 @@ REFRESHRATE=1200
 #### CONFIGURAÇÕES DO APPSERVER.INI #### 
 */
 
-#DEFINE CENDMAILWF		"juliano@cantu.com.br;b2b@cantuimportadora.com.br;e-commerce@cantuimportadora.com.br"		//--E-mail para envio do workflow
+#DEFINE CENDMAILWF		"gustavo.lattmann@cantuimportadora.com.br;b2b@cantuimportadora.com.br;e-commerce@cantuimportadora.com.br"		//--E-mail para envio do workflow
 #DEFINE CPATHFILES		"/b2bvertis/"					//--Path de arquivos de log servidor protheus.
 #DEFINE CEXTIMAGEM		".jpg"							//--Extensão de arquivos de imagens.
 #DEFINE CSESSIONID		""								//--ID da sessão dos webservices.
@@ -4479,13 +4479,13 @@ Local cMOSTRAERRO	:= STRINGNULL
 Private lMsErroAuto := .F.       
 
 	oCONNSRV := rpcconnect(cIPSERVER, Val(cPORTSERVER), GetEnvServer(), cCODEMP, cCODFIL)
-	/*
+	
 	If !(ValType(oCONNSRV) == "O")
 		conout("ERRO DE COMUNICACAO COM PROTHEUS SERVER!")
 		conout("IP/PORTA: " + cIPSERVER +"/"+ cPORTSERVER)
 		Return
 	EndIf
-	*/
+	
 	RpcClearEnv()
 	RpcSetType(3)
 	RpcSetEnv(cCODEMP, cCODFIL,,,,GetEnvServer(),{ "SC5" })	

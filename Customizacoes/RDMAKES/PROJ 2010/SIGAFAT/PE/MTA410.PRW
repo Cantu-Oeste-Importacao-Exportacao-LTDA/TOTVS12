@@ -123,7 +123,7 @@ U_USORWMAKE(ProcName(),FunName())
 	
 	EndIf
 	*/
-		
+	
 	//旼컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴커
 	//쿑lavio - Adicionado valida豫o de altera豫o do pedido para impedir alterar se exitir uma carga amarrada�
 	//읕컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴켸

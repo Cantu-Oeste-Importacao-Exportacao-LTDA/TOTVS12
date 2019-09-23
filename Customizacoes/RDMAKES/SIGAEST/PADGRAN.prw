@@ -207,18 +207,18 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	//Declaração componentes TSAY/TGET para os campos do cabeçalho da interface		³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oSay1 := TSay():New(040,004,{||"Raça"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
+	oSay1 := TSay():New(010,004,{||"Raça"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
     
-	aItens  := {"Hy-Line Brown","Hy-Line W-36","Hisex Brown","Hisex White","Codorna","Hy-Line W-80","Novo Gen Brow"}
+	aItens  := {"Hy-Line Brown","Hy-Line W-36","Hisex Brown","Hisex White","Codorna"}
 	cCombo1 := aItens[Val(cRaca)]
-	oCombo1 := TComboBox():New(038,040,{|u|if(PCount()>0,cCombo1:=u,cCombo1)},aItens,100,20,oDlg,,,,,,.T.,,,,,,,,,'cCombo1') 
+	oCombo1 := TComboBox():New(008,040,{|u|if(PCount()>0,cCombo1:=u,cCombo1)},aItens,100,20,oDlg,,,,,,.T.,,,,,,,,,'cCombo1') 
 	oCombo1:lReadOnly := .T.
 
 	
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	// Declaração do MSNEWGETDADOS referente ao grid de itens da interface			³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oBrw1 := MsNewGetDados():New(060,002,aPosObj[2][3],aPosObj[2][4],/*GD_INSERT + GD_UPDATE + GD_DELETE*/,/*'U_PRODLOK()'*/,'AllwaysTrue()',"+Z79_COD",,0,999,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
+	oBrw1 := MsNewGetDados():New(030,002,aPosObj[2][3],aPosObj[2][4],/*GD_INSERT + GD_UPDATE + GD_DELETE*/,/*'U_PRODLOK()'*/,'AllwaysTrue()',"+Z79_COD",,0,999,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Executa método de apresesntação de tela criando à barra de botões				³
@@ -287,16 +287,16 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	//Declaração componentes TSAY/TGET para os campos do cabeçalho da interface		³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oSay1 := TSay():New(040,004,{||"Raça"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
+	oSay1 := TSay():New(010,004,{||"Raça"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
     
-	aItens  := {"Hy-Line Brown","Hy-Line W-36","Hisex Brown","Hisex White","Codorna","Hy-Line W-80","Novo Gen Brow"}
+	aItens  := {"Hy-Line Brown","Hy-Line W-36","Hisex Brown","Hisex White","Codorna"}
 	cCombo1 := aItens[1]
-	oCombo1 := TComboBox():New(038,040,{|u|if(PCount()>0,cCombo1:=u,cCombo1)},aItens,100,20,oDlg,,,,,,.T.,,,,,,,,,'cCombo1')
+	oCombo1 := TComboBox():New(008,040,{|u|if(PCount()>0,cCombo1:=u,cCombo1)},aItens,100,20,oDlg,,,,,,.T.,,,,,,,,,'cCombo1')
 	
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	// Declaração do MSNEWGETDADOS referente ao grid de itens da interface			³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oBrw1 := MsNewGetDados():New(060,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,'AllwaysTrue()','AllwaysTrue()',"+Z79_SEMANA",,0,999,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
+	oBrw1 := MsNewGetDados():New(030,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,'AllwaysTrue()','AllwaysTrue()',"+Z79_SEMANA",,0,999,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Executa método de apresesntação de tela criando à barra de botões				³
@@ -402,17 +402,17 @@ oDlg := MSDialog():New(aSize[7],0,aSize[6],aSize[5],cCadastro,,,,,CLR_BLACK,CLR_
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	//Declaração componentes TSAY/TGET para os campos do cabeçalho da interface		³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oSay1 := TSay():New(040,004,{||"Raça"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
+	oSay1 := TSay():New(010,004,{||"Raça"},oDlg,,,.F.,.F.,.F.,.T.,CLR_HBLUE,CLR_WHITE,032,008)
     
-	aItens  := {"Hy-Line Brown","Hy-Line W-36","Hisex Brown","Hisex White","Codorna","Hy-Line W-80","Novo Gen Brow"}
+	aItens  := {"Hy-Line Brown","Hy-Line W-36","Hisex Brown","Hisex White","Codorna"}
 	cCombo1 := aItens[Val(cRaca)] //cCombo1 := aItens[1]
-	oCombo1 := TComboBox():New(038,040,{|u|if(PCount()>0,cCombo1:=u,cCombo1)},aItens,100,20,oDlg,,,,,,.T.,,,,,,,,,'cCombo1')
+	oCombo1 := TComboBox():New(008,040,{|u|if(PCount()>0,cCombo1:=u,cCombo1)},aItens,100,20,oDlg,,,,,,.T.,,,,,,,,,'cCombo1')
 	oCombo1:lReadOnly := .T.
 	
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 	// Declaração do MSNEWGETDADOS referente ao grid de itens da interface			³
 	//ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-	oBrw1 := MsNewGetDados():New(060,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,'AllwaysTrue()','AllwaysTrue()',"+Z79_SEMANA",,0,999,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
+	oBrw1 := MsNewGetDados():New(030,002,aPosObj[2][3],aPosObj[2][4],GD_INSERT + GD_UPDATE + GD_DELETE,'AllwaysTrue()','AllwaysTrue()',"+Z79_SEMANA",,0,999,'AllwaysTrue()','',/*'U_CAD04VDEL()'*/,oDlg,aHeader,aCols)
 
 //ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 //Executa método de apresesntação de tela criando à barra de botões				³
@@ -432,7 +432,7 @@ Return
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÉÍÍÍÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍÍÍÍÍÍÑÍÍÍÍÍÍÍÍÍÍÍÍÍ»±±
-±±ºPrograma  ³PADVCB       ºAutor  ³Gustavo         º Data ³ 04/06/2014   º±±
+±±ºPrograma  ³CAD04VAT     ºAutor  ³Gustavo         º Data ³ 04/06/2014   º±±
 ±±ÌÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 ±±ºDesc.     ³ Função de validação do cabeçalho da rotina.		          º±±
 ±±º          ³                                                            º±±
@@ -491,10 +491,6 @@ Elseif cCombo1 == "Hisex White"
 	cRaca := "4"
 Elseif cCombo1 == "Codorna"
 	cRaca := "5"		
-Elseif cCombo1 == "Hy-Line W-80"
-	cRaca := "6"	
-Elseif cCombo1 == "Novo Gen Brow"
-	cRaca := "7"			
 EndIf
 
 Do Case

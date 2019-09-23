@@ -22,29 +22,46 @@ User Function MT100LOK()
 Local aArea := GetArea()
 Local lRet := .T.
 
-Local nPosConta := aScan(aHeader,{|x| AllTrim(x[2])=="D1_CONTA"})
-Local nPosIT    := aScan(aHeader,{|x| AllTrim(x[2])=="D1_ITEMCTA"})
-Local nPosCC    := aScan(aHeader,{|x| AllTrim(x[2])=="D1_CC"}) 
-Local nPosCL    := aScan(aHeader,{|x| AllTrim(x[2])=="D1_CLVL"}) 
-Local nPosRat   := aScan(aHeader,{|x| AllTrim(x[2])=="D1_RATEIO"} )
+Local nPosConta  := aScan(aHeader,{|x| AllTrim(x[2])=="D1_CONTA"})
+Local nPosIT     := aScan(aHeader,{|x| AllTrim(x[2])=="D1_ITEMCTA"})
+Local nPosCC     := aScan(aHeader,{|x| AllTrim(x[2])=="D1_CC"}) 
+Local nPosCL     := aScan(aHeader,{|x| AllTrim(x[2])=="D1_CLVL"}) 
+Local nPosRat    := aScan(aHeader,{|x| AllTrim(x[2])=="D1_RATEIO"} )
+Local nPosNori   := aScan(aHeader,{|x| AllTrim(x[2])=="D1_NFORI"} )
+
+
 
 cConta  := aCols[n, nPosConta]
 cItem   := aCols[n, nPosIT ]
 cCCusto := aCols[n, nPosCC]
 cClasse := aCols[n, nPosCL]
-cRateio := aCols[n, nPosRat] 
+cRateio := aCols[n, nPosRat]
+cNfori  := aCols[n, nPosNori]
+ 
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-U_USORWMAKE(ProcName(),FunName())
-                                   
+U_USORWMAKE(ProcName(),FunName())                           
 
 If Empty(cConta)
 	Return(lRet)
 End
 
+
 If SuperGetMV("MV_X_VALEN",,.T.)
+
+        dbSelectArea("SA2")
+		dbSetOrder(1) // filial + Fornecedor + loja
+		If dbSeek(xFilial() + CA100FOR + CLOJA)
+		
+			If SA2->A2_TIPORUR == "F" .and. Empty(cNfori) .and. cTipo != "C"
+				Aviso( "Lançamento de nota de produtor rural!", "Favor informar o numero da nota do produtor no campo Docto. Orig.")
+				lRet := .F.
+			Endif
+		
+		Endif
+
 
 	If cRateio != "1"	//Rateio!=1-SIM
 
@@ -74,6 +91,8 @@ If SuperGetMV("MV_X_VALEN",,.T.)
 		Endif
 	
 	EndIf
+	
+	
 		
 Endif
 RestArea(aArea)

@@ -316,18 +316,6 @@ If MsgBox("Imprimir Comprovante de Entrada?","Comprovante","YESNO")
    @ PRow()    , PCol() + 01 PSay SF1->F1_DTDIGIT   
 
 IF !Empty(MV_PAR04)   
-	
-	lTemDesc := .F.
-	//-- Gustavo
-	dbSelectArea("Z30")
-	Z30->(dbSetOrder(2))
-	Z30->(dbGoTop())
-	If Z30->(dbSeek(xFilial("Z30") + SA2->A2_COD))
-		If (Z30->Z30_ATIVO == "S" .and. Z30->Z30_DATFIN <= ddatabase)
-			lTemDesc := .T.
-		EndIf
-	EndIf
-
    If Empty(cCodTran) .And. Empty(cNomTran)
       @ PRow() + 2, 00          PSay 'Fornecedor:'
       @ PRow()    , PCol() + 02 PSay SA2->A2_Cod + '/' + SA2->A2_Loja + ' - ' + SA2->A2_Nome
@@ -508,7 +496,6 @@ ENDIF
    		@ PRow() + 1, 00 PSay "Banco: " + SA2->A2_BANCO + "-" + cBanco 
    		@ PRow()    , 40 PSay "Agencia: " + ALLTRIM(SA2->A2_AGENCIA) + "-" + ALLTRIM(SA2->A2_DIGAGEN)
    		@ PRow()    , 60 PSay "Conta: " + ALLTRIM(SA2->A2_NUMCON) + "-" + ALLTRIM(SA2->A2_DIGCON)
-   		@ PRow() +1 , 00 PSay "Tem Desconto? " + IIf(lTemDesc,"SIM","NAO")    		
   
    ELSE
       @ PRow() + 1,          00 PSay Repl('-', 80)
@@ -532,7 +519,7 @@ ENDIF
 
    		@ PRow() + 1, 00 PSay "Banco: " + SA1->A1_BANCO + " - " + cBanco 
    		@ PRow()    , 40 PSay "Agencia: " + SA1->A1_AGENCIA
-   		@ PRow()    , 60 PSay "Conta: " + SA1->A1_NUMCONT
+   		@ PRow()    , 60 PSay "Conta: " + SA1->A1_NUMCONT 
   
    ENDIF
    

@@ -125,7 +125,7 @@ Local cNATFRETE := SuperGetMV("MV_X_CNFGP",,"'2110008','2014013'")
 	cQuery += "			SD1.D1_EMISSAO,																	" + chr(13)
 	cQuery += "			SD1.D1_DOC, 																	" + chr(13)
 	cQuery += "			SD1.D1_SERIE, 																	" + chr(13)
-	cQuery += "			SUM(SD1.D1_TOTAL) D1_TOTAL,														" + chr(13)
+	cQuery += "			SUM(SD1.D1_CUSTO) D1_CUSTO,														" + chr(13)
 	cQuery += "			SUM(SD1.D1_BASEIRR) D1_BASEIRR,													" + chr(13)
 	cQuery += "			SUM(SD1.D1_VALIRR) D1_VALIRR,													" + chr(13)
 	cQuery += "			SUM(SD1.D1_BASEINS) D1_BASEINS,													" + chr(13)
@@ -236,7 +236,7 @@ Local cNATFRETE := SuperGetMV("MV_X_CNFGP",,"'2110008','2014013'")
 		@nLin,080 PSAY DTOC(STOD((cAliasTMP)->D1_EMISSAO))
 		@nLin,094 PSAY (cAliasTMP)->D1_DOC
 		@nLin,106 PSAY (cAliasTMP)->D1_SERIE				
-		@nLin,112 PSAY (cAliasTMP)->D1_TOTAL 	PICTURE "@E 99,999,999.99"
+		@nLin,112 PSAY (cAliasTMP)->D1_CUSTO 	PICTURE "@E 99,999,999.99"
 		@nLin,127 PSAY (cAliasTMP)->D1_BASEIRR 	PICTURE "@E 99,999,999.99"
 		@nLin,142 PSAY (cAliasTMP)->D1_VALIRR 	PICTURE "@E 99,999,999.99"
 		@nLin,157 PSAY (cAliasTMP)->D1_BASEINS 	PICTURE "@E 99,999,999.99"
@@ -248,14 +248,14 @@ Local cNATFRETE := SuperGetMV("MV_X_CNFGP",,"'2110008','2014013'")
 		nLin := nLin + 1 
 
 	    cFORNECE  := (cAliasTMP)->(D1_FORNECE+D1_LOJA)
-	    aTOTALFOR[1] += (cAliasTMP)->D1_TOTAL
+	    aTOTALFOR[1] += (cAliasTMP)->D1_CUSTO
 	    aTOTALFOR[2] += (cAliasTMP)->D1_BASEIRR
 	    aTOTALFOR[3] += (cAliasTMP)->D1_VALIRR
 	    aTOTALFOR[4] += (cAliasTMP)->D1_BASEINS
 	    aTOTALFOR[5] += (cAliasTMP)->D1_VALINS
 	    aTOTALFOR[6] += (cAliasTMP)->D1_BASESES
 	    aTOTALFOR[7] += (cAliasTMP)->D1_VALSES	    	    	    	    	    
-		aTOTALGRL[1] += (cAliasTMP)->D1_TOTAL
+		aTOTALGRL[1] += (cAliasTMP)->D1_CUSTO
 		aTOTALGRL[2] += (cAliasTMP)->D1_BASEIRR
 		aTOTALGRL[3] += (cAliasTMP)->D1_VALIRR
 		aTOTALGRL[4] += (cAliasTMP)->D1_BASEINS		

@@ -21,7 +21,7 @@ if ZZH->(dbSeek(xFilial("ZZH") + SA6->A6_COD + SA6->A6_AGENCIA + SA6->A6_NUMCON)
 	SE5->E5_AGENCIA := cAgencia
 	SE5->E5_CONTA := cConta
 	// Seta informaçoes adicionais
-//	SE5->E5_MOEDA := '01' // seta o numerário que é obrigatório
+	SE5->E5_MOEDA := '01' // seta o numerário que é obrigatório
 	SE5->E5_CLVLCR := SE1->E1_CLVLDB
 	SE5->E5_CLVLDB := SE1->E1_CLVLCR
 	SE5->E5_CCD := SE1->E1_CCC
@@ -33,7 +33,7 @@ elseif (Empty(SE5->E5_CLVLCR) .And. Empty(SE5->E5_CLVLDB) .And. Empty(SE5->E5_CC
 	
 	RecLock('SE5',.F.)
 	// Seta informaçoes adicionais de centro de lucro e segmento
-//	SE5->E5_MOEDA := '01' // seta o numerário que é obrigatório
+	SE5->E5_MOEDA := '01' // seta o numerário que é obrigatório
 	SE5->E5_CLVLCR := SE1->E1_CLVLDB
 	SE5->E5_CLVLDB := SE1->E1_CLVLCR
 	SE5->E5_CCD := SE1->E1_CCC
@@ -108,7 +108,7 @@ if !(Empty(SE1->E1_CLVLCR) .And. Empty(SE1->E1_CLVLDB) .And. Empty(SE1->E1_CCC) 
 	
 	if SE5->E5_TIPODOC = "DC"	
 		// Seta informaçoes adicionais de centro de lucro e segmento
-		//	SE5->E5_MOEDA := '01' // seta o numerário que é obrigatório
+		SE5->E5_MOEDA := '01' // seta o numerário que é obrigatório
 		SE5->E5_CLVLCR := SE1->E1_CLVLDB
 		SE5->E5_CLVLDB := SE1->E1_CLVLCR
 		SE5->E5_CCD := SE1->E1_CCC

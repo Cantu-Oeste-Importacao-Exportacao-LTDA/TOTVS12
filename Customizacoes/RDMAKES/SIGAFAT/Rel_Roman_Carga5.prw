@@ -360,48 +360,33 @@ While TMPDAK->(!Eof() )
 		nLinha := 06
 	EndIf
   
-   PrintS(IncLin(0), 00, "CONTROLE DE CAIXAS", 3)
-   PrintS(IncLin(2), 00, " T I P O  DESCRICAOO                                           |  PESO  ||  QTDE  |", 3)
-   PrintS(IncLin(2), 00, "|  X01  | Bagulho..............................................|________||________|", 3)
-   PrintS(IncLin(2), 00, "|  X02  | Palet  ..............................................|________||________|", 3)
-   PrintS(IncLin(2), 00, "|  X03  | Caixa de 1/2 ........................................|________||________|", 3)
-   PrintS(IncLin(2), 00, "|  X04  | Banana ..............................................|________||________|", 3)
-   PrintS(IncLin(2), 00, "|  X05  | Papelão  ............................................|________||________|", 3)
-   PrintS(IncLin(2), 00, "|  X06  | Plastica ............................................|________||________|", 3)
-   PrintS(IncLin(2), 00, "|  X07  | Bins     ............................................|________||________|", 3)
-    
-    if nOrient == 2
-  	nLinha := 22 
-  Else
-  	nLinha := 20
-  EndIf 
-  //@aqui
-  PrintS(IncLin(4), 00, "CARREGAMENTO:                            TIPO CARGA:" 		    ,3)
-  PrintS(IncLin(2), 00, "Terceiros(Dia)   : [       ]             Caixas    : [       ]",3)
-  PrintS(IncLin(2), 00, "Terceiros(Noite) : [       ]             Palet     : [       ]",3)
-  PrintS(IncLin(2), 00, "Cantu/Próprio    : [       ]             					   ",3)
-	
-	
-  PrintS(IncLin(2), 00, "Separador:_________________________________________________________________________", 3)
-  PrintS(IncLin(2), 00, "Hr. Inicio Separacao:_________________Hr. Final Separacao:_________________________", 3)
-  PrintS(IncLin(2), 00, "Hr. Inicio Separacao Ceasa:___________Hr. Final Separacao Ceasa____________________", 3)
-  PrintS(IncLin(2), 00, "Carregador:________________________________________________________________________", 3)
-  PrintS(IncLin(2), 00, "Hr. Inicio Conferencia:____________________Hr. Final Conferencia:__________________", 3)
+ 	PrintS(IncLin(0), 00, "CONTROLE DE CAIXAS", 3)
+ 	PrintS(IncLin(2), 00, " T I P O  DESCRICAOO                                        |  PESO  ||  QTDE  |", 3)
+ 	PrintS(IncLin(2), 00, "|  X01  | Bagulho...........................................|________||________|", 3)
+ 	PrintS(IncLin(2), 00, "|  X02  | Palet  ...........................................|________||________|", 3)
+ 	PrintS(IncLin(2), 00, "|  X03  | Caixa de 1/2 .....................................|________||________|", 3)
+ 	PrintS(IncLin(2), 00, "|  X04  | Banana ...........................................|________||________|", 3)
+ 	PrintS(IncLin(2), 00, "|  X05  | Papelão  .........................................|________||________|", 3)
+ 	PrintS(IncLin(2), 00, "|  X06  | Plastica .........................................|________||________|", 3)
+	PrintS(IncLin(2), 00, "|  X07  | Bins     .........................................|________||________|", 3)
   
-  PrintS(IncLin(4), 00, "  I T E M              PONTUAÇÃO                         OBSERVAÇÕES               ", 3)
-  PrintS(IncLin(0), 00, " _________________________________________________________________________________ ", 3)
-  PrintS(IncLin(1), 00, "|                      | 1 | 2 | 3 | 4 | 5 |                                      |", 3)
-  PrintS(IncLin(0), 00, "|_________________________________________________________________________________|", 3)
-  PrintS(IncLin(1), 00, "| Organização da Carga |   |   |   |   |   |______________________________________|", 3)
-  PrintS(IncLin(0), 00, "|_________________________________________________________________________________|", 3) 
-  PrintS(IncLin(1), 00, "| Altura da Carga      |   |   |   |   |   |______________________________________|", 3)
-  PrintS(IncLin(0), 00, "|_________________________________________________________________________________|", 3)
-  PrintS(IncLin(1), 00, "| Falta de Mercadoria  |   |   |   |   |   |______________________________________|", 3)
-  PrintS(IncLin(0), 00, "|_________________________________________________________________________________|", 3)
-  PrintS(IncLin(1), 00, "| Sobra de Mercadoria  |   |   |   |   |   |______________________________________|", 3)
-  PrintS(IncLin(0), 00, "|_________________________________________________________________________________|", 3)
-  PrintS(IncLin(1), 00, "| Quantidade/Qualidade |   |   |   |   |   |______________________________________|", 3)
-  PrintS(IncLin(0), 00, "|_________________________________________________________________________________|", 3)
+  	if nOrient == 2
+		nLinha := 22 
+	Else
+		nLinha := 20
+	EndIf 
+	//@aqui
+	PrintS(IncLin(4), 00, "CARREGAMENTO:                            TIPO CARGA:" 		  ,3)
+	PrintS(IncLin(2), 00, "Terceiros(Dia)   : [       ]             Caixas    : [       ]",3)
+	PrintS(IncLin(2), 00, "Terceiros(Noite) : [       ]             Palet     : [       ]",3)
+	PrintS(IncLin(2), 00, "Cantu/Próprio    : [       ]             					 ",3)
+	
+	
+ 	PrintS(IncLin(4), 00, "Separador:______________________________________________________________________", 3)
+ 	PrintS(IncLin(2), 00, "Hr. Inicio Separacao:__________________Hr. Final Separacao:_____________________", 3)
+ 	PrintS(IncLin(2), 00, "Hr. Inicio Separacao Ceasa:____________Hr. Final Separacao Ceasa________________", 3)
+ 	PrintS(IncLin(2), 00, "Carregador:_____________________________________________________________________", 3)
+ 	PrintS(IncLin(2), 00, "Hr. Inicio Conferencia:________________Hr. Final Conferencia:___________________", 3)
   
 	if nOrient == 2
 	 	nLinha := 55 
@@ -494,7 +479,7 @@ if nOrient == 2  //PAISAGEM
 	//PrintS(IncLin(1), 00, "CODIGO    DESCRICAO                                                  LOTE                PESO       QUANT  UM       SEPAR/CARREG/CXS", 2)
 	PrintS(IncLin(0) , 00, "CODIGO", 2)                                
 	PrintS(IncLin(0) , 09, "DESCRICAO", 2)  //Gustavo
-	PrintS(IncLin(0) , 50, "CAIXA", 2)
+	PrintS(IncLin(0) , 50, "LOTE", 2)
 	PrintS(IncLin(0) , 69, "PESO", 2)
 	PrintS(IncLin(0) , 78, "QUANT", 2) 
 	PrintS(IncLin(0) , 89, "UM", 2)
@@ -505,7 +490,7 @@ Else  //RETRATO
 	//PrintS(IncLin(1), 00, "CODIGO    DESCRICAO                       LOTE         PESO        QUANT  UM  SEPAR/CARREG/CXS", 2)
 	PrintS(IncLin(0) , 00, "CODIGO", 2)
 	PrintS(IncLin(0) , 09, "DESCRICAO", 2)    //Gustavo
-   	PrintS(IncLin(0) , 38, "CAIXA", 2)
+   	PrintS(IncLin(0) , 38, "LOTE", 2)
    	PrintS(IncLin(0) , 54, "PESO", 2)
    	PrintS(IncLin(0) , 62, "QUANT", 2)
    	PrintS(IncLin(0) , 67, "UM", 2)

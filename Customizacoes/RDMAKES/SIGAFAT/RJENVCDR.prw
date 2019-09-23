@@ -202,8 +202,7 @@ if !lBoleto
 		)*/
 	
 	For nX := 1 to len(aPedXml)
-		cSql := "select num_pedido from pedido where num_pedido = " + Str(Val(aPedXml[nX, 1])) 
-		+ " and id_filial = " + cEmpAnt + AllTrim(Str(Val(aPedXml[nX, 2])))
+		cSql := "select num_pedido from pedido where num_pedido = " + Str(Val(aPedXml[nX, 1])) + " and id_filial = " + cEmpAnt + AllTrim(Str(Val(aPedXml[nX, 2])))
 	
 		TcQuery cSql New Alias "TMPPV"
 		
@@ -230,11 +229,10 @@ if !lBoleto
 	if lIncPed
 		For nX := 1 to len(aItPedXml)
 			
-			cSql := "insert into pedido_itens(cod_pedido, id_filial, cod_produto, quant_itens, lote)"
+			cSql := "insert into pedido_itens(cod_pedido, id_filial, cod_produto, quant_itens)"
 			              // SD2->D2_PEDIDO, SD2->D2_FILIAL, SD2->D2_ITEMPV, SD2->D2_COD, SD2->D2_QUANT		
-			cSql += "values(" + aItPedXml[nX, 1] + ", " + cEmpAnt + aItPedXml[nX, 2] + ", " 
-			+  aItPedXml[nX, 4] + " , " + Str(Round(aItPedXml[nX, 5],0))+ "'" + if(Empty(aItPedXml[nX, 6], "0", Trim(aItPedXml[nX, 6]))) + "'" + ") "
-			MsgAlert(cSql, "SQL Inserção")
+			cSql += "values(" + aItPedXml[nX, 1] + ", " + cEmpAnt + aItPedXml[nX, 2] + ", " +  aItPedXml[nX, 4] + " , " + Str(Round(aItPedXml[nX, 5],0)) + ") "
+			
 			nStatus := TcSqlExec(cSql)
 			lIncPed := .T.
 			if (nStatus < 0)

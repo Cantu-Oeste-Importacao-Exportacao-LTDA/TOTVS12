@@ -80,18 +80,18 @@ DEFINE MSDIALOG oDlg TITLE cDlgTitle From 3,1 To 450,700 OF oMainWnd PIXEL
     
 @ 013,001 TO 74,350
 
-@ 015,010 Say OemToAnsi("Produto Inicial")
-@ 015,045 Get _cPrI PICTURE '@!' 	Size 40,10 F3 "SB1" 
-@ 015,090 Get _DesProdI PICTURE '@!' 	Size 160,10 When .F.  
-@ 027,010 Say OemToAnsi("Produto Final")
-@ 027,045 Get _cPrF	PICTURE '@!' 	Size 40,10 F3 "SB1" Valid NaoVazio()
-@ 027,090 Get _DesProdF PICTURE '@!' 	Size 160,10 When .F.  
-@ 039,010 Say OemToAnsi("Grupo Inicial")
-@ 039,045 Get _cGrI	PICTURE '@!' 	Size 40,10 F3 "SBM" 
-@ 039,090 Get _DesGRPI PICTURE '@!' 	Size 160,10 When .F.  
-@ 051,010 Say OemToAnsi("Grupo Final")
-@ 051,045 Get _cGrF	PICTURE '@!' 	Size 40,10 F3 "SBM" Valid NaoVazio() .and. u_Produtos()
-@ 051,090 Get _DesGRPF PICTURE '@!' 	Size 160,10 When .F.  
+@ 030,010 Say OemToAnsi("Produto Inicial")
+@ 030,045 Get _cPrI PICTURE '@!' 	Size 40,10 F3 "SB1" 
+@ 030,090 Get _DesProdI PICTURE '@!' 	Size 160,10 When .F.  
+@ 042,010 Say OemToAnsi("Produto Final")
+@ 042,045 Get _cPrF	PICTURE '@!' 	Size 40,10 F3 "SB1" Valid NaoVazio()
+@ 042,090 Get _DesProdF PICTURE '@!' 	Size 160,10 When .F.  
+@ 054,010 Say OemToAnsi("Grupo Inicial")
+@ 054,045 Get _cGrI	PICTURE '@!' 	Size 40,10 F3 "SBM" 
+@ 054,090 Get _DesGRPI PICTURE '@!' 	Size 160,10 When .F.  
+@ 066,010 Say OemToAnsi("Grupo Final")
+@ 066,045 Get _cGrF	PICTURE '@!' 	Size 40,10 F3 "SBM" Valid NaoVazio() .and. u_Produtos()
+@ 066,090 Get _DesGRPF PICTURE '@!' 	Size 160,10 When .F.  
 
 oMark := MsSelect():New("TRBB1","B1_OK",,aCampos,@lInverte,@cMarca,{75,1,220,350})
 ObjectMethod(oMark:oBrowse,"Refresh()")
@@ -145,16 +145,21 @@ IF (nOpca == 1)
 				SBZ->(DbSelectArea("SBZ"))
 				SBZ->(DbGotop())
 				// Se o INDICADOR do produto destino não existir.
-				IF !SBZ->(DbSeek(TMPSBZ->BZ_FILIAL+aProduto[nX,1]))
+				If !SBZ->(DbSeek(TMPSBZ->BZ_FILIAL+aProduto[nX,1]))
 					SBZ->(RecLock("SBZ", .T.))
 					For I := 1 To Len(aProdOri)
 						_cCampo := aProdOri[I,1]
 				 		If _cCampo $ "BZ_COD"
 							SBZ->&_cCampo	:= aProduto[nX,1]
 				 		Else 
-				 			If !AllTrim(_cCampo) $ "BZ_UCALSTD/BZ_UCOM/BZ_CONINI/BZ_DATREF"
-								SBZ->&_cCampo	:= 	TMPSBZ->&_cCampo
-							Endif
+				 			If !AllTrim(_cCampo) $ "BZ_UCALSTD/BZ_UCOM/BZ_CONINI/BZ_DATREF/BZ_MOPC"
+				 				//-- Gustavo 20/03/2018 - Converte para data caso a origem esteja preenchida
+				 				If AllTrim(_cCampo) $ "BZ_DTINCLU" .and. (Valtype(TMPSBZ->&_cCampo) == "C")
+				 					SBZ->&_cCampo	:= 	CTOD(TMPSBZ->&_cCampo)
+								Else
+									SBZ->&_cCampo	:= 	TMPSBZ->&_cCampo
+								EndIf
+							EndIf
 						Endif
 					Next I				
 					nCont += 1

@@ -89,7 +89,7 @@ If ValType(_lAuto) == "U"
 	//³Verifica se o banco selecionado pode ser utilizado para emissão de boletos.³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	
-	if !MV_PAR16 $ "001/004/033/104/224/237/246/320/341/399/422/623/655/707/745/748"
+	if !MV_PAR16 $ "001/004/033/104/224/237/246/320/341/399/422/623/655/707/745/748/756"
 		aAdd(aMsg, "O BANCO " + AllTrim(MV_PAR16) + " NÃO ESTÁ PREPARADO PARA EMITIR BOLETOS.")
 		Return
 	EndIf
@@ -117,8 +117,9 @@ if nOpc == 1
 	"E1_EMISSAO >= CTOD('" + DTOC(MV_PAR13) + "') .And. E1_EMISSAO <= CTOD('" + DTOC(MV_PAR14) + "') .And. " + ;
 	"E1_VENCREA  >= CTOD('" + DTOC(MV_PAR11) + "') .And. E1_VENCREA  <= CTOD('" + DTOC(MV_PAR12) + "') .And. " + ;
 	"E1_LOJA    >= '" + MV_PAR09 + "' .And. E1_LOJA    <= '" + MV_PAR10 + "' .And. " + ;
-	"E1_FILIAL   = '" + xFilial("SE1") + "' .And. E1_SALDO > 0 .And. " + ;
+	"E1_FILIAL   = '" + xFilial("SE1") + "' .And. E1_SALDO > 0 .And. E1_XCODAUT = ' ' .And." + ;
 	"(Alltrim(E1_TIPO) = 'NF' .Or. Alltrim(E1_TIPO) = 'FT' .Or. Alltrim(E1_TIPO) = 'DP')"
+	
 	
 	//ÚÄÄÄÄÄÄÄÄÄÄÄ¿
 	//³Reimpressão³
@@ -233,7 +234,7 @@ Else
 	//³Verifica se o banco selecionado pode ser utilizado para emissão de boletos.³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	
-	if !MV_PAR16 $ "001/004/033/104/224/237/246/320/341/422/623/655/707/745/748"
+	if !MV_PAR16 $ "001/004/033/104/224/237/246/320/341/422/623/655/707/745/748/756"
 		aAdd(aMsg, "O BANCO " + AllTrim(MV_PAR16) + " NÃO ESTÁ PREPARADO PARA EMITIR BOLETOS.")
 		Return
 	EndIf
@@ -245,7 +246,7 @@ Else
 	"E1_NUM     >= '" + _cDoc  + "' .And. E1_NUM     <= '" + _cDoc  + "' .And. " + ;
 	"E1_CLIENTE >= '" + _cCli  + "' .And. E1_CLIENTE <= '" + _cCli  + "' .And. " + ;
 	"E1_LOJA    >= '" + _cLoja + "' .And. E1_LOJA    <= '" + _cLoja + "' .And. " + ;
-	"E1_FILIAL   = '" + xFilial("SE1") + "' .And. E1_SALDO > 0 .And. " + ;
+	"E1_FILIAL   = '" + xFilial("SE1") + "' .And. E1_SALDO > 0 .And. E1_XCODAUT = ' ' .And." + ;
 	"(Alltrim(E1_TIPO)='NF' .Or. Alltrim(E1_TIPO)='FT' .Or. Alltrim(E1_TIPO)='DP')"
 	
 	cFilter    += " .And. Empty(E1_NUMBCO)"
@@ -368,6 +369,7 @@ Local cPeriodo
 Local lVisual   := .T.
 Local lSend := .F.
 Private M->FatorVcto := ""
+Private M->FatVtoSic := ""
 Private M->NumBoleta := ""
 Private M->CodBarras := ""
 Private M->LinhaDig  := ""
@@ -554,7 +556,7 @@ WHILE SE1->(!EOF())
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 		
 		if (Val(cNumBco) < Val(SEE->EE_FAXINI) .or. Val(cNumBco) > Val(SEE->EE_FAXFIM))
-			aAdd(aMsg, "SEQUÊNCIA NUMERO "+AllTrim(cNumBco)+" FORA DA FAIXA PERMITIDA NO CADASTRO DE PARÂMETROS DE BANCOS (ADQUIRA NOVA FAIXA NUMÉRICA JUNTO AO BANCO).")
+			aAdd(aMsg, "SEQUÊNCIA NUMERO "+AllTrim(cNumBco)+" FORA DA FAIXA PERMITIDA NO CADASTRO DE PARÂMETROS DE BANCOS, ENTRE EM CONTATO COM O FINANCEIRO (FAVOR NÃO EMITIR MAIS BOLETOS NESSA CONTA.).")
 			Return
 		endIf
 		
@@ -658,17 +660,6 @@ WHILE SE1->(!EOF())
 	if aDadosBanco[01] == "320"
 		Aadd(aMensagem, "Tit. cedido fiduciariamente, não pagar diretamente à "+Upper(Trim(SubStr(SM0->M0_NOMECOM, 01, 30)))+".")
 	
-	
-	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ ¿
-	//³Particularidade do Bic Safra³
-	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ Ù
-	                                                              
-
-	ElseIf aDadosBanco[01] == "422"
-		Aadd(aMensagem, "Este boleto representa duplicata cedida fiduciariamente ao banco Safra S/A.") 
-	
-	 
-	
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ$
 	//³Banco Votorantim³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ$
@@ -683,19 +674,35 @@ WHILE SE1->(!EOF())
 	Endif
 	
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³Verifica se existe percentual de multa cadastrado para o bancoÄ¿
+	//particularidade fidic creditise                                .³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	
+	if SA6->A6_X_JUROS > 0 .and. aDadosBanco[05] == "0002364"
+        Aadd(aMensagem, "Cobrar mora de "+AllTrim(Transform((SA6->A6_X_JUROS)," @E 99,999.99")) + "% a.m. de atraso")
+	EndIf
+	
+	
+	if SA6->A6_X_MULTA > 0 .and. aDadosBanco[05] == "0002364"
+			Aadd(aMensagem, "Após o vencimento cobrar multa de "+AllTrim(Transform((SA6->A6_X_MULTA)," @E 99,999.99")) + "%" )
+	EndIf 
+	
+	
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 	//³Verifica se existe percentual de multa cadastrado para o banco.³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	
-	if SA6->A6_X_MULTA > 0 
-		Aadd(aMensagem, "Após "+ _dDataVencto +" cobrar multa de R$ "+AllTrim(Transform((nValLiq*(SA6->A6_X_MULTA/100)),"@E 99,999.99")))
+	if SA6->A6_X_MULTA > 0  .and. aDadosBanco[05] != "0002364"
+        Aadd(aMensagem, "Após "+ _dDataVencto +" cobrar multa de R$ "+AllTrim(Transform((nValLiq*(SA6->A6_X_MULTA/100)),"@E 99,999.99")))
 	EndIf
+	
 	
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 	//³Verifica se existe percentual de juros cadastrado para o banco.³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	
 	
-	if SA6->A6_X_JUROS > 0 
+	if SA6->A6_X_JUROS > 0  .and. aDadosBanco[05] != "0002364"
 			Aadd(aMensagem, "Após "+ _dDataVencto +" cobrar juros/mora diária de R$ " +AllTrim(Transform(((nValLiq*(SA6->A6_X_JUROS/100))/30)," @E 99,999.99")))
 	EndIf   
 
@@ -703,7 +710,7 @@ WHILE SE1->(!EOF())
 	//³Verifica se existe acrescimo para o titulo                    .³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-    if SE1->E1_ACRESC > 0 
+    if SE1->E1_ACRESC > 0  
 			Aadd(aMensagem, "Cobrar Acréscimo de R$ " +AllTrim(Transform(se1->e1_acresc," @E 99,999.99")))
 	EndIf   
 
@@ -714,8 +721,12 @@ WHILE SE1->(!EOF())
 	
 	
 	if SEE->EE_PROTEST .or. SuperGetMv("MV_MSGPROT",,.F.)
-		If !Empty(nDiasProtesto)
+		If !Empty(nDiasProtesto) .and. aDadosBanco[05] != "0002364"
 			Aadd(aMensagem, "Sujeito a protesto após "+ nDiasProtesto+" dias do vencimento.") 
+		EndIf
+		//particularidade para banco creditise
+		If !Empty(nDiasProtesto) .and. aDadosBanco[05] == "0002364"
+			Aadd(aMensagem, "Protestar após "+ nDiasProtesto+" dias de vencido.") 
 		EndIf
 	EndIf 
 	
@@ -777,12 +788,14 @@ EndDo
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
 If !_auto
+	
 	if Len(aFiles) > 0
 		cMsgInt := U_RJENVCDR(aFiles, .T.,,,aEmail)
 		if !Empty(cMsgInt)
 			Alert("Erros na integração: " + cMsgInt)
 		endIf
 	endIf
+
 	oPrn:Preview()
 /* GUSTAVO 06/03/2017
 Else
@@ -883,11 +896,12 @@ EndIf
 // Faz o controle de geração de PDF dos boletos
 if lGeraPDF
 	cTempPath := "\nfe\"
-	cPathLoc := GetTempPath(.T.)                           
+	cPathLoc := GetTempPath(.T.)                       
 	
 	cFilePDF := "bol_" + Trim(cEmpAnt) + Trim(SE1->E1_FILIAL) + Trim(SE1->E1_NUM) + Trim(SE1->E1_PARCELA) + ".rel"
 
-	oPrnPDF := FWMSPrinter():New(cFilePDF, IMP_PDF, .F., cPathLoc, .T.)
+	oPrnPDF := FWMSPrinter():New(cFilePDF, IMP_PDF, .F., , .T.)
+	
 	
 	oPrnPDF:SetResolution(78)
 	oPrnPDF:SetPortrait()
@@ -1239,7 +1253,7 @@ oprn:say(_nL+430,_nCol+2143+_nVaria,Transform(nValLiq,"@E 999,999,999.99"),oFont
 
 If _nVia == 1
 	
-	oprn:say(_nL+480,_nCol+0120,"Instruções (Todas as instruções desse bloqueto são de exclusiva responsabilidade do Beneficiário)",oFont1,100)
+	oprn:say(_nL+480,_nCol+0120,"Instruções (Todas as instruções desse bloqueto são de exclusiva responsabilidade do cedente)",oFont1,100)
 	oprn:say(_nL+480,_nCol+1520+_nVaria,"(-) Desconto",oFont1,100)
 	oprn:say(_nL+560,_nCol+1520+_nVaria,"(-) Outras Deduções (abatimento)",oFont1,100)
 	oprn:say(_nL+640,_nCol+1520+_nVaria,"(+) Mora / Multa (Juros)",oFont1,100)
@@ -1273,6 +1287,9 @@ If _nVia == 1
 	
 	elseif cBanco == "237" .and. (AllTrim(cConta)) == '0838500'
         oprn:say(_nL+845,0120," PROTESTAR EM 5 DIAS. DÚVIDAS TEL. (47)3355-9981 E-MAIL comercial@rnxfidc.com.br ",oFont1,100) 
+     
+    elseif cBanco == "237" .and. (AllTrim(cConta)) == '0002364'
+        oprn:say(_nL+845,0120,"Título cedido ao Creditise FIDC NP",oFont1,100)    
 	
 	else
     	oprn:say(_nL+845,0120,"DUVIDAS SOBRE COBRANÇA, LIGUE "+cTelCob,oFont1,100)
@@ -1305,7 +1322,7 @@ ElseIf _nVia == 2
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	
 	if aDadosBanco[01] == "320"
-		oprn:say(_nL+480,_nCol+0120,"Instruções (Todas as instruções desse bloqueto são de exclusiva responsabilidade do Beneficiário)",oFont1,100)
+		oprn:say(_nL+480,_nCol+0120,"Instruções (Todas as instruções desse bloqueto são de exclusiva responsabilidade do cedente)",oFont1,100)
 	Else
 		oprn:say(_nL+480,_nCol+0120,"Dados do Beneficiário",oFont1,100)
 	EndIf
@@ -1340,7 +1357,19 @@ ElseIf _nVia == 2
             
     elseif aDadosBanco[01] == "237" .and. (AllTrim(cConta)) == '0838500'
      		
-        oprn:say(_nL+590,0120,"  ", oFont2,100)	    	
+        oprn:say(_nL+590,0120,"  ", oFont2,100)	  
+        
+        
+    //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ ¿
+	//³Particularidade do Bic Safra³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ Ù
+    ElseIf aDadosBanco[01] == "422"
+        oprn:say(_nL+510,0120,"Este boleto representa duplicata cedida fiduciariamente ao banco Safra S/A,  ", oFont2,100)  
+        oprn:say(_nL+545,0120,"ficando vedado o pagamento de qualquer outra forma que não através do presente boleto.", oFont2,100)     
+        oprn:say(_nL+590,0120, Upper(Trim(SM0->M0_NOMECOM)) + " CNPJ: "+ Transform(SM0->M0_CGC,"@R 99.999.999/9999-99"), oFont2,100)
+		oprn:say(_nL+630,0120, Upper(Trim(SM0->M0_ENDENT)), oFont2, 100)
+		oprn:say(_nL+670,0120, SubStr(SM0->M0_CEPENT,01,02) +"."+ SubStr(SM0->M0_CEPENT,03,03) +"-"+ SubStr(SM0->M0_CEPENT,06,03) +;
+		" "+ Upper(Trim(SM0->M0_CIDENT)) + " " + SM0->M0_ESTENT, oFont2, 100)		       	
 		
 	Else
 		oprn:say(_nL+590,0120, Upper(Trim(SM0->M0_NOMECOM)) + " CNPJ: "+ Transform(SM0->M0_CGC,"@R 99.999.999/9999-99"), oFont2,100)
@@ -1437,6 +1466,7 @@ Local cBarDV    := ""
 Private cBco    := cBanco
 
 M->FatorVcto := StrZero( SE1->E1_VENCREA - Ctod("07/10/1997"), 04)
+M->FatVtoSic := StrZero( SE1->E1_VENCREA - Ctod("03/07/2000") + 1000, 04)
 
 Do Case
 	
@@ -1575,7 +1605,7 @@ Do Case
 		//³Banco Safra³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÙ
 		
-	Case cBanco == "422" //codaqui
+	Case cBanco == "422" 
 		_cBarra := "422"  + "9" + M->FatorVcto
 		_cBarra += StrZero(SE1->E1_SALDO*100,10)
 		_cBarra += "7" + aDadosBanco[03] + aDadosBanco[04] + aDadosBanco[05] + aDadosBanco[06] +;
@@ -1636,7 +1666,7 @@ Do Case
 		//ÀÄÄÄÄÄÄÄÄÙ
 		
 	Case cBanco == "748"
-		  
+		    
 		    cBarDV += "3" + aDadosBanco[08] + SuBStr(M->NumBoleta, 01, 08) + dvBol + AllTrim(ADadosBanco[03]) + left(ADadosBanco[09],2)
 			cBarDV += right(ADadosBanco[09],5) + "1" + "0"
 		
@@ -1646,8 +1676,28 @@ Do Case
 			_cBarra += "3" + aDadosBanco[08] + SuBStr(M->NumBoleta, 01, 08) + dvBol + AllTrim(ADadosBanco[03]) + left(ADadosBanco[09],2)
 			_cBarra += right(ADadosBanco[09],5) + "1" + "0" 
 			_cBarra += fDvCpoLv(cBarDV)
-							 		
-	
+			
+		//ÚÄÄÄÄÄÄÄÄ¿
+		//³Sicoob³
+		//ÀÄÄÄÄÄÄÄÄÙ
+		
+	Case cBanco == "756"
+		    
+		    			    	
+		    	_cBarra := "756"  + "9" + M->FatVtoSic
+			    _cBarra += StrZero(nValLiq*100,10)
+		    	_cBarra += aDadosBanco[08] + AllTrim(ADadosBanco[03]) + "01" + "0" + aDadosBanco[09] + SuBStr(M->NumBoleta, 01, 07) + dvBol
+		    	
+		    if  Empty (SE1->E1_PARCELA) 
+		       _cBarra += "001"
+		    
+		    else
+		    	_cBarra += SE1->E1_PARCELA
+		    endif
+		    	
+		    	
+		    	
+		     			 			
 		 
 EndCase
 
@@ -1662,7 +1712,7 @@ Substr(_cBarra,5,100)
 Return(_cResult)
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-//³Cálculo do dígito verificador do campo livre da caixa econômica federal³
+//³Cálculo do dígito verificador do campo livre                           ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
 Static Function fDvCpoLv(cBarDV)
@@ -1721,6 +1771,8 @@ Do case
     nCalc4  := 11 - nCalc3
 
     Iif(nCalc3 <= 1, cRet := "0", cRet := alltrim(Str(nCalc4)))
+	
+
 	
 EndCase 	
 
@@ -2159,8 +2211,33 @@ Do Case
 				nPeso := 2
 			EndIf
 		Next i
+		       
 		
-		//edison        
+		nCalc1 := mod(nCont,11)
+        nCalc2 := 11 - nCalc1
+                         
+    	Iif(((nCalc2 < 2) .OR. (nCalc2 > 9)),DV_BAR := "1", DV_BAR := alltrim(str(nCalc2)))
+    	
+    	
+    	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³       Sicoob          ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ 
+	 
+	Case cBco == "756"
+		nCont := 0
+		nPeso := 2  
+		nCalc1 := 0
+		nCalc2 := 0
+		
+		
+		For i := len(_cBarCampo) to 1 step -1
+			nCont += Val(SubStr(_cBarCampo, i, 01)) * nPeso
+			nPeso++
+			if nPeso > 9
+				nPeso := 2
+			EndIf
+		Next i
+		       
 		
 		nCalc1 := mod(nCont,11)
         nCalc2 := 11 - nCalc1
@@ -2809,6 +2886,45 @@ Do Case
 		  	_cResult := Str(nResult,1)
 		Endif
 		
+		
+			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³      Sicoob          ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+				
+	Case cBco == "756"
+		nVal   := 0
+		Dezena := 0
+		Resto  := 0
+		nCont  := 0
+		Peso   := 2 
+		multi  := 0    
+		nResult := 0
+		
+		For i := Len(_cCampo) to 1 Step -1
+			
+			If Peso == 3
+			   Peso := 1
+			Endif
+			
+			If Val(SUBSTR(_cCampo,i,1)) * Peso >= 10
+				nVal  := Val(SUBSTR(_cCampo,i,1)) * Peso
+				nCont += Val(SUBSTR(Str(nVal,2),1,1)) + Val(SUBSTR(Str(nVal,2),2,1))
+			Else
+				nCont += Val(SUBSTR(_cCampo,i,1)) * M->Peso
+			Endif
+			
+			Peso++
+		Next
+
+		Dezena   := Substr(Str(nCont,2),1,1)
+		cmulti   := ((Val(Dezena)+1) * 10)
+		nResult  := cmulti - nCont
+		If  nResult >= 10
+			_cResult := "0"
+		Else
+		  	_cResult := Str(nResult,1)
+		Endif
+		
 EndCase
 
 Return(_cResult)
@@ -2987,6 +3103,13 @@ Do Case
 		
 	Case aDadosBanco[01] == "748"
 		cSeqNNro := StrZero(Val(cSeqBco)+1,05)
+		
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³      Sicoob          ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "756"
+		cSeqNNro :=  StrZero(Val(cSeqBco)+1,07)
 		
 		
 EndCase
@@ -3420,6 +3543,34 @@ Do Case
    		nCalc3 := nCont - nCalc2      // 4o calculo
 
     	iif((11 - nCalc3) >= 10, cDv := "0", cDv := alltrim(Str((11 - nCalc3))))
+    	
+    	
+    		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³        Sicoob         ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "756"
+		cFator  := ""
+		nResto  := 0
+		nResult := 0
+		nVal1   := 0
+		nBoleta :=  "0756" + "0000" + SubStr(aDadosBanco[09] ,01, 06) + AllTrim(cNumBco)
+		
+		
+		
+			cFator := "319731973197319731973"
+			For i := 1 to Len(nBoleta)
+				nResult := Val(Substr(nBoleta,I,1)) * Val(Substr(cFator,I,1))
+				nVal1   += nResult
+			Next
+			
+			nResto := nVal1 % 11
+			If nResto < 10
+				cDv := Alltrim(Str(nResto))
+			ElseIf nResto == 0 .or. nResto == 1
+				cDv := "0"
+			EndIf
+	
 
 EndCase
 
@@ -3555,6 +3706,13 @@ Do Case
 		
 	Case aDadosBanco[01] == "748"
 		cSeq := StrZero(Val(SubStr(cNNro,01,09)),09)
+		
+			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³       Sicoob         ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "756"
+		cSeq := StrZero(Val(SubStr(cNNro,01,07)),07)
 EndCase
 
 Return cSeq 
@@ -3695,6 +3853,13 @@ Do Case
 	Case cBanco == "748"
 		cRet := "PAGÁVEL PREFERENCIALMENTE NAS COOPERATIVAS DE CRÉDITO DO SICREDI"
 		
+		//ÚÄÄÄÄÄÄÄÄ¿
+		//³Sicredi³
+		//ÀÄÄÄÄÄÄÄÄÙ
+		
+		Case cBanco == "756"
+		cRet := "PAGÁVEL PREFERENCIALMENTE NAS COOPERATIVAS DA REDE OU QUALQUER OUTRO BANCO ATÉ O VENCIMENTO"
+		
 EndCase
 
 Return cRet
@@ -3735,19 +3900,8 @@ Do Case
 		//ÀÄÄÄÄÄÄÄÄÄÙ    
 		
 	Case cBanco == "033"
-	   if (AllTrim(cConta))== '2463'   
-	        cRet := 'Banco Sofisa'
-	        
-	   elseif (AllTrim(cConta)) == '291'
-		    cRet := AllTrim(SEE->EE_FORMEN1) 
-		  
-	   elseif (AllTrim(cConta)) == '289'
-		    cRet := AllTrim(SEE->EE_FORMEN1)      
-	        
-	   Else
-	        cRet := Upper(AllTrim(SM0->M0_NOMECOM)) + " " +;
-		    "CNPJ/CPF: " + Transform(AllTrim(SM0->M0_CGC),"@R 99.999.999/9999-99")
-       Endif	
+	   
+	   cRet := AllTrim(SEE->EE_FORMEN1)  	
 		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Caixa Econômica Federal³
@@ -3781,8 +3935,15 @@ Do Case
 	    elseif (AllTrim(cConta)) == '0838500'
 	        cRet := 'RNX FIDC MULTISSETORIAL LP  CNPJ: 12.813.212/0001-77'       
 	    
-	    elseif (AllTrim(cConta)) == '0003098'
-		    cRet := AllTrim(SEE->EE_FORMEN1)                    
+	    //elseif (AllTrim(cConta)) $ '0003098/0006773/0000112'
+		  //  cRet := AllTrim(SEE->EE_FORMEN1) 
+		  
+	    elseif (AllTrim(cConta)) $ '0000645/0000643/0000356'
+		    cRet := AllTrim(SEE->EE_FORMEN1)
+		   
+		elseif (AllTrim(cConta)) == '0002364'
+		  cRet := 'CREDITISE FIDC NP CNPJ: 28.702.814/0001-97' 
+		                           
 	    else  
 	  		cRet := Upper(AllTrim(SM0->M0_NOMECOM)) 
 	  	endif
@@ -3809,7 +3970,8 @@ Do Case
 		//ÀÄÄÄÄÙ
 		
 	Case cBanco == "341"
-		cRet := Upper(AllTrim(SM0->M0_NOMECOM))    
+		cRet := Upper(AllTrim(SM0->M0_NOMECOM)) + " " +;
+		"CNPJ/CPF: " + Transform(AllTrim(SM0->M0_CGC),"@R 99.999.999/9999-99")
 
 		//ÚÄÄÄÄ¿
 		//³HSBC³
@@ -3862,6 +4024,11 @@ Do Case
 	Case cBanco == "748"
 		cRet := Upper(AllTrim(SM0->M0_NOMECOM))
 		
+	    //ÚÄÄÄÄ¿
+		//ÀÄÄÄÄÙ
+		
+	Case cBanco == "756"
+		cRet := Upper(AllTrim(SM0->M0_NOMECOM))
 EndCase
 
 Return cRet
@@ -4022,13 +4189,22 @@ Do Case
 		cRet := cCodAge + " / " + cCodCed          
 		
 		//ÚÄÄÄÄÄÄÄÄ¿
-		//³Citibank³
+		//³Sicredi³
 		//ÀÄÄÄÄÄÄÄÄÙ 
 		
 	Case aDadosBanco[01] == "748" 
          cCodAge := aDadosBanco[03]
          cCodCed := aDadosBanco[09]  
          cRet := cCodAge + "." + SubStr(cCodCed, 01, 02) + "." + SubStr(cCodCed, 03, 07)        
+         
+         //ÚÄÄÄÄÄÄÄÄ¿
+		//³Sicoob³
+		//ÀÄÄÄÄÄÄÄÄÙ 
+		
+	Case aDadosBanco[01] == "756" 
+         cCodAge := aDadosBanco[03]
+         cCodCed := aDadosBanco[09]  
+         cRet := cCodAge + " / " + cCodCed
 			
 		
 EndCase
@@ -4227,6 +4403,14 @@ Do Case
 	Case aDadosBanco[01] == "748"
 		cRet := SubStr(Trim(cBoleto), 01, 02)  + "/" + SubStr(Trim(cBoleto), 03, 01)  + SubStr(Trim(cBoleto), 04, 05)  + "-" + Trim(cDv)
 		
+		//ÚÄÄÄÄÄÄÄÄ¿
+		//³Sicoob³
+		//ÀÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "756"
+		cRet := Trim(cBoleto) + "-" + Trim(cDv) 
+		
+		
 EndCase
 
 Return cRet
@@ -4414,6 +4598,13 @@ Do Case
 	Case cBanco == "748"
 		cRet := "-X"
 		
+		//ÚÄÄÄÄÄÄÄÄ¿
+		//³Sicoob³
+		//ÀÄÄÄÄÄÄÄÄÙ
+		
+	Case cBanco == "756"
+		cRet := "-0"
+		
 EndCase
 
 Return cRet   
@@ -4538,6 +4729,13 @@ Do Case
 		//ÀÄÄÄÄÄÄÄÄÙ
 		
 	Case aDadosBanco[01] == "748"
+		cRet := aDadosBanco[08]
+		
+		//ÚÄÄÄÄÄÄÄÄ¿
+		//³Sicoob³
+		//ÀÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "756"
 		cRet := aDadosBanco[08]
 EndCase
 
@@ -4714,7 +4912,6 @@ Do Case
 	//³Banco fidc arm³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄå
 	                      
-	//aqui
 	
 	Case cBanco == "237".and. (AllTrim(cConta)) == '0014046'
 		cRet := Upper(AllTrim(SM0->M0_NOMECOM)) + " ,CNPJ: " + Transform(SM0->M0_CGC,"@R 99.999.999/9999-99")	
@@ -4726,7 +4923,15 @@ Do Case
 	                      
 	
 	Case cBanco == "237".and. (AllTrim(cConta)) == '0838500'
-		cRet := Upper(AllTrim(SM0->M0_NOMECOM)) + " ,CNPJ: " + Transform(SM0->M0_CGC,"@R 99.999.999/9999-99")		
+		cRet := Upper(AllTrim(SM0->M0_NOMECOM)) + " ,CNPJ: " + Transform(SM0->M0_CGC,"@R 99.999.999/9999-99")	
+		
+	 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄå
+	//³Banco Gavea Sul³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄå
+	                      
+	
+	Case cBanco == "237".and. (AllTrim(cConta)) $ "0000112/0006773"
+		cRet := Upper(AllTrim(SM0->M0_NOMECOM)) + " ,CNPJ: " + Transform(SM0->M0_CGC,"@R 99.999.999/9999-99")			
 		
 		//ÚÄÄÄÄÄÄÄÄÄ¿
 		//³Bic Banco³
@@ -5110,7 +5315,7 @@ ElseIf _nVia == 2
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	
 	if aDadosBanco[01] == "320"
-		oPrnPDF:say(_nLPDF+(480/nPrp),_nCol+(0120/nPrp),"Instruções (Todas as instruções desse bloqueto são de exclusiva responsabilidade do Beneficiário)",oFont1,(100/nPrp))
+		oPrnPDF:say(_nLPDF+(480/nPrp),_nCol+(0120/nPrp),"Instruções (Todas as instruções desse bloqueto são de exclusiva responsabilidade do cedente)",oFont1,(100/nPrp))
 	Else
 		oPrnPDF:say(_nLPDF+(480/nPrp),_nCol+(0120/nPrp),"Dados do Beneficiário",oFont1,(100/nPrp))
 	EndIf

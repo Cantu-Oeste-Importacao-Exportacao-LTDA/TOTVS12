@@ -58,9 +58,9 @@ If DAK->DAK_FEZNF == "2" //Não foi faturada
 
 	DEFINE MSDIALOG oDlg TITLE OemtoAnsi("Informe o transportador") FROM C(221),C(260) TO C(320),C(620) PIXEL // "Transportadora"
 
-		@ C(018),C(006) Say ("Transportador") + ":"	   Size C(055),C(008) COLOR CLR_BLUE  PIXEL OF oDlg FONT oBold //"Transportadora:"
-		@ C(016),C(045) MsGet oTrans  Var cDakTransp  Picture "@!" Valid ( Os200NomTr(cDakTransp, @cNtrans)) F3 "SA4" Size C(040),C(009) COLOR CLR_BLACK PIXEL OF oDlg
-		@ C(016),C(090) MsGet onTrans Var cNtrans Size C(080),C(008) COLOR CLR_BLACK PIXEL OF oDlg  When .F.
+		@ C(028),C(006) Say ("Transportador") + ":"	   Size C(055),C(008) COLOR CLR_BLUE  PIXEL OF oDlg FONT oBold //"Transportadora:"
+		@ C(026),C(045) MsGet oTrans  Var cDakTransp  Picture "@!" Valid ( Os200NomTr(cDakTransp, @cNtrans)) F3 "SA4" Size C(040),C(009) COLOR CLR_BLACK PIXEL OF oDlg
+		@ C(026),C(090) MsGet onTrans Var cNtrans Size C(080),C(008) COLOR CLR_BLACK PIXEL OF oDlg  When .F.
 
 	ACTIVATE MSDIALOG oDlg CENTERED ON INIT EnchoiceBar(oDlg, {||GrvTransp(cDakTransp), ODlg:End(), Nil}, {||cDakTransp:=Criavar("A4_COD",.F.),oDlg:End()},,aButtons)
 Else

@@ -23,7 +23,7 @@ Local cPerg := "RELFLUCX"
 Local cPerg := PadR(cPerg,10," ")
 VldPerg(cPerg)  // Chama funcao VldPerg para Verificar se as Perguntas existem no SX1, se nao existir cria
 
-AjusteSX1(cPerg)
+//AjusteSX1(cPerg)
 If Pergunte(cPerg,.T.)
 	Processa({|| MovFunc() },"Processando...","Selecionando Registros... ")
 EndIf

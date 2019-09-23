@@ -21,7 +21,7 @@ Private 	_nCountNF	:= 0
 	
 	cPerg := Padr(cPerg,Len(SX1->X1_GRUPO))
 	aAdd(aRegistros,{"Bordero?" ,"Bordero?","Bordero?" ,"MV_CH1","C",TAMSX3("E1_NUMBOR")[1],0,0,"G","","MV_PAR01","","","","","","","","","","","","","","","","","","","","","","","","","","","S",""})
-	AjustaSx1(cPerg,aRegistros)
+	//AjustaSx1(cPerg,aRegistros)
 	
 	If Pergunte(cPerg,.T.)
 		_cDir:= cGetFile("", "Exportar XML", 0, "", .F., GETF_LOCALHARD + GETF_RETDIRECTORY,.F.)

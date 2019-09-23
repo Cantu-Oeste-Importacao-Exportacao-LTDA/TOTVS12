@@ -429,28 +429,26 @@ Begin Transaction
 				SC6->( MsSeek( xFilial( 'SC6' ) + SC5->C5_NUM ) )
 				While !SC6->( Eof() ) .And. ( ( SC6->C6_FILIAL + SC6->C6_NUM ) == ( SC5->C5_FILIAL + SC5->C5_NUM ) )
 				
-					aAdd( aSLR, { { "L2_FILIAL" 	, xFilial( "SL2" )	, Nil },;
-					              { "L2_NUM"    	, cNumOrc         	, Nil },;
-					              { "L2_ITEM"   	, SC6->C6_ITEM    	, Nil },;
-					              { "L2_PRODUTO"	, SC6->C6_PRODUTO 	, Nil },;
-					              { "L2_DESCRI" 	, SC6->C6_DESCRI  	, Nil },;
-					              { "L2_QUANT"  	, SC6->C6_QTDVEN  	, Nil },;
-					              { "L2_VRUNIT" 	, SC6->C6_PRCVEN  	, Nil },;
-					              { "L2_VLRITEM"	, SC6->C6_VALOR   	, Nil },;
-					              { "L2_LOCAL"  	, SC6->C6_LOCAL   	, Nil },;
-					              { "L2_UM"    	 	, SC6->C6_UM      	, Nil },;
-					              { "L2_DESC"   	, SC6->C6_DESCONT 	, Nil },;
-					              { "L2_VALDESC"	, SC6->C6_VALDESC 	, Nil },;
-					              { "L2_TES"    	, SC6->C6_TES     	, Nil },;
-					              { "L2_CF"    	 	, SC6->C6_CF      	, Nil },;
-					              { "L2_EMISSAO"	, SC5->C5_EMISSAO 	, Nil },;
-					              { "L2_GRADE"  	, "N"             	, Nil },;
-					              { "L2_VEND"   	, SC5->C5_VEND1   	, Nil },;
-					              { "L2_TABELA" 	, "1"				, Nil },;
-					              { "L2_ITEMSD1" 	, "000000"			, Nil },;
-					              { "L2_ENTREGA" 	, "2"  				, Nil },;
-					              { "L2_PRCTAB" 	, SC6->C6_PRCVEN  		, Nil },;
-					              { "L2_LOTECTL"	, SC6->C6_LOTECTL 		, Nil }} )
+					aAdd( aSLR, { { "L2_FILIAL" ,	xFilial( "SL2" ), Nil },;
+					              { "L2_NUM"    ,	cNumOrc         , Nil },;
+					              { "L2_ITEM"   ,	SC6->C6_ITEM    , Nil },;
+					              { "L2_PRODUTO",	SC6->C6_PRODUTO , Nil },;
+					              { "L2_DESCRI" ,	SC6->C6_DESCRI  , Nil },;
+					              { "L2_QUANT"  ,	SC6->C6_QTDVEN  , Nil },;
+					              { "L2_VRUNIT" ,	SC6->C6_PRCVEN  , Nil },;
+					              { "L2_VLRITEM", SC6->C6_VALOR   , Nil },;
+					              { "L2_LOCAL"  , SC6->C6_LOCAL   , Nil },;
+					              { "L2_UM"     ,	SC6->C6_UM      , Nil },;
+					              { "L2_DESC"   , SC6->C6_DESCONT , Nil },;
+					              { "L2_VALDESC", SC6->C6_VALDESC , Nil },;
+					              { "L2_TES"    ,	SC6->C6_TES     , Nil },;
+					              { "L2_CF"     ,	SC6->C6_CF      , Nil },;
+					              { "L2_EMISSAO", SC5->C5_EMISSAO , Nil },;
+					              { "L2_GRADE"  , "N"             , Nil },;
+					              { "L2_VEND"   ,	SC5->C5_VEND1   , Nil },;
+					              { "L2_TABELA" ,	SC5->C5_TABELA  , Nil },;
+					              { "L2_PRCTAB" , 0               , Nil },;
+					              { "L2_LOTECTL", SC6->C6_LOTECTL , Nil }} )
 					
 					SC6->( dBSkip() )
 					

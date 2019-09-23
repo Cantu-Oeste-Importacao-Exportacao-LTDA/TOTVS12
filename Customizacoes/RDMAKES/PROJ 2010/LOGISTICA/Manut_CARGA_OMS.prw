@@ -113,7 +113,7 @@ DEFINE MSDIALOG oDlg1 TITLE cCadastro From 0,0 To 500, 800 PIXEL OF oMainWnd
 
 @ 010,170 Say OemToAnsi("F7-Ordenar  F8-Filtrar  F9-Contar Todos  F10-Contar Rateados  F11-Rateio Automático")  of oDlg1 PIXEL
 
-oGet := MSGetDados():New(025,1,235,400,nOpc, , .F., "", .T.,{"C9_QTDNOVA"}, , .F., 256,,,, )
+oGet := MSGetDados():New(030,1,250,400,nOpc, , .F., "", .T.,{"C9_QTDNOVA"}, , .F., 256,,,, )
 oGet:oBrowse:nColPos
 
 ACTIVATE MSDIALOG oDlg1 CENTER ON INIT EnchoiceBar(oDlg1,{|| GrvDados(nOpc), ODlg1:End(), Nil }, {|| oDlg1:End() })

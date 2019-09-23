@@ -1342,7 +1342,7 @@ cArqTrb2 := CriaTrab( NIL,.F. )
 IndRegua("TRB",cArqTrb2,"D2_FILIAL+D2_TP+D2_COD+D2_DOC+D2_SERIE",,cFilSD2,STR0018) //"Selecionando Registros..."
 
 #IFDEF TOP
-	If !(TcSrvType()=="AS/400") .And. !("POSTGRES" $ TCGetDB())
+	//If !(TcSrvType()=="AS/400") .And. !("POSTGRES" $ TCGetDB())
 		cAliasTop	:= CriaTrab("",.F.)
 		lQuery		:= .T.
 		cQuery := " SELECT SD2.D2_FILIAL,SD2.D2_TP,SD2.D2_COD,SD2.D2_DOC,SD2.D2_SERIE," 
@@ -1410,7 +1410,7 @@ IndRegua("TRB",cArqTrb2,"D2_FILIAL+D2_TP+D2_COD+D2_DOC+D2_SERIE",,cFilSD2,STR001
 		SetRegua(LastRec())
 		dbSelectArea(cAliasTop)
 
-    Else
+    //Else
 #ENDIF
 
 		cFilSD2 := "D2_FILIAL == '" + xFilial("SD2") + "'"
@@ -1433,7 +1433,7 @@ IndRegua("TRB",cArqTrb2,"D2_FILIAL+D2_TP+D2_COD+D2_DOC+D2_SERIE",,cFilSD2,STR001
 		IndRegua("SD2",cArqSD2,cKeySD2,,cFilSD2,STR0018) //"Selecionando Registros..."
 		
 #IFDEF TOP
-	EndIf
+	//EndIf
 #ENDIF	
 
 GeraTrab("SD2",cAliasTop)

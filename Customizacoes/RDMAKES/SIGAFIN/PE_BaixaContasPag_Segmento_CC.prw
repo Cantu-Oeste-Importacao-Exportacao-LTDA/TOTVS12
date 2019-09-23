@@ -1,7 +1,8 @@
+/*
 #include "rwmake.ch"
 #include "protheus.ch"
 
-/*
+
 
 DESCONTINUADO DEVIDO AS NOVAS TABELAS FK* NO MODULO FINANCEIRO
 

@@ -27,6 +27,7 @@ Local nOpca       := 0
 Local aSays       := {} 
 Local aButtons    := {}
 Local cMODIMP 	  := "FIN"
+//Local nDias       := dDataBase -180
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Fixado como Verdadeiro para utilizar execução via schedule³
@@ -47,10 +48,10 @@ Private cCadastro := OemToAnsi(STR0003)
 //SchedDef("P", "FINA410", "AFI410", {"","",""}, "S", {"Calculos de analise de credito","",""}, {"Calculos de analise de credito","",""}, "")
 
 If lDireto 
-
+    
 	RPCSetType(3)
-	                                              
-	PREPARE ENVIRONMENT EMPRESA "40" FILIAL "01" MODULO cMODIMP 
+    PREPARE ENVIRONMENT EMPRESA "40" FILIAL "01" MODULO cMODIMP
+     
 	
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 	//³Criação de arquivo temporário sobre a execução da rotina, devido a execução N vezes pelo schedule decorrente das threads³
@@ -189,7 +190,7 @@ DEFAULT lBat	:= .F.
 		
 		cSql := "UPDATE " + RetSqlName("SA1") + " SET A1_MSALDO = 0, A1_SALDUPM = 0, A1_SALDUP = 0, A1_SALFIN = 0, A1_SALFINM = 0, A1_VACUM = 0 "
 		If cMVPAR02 == 1
-			cSql += ", A1_METR = 0, A1_MATR = 0, A1_MAIDUPL = 0, A1_ATR = 0, A1_PAGATR = 0, A1_NROPAG = 0, A1_ULTCOM = '        ', A1_MCOMPRA = 0, A1_NROCOM = 0 "
+			cSql += ", A1_METR = 0, A1_MATR = 0, A1_MAIDUPL = 0, A1_ATR = 0, A1_PAGATR = 0, A1_NROPAG = 0, A1_MCOMPRA = 0, A1_NROCOM = 0 "
     EndIf
 		cSql +=	"WHERE A1_COD BETWEEN '" + cMVPAR03 + "' AND '" + cMVPAR04 + "' "		
 		TcSqlExec(cSql)
@@ -326,9 +327,9 @@ DEFAULT lBat	:= .F.
 				if SA1->(dbSeek(xFilial("SA1") + TMPSE1->E1_CLIENTE + TMPSE1->E1_LOJA))
 					ConOut("Atualizando cliente " + TMPSE1->E1_CLIENTE + " / " + TMPSE1->E1_LOJA + SA1->A1_NREDUZ)
 					RecLock("SA1", .F.)
-					if (SToD(TMPSE1->ULT_COMPRA) > SA1->A1_ULTCOM)
-						SA1->A1_ULTCOM := StoD(TMPSE1->ULT_COMPRA)
-					EndIf
+					//if (SToD(TMPSE1->ULT_COMPRA) > SA1->A1_ULTCOM)
+					//	SA1->A1_ULTCOM := StoD(TMPSE1->ULT_COMPRA)
+					//EndIf
 					
 					if (TMPSE1->MAIOR_COMPRA > SA1->A1_MCOMPRA)
 						SA1->A1_MCOMPRA := TMPSE1->MAIOR_COMPRA
@@ -538,9 +539,9 @@ DEFAULT lBat	:= .F.
 			    		
 			    		Reclock( "SA1" )
 							SA1->A1_PRICOM  := Iif(SE1->E1_EMISSAO < A1_PRICOM .or. Empty(A1_PRICOM), SE1->E1_EMISSAO, A1_PRICOM)
-							If cMVPAR02 == 1  //Refaz dados Historicos
-								SA1->A1_ULTCOM  := Iif(A1_ULTCOM<SE1->E1_EMISSAO,SE1->E1_EMISSAO,A1_ULTCOM)
-							Endif
+							//If cMVPAR02 == 1  //Refaz dados Historicos
+							//	SA1->A1_ULTCOM  := Iif(A1_ULTCOM<SE1->E1_EMISSAO,SE1->E1_EMISSAO,A1_ULTCOM)
+							//Endif
 							IF Year(SE1->E1_EMISSAO) == Year(Date())
 								SA1->A1_VACUM += xMoeda(SE1->E1_VALOR,SE1->E1_MOEDA,nMoedaF,SE1->E1_EMISSAO)
 							Endif
@@ -700,7 +701,8 @@ DEFAULT lBat	:= .F.
 		dbSelectArea( "SE1" )
 		dbSetOrder(1)         
 		MsUnlockAll()		
-
+        
+        
 		RpcClearEnv()
 		RPCSetType(3)
 		                                              
@@ -708,8 +710,10 @@ DEFAULT lBat	:= .F.
 		
 		RestArea(aArea)
 		
+		
 	Next nEMP
-
+	     
+    
 	RpcClearEnv()
 	RPCSetType(3)
 	                                              
@@ -726,10 +730,13 @@ DEFAULT lBat	:= .F.
 			cSql += "( select e1_cliente, e1_loja, 
 			cSql += " sum(to_date(E1_BAIXA,'yyyymmdd') - to_date(E1_VENCREA,'yyyymmdd')) as MATR,"
 			cSql += " sum(case when e1_baixa <> ' ' then 1 else 0 end) as NPAGT "
+			//cSql += " sum(case when e1_baixa <> ' ' then 1 else 0 end) as PAGAMENTOS "
 			cSql += " from SE1"+aEMPMEDAT[nI]+"0
 			cSql += " where E1_VENCREA <> ' '  "
 			cSql += " and E1_CLIENTE between '"+ cMVPAR03 +"' and '"+ cMVPAR04 +"' "
 			cSql += " and E1_BAIXA <> ' ' "
+			cSql += " and E1_TIPO <> 'NCC' "
+			//cSql += " and E1_BAIXA >= nDias "
 			cSql += " and E1_MOEDA = 1 AND D_E_L_E_T_ <> '*' "
 			cSql += " and not INSTR('" + cAbat + "', e1_tipo) > 0 "
 			cSql += " group by e1_cliente, e1_loja )"
@@ -746,7 +753,9 @@ DEFAULT lBat	:= .F.
 			dbSetOrder(1)
 			If SA1->(dbSeek(xFilial("SA1") + TMPMAT->E1_CLIENTE + TMPMAT->E1_LOJA))
 				RecLock("SA1", .F.)
+				
 				SA1->A1_METR := Min(TMPMAT->MATR/TMPMAT->NPAGT, 999)
+				
 				SA1->(MsUnlock())
 			EndIf
 			TMPMAT->(dbSkip())

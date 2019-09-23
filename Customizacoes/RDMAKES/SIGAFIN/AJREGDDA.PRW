@@ -108,8 +108,8 @@ FIGTMP->(DbCloseArea())
 aColsEx  := aClone(aFieldFill)
 aColsOld := aClone(aColsEx)
 
-	DEFINE MSDIALOG oDlg TITLE "Registros Não Processados" FROM 000, 000  TO 600, 900 COLORS 0, 16777215 PIXEL
-	oMSNewGe1 := MsNewGetDados():New( 026, 001, 259, 450, GD_INSERT + GD_DELETE + GD_UPDATE, "AllwaysTrue", "AllwaysTrue", "", aAlterFields, 0, Len(aColsEx), "AllwaysTrue",, "AllwaysTrue", oDlg, aHeaderEx, aColsEx)	
+	DEFINE MSDIALOG oDlg TITLE "Registros Não Processados" FROM 000, 000  TO 600, 1350 COLORS 0, 16777215 PIXEL
+	oMSNewGe1 := MsNewGetDados():New( 030, 001, 259, 670, GD_INSERT + GD_DELETE + GD_UPDATE, "AllwaysTrue", "AllwaysTrue", "", aAlterFields, 0, Len(aColsEx), "AllwaysTrue",, "AllwaysTrue", oDlg, aHeaderEx, aColsEx)	
 	oMSNewGe1:oBrowse:Refresh()
 	
   @ 263, 010 SAY oF7  PROMPT "F7 = Conciliar " SIZE 040, 007 OF oDlg COLORS 0, 16777215 PIXEL
@@ -162,14 +162,14 @@ Next i
 
 
   DEFINE MSDIALOG oDlgReprocessa TITLE "Registros Ajustados e Não Conciliados" FROM 000, 000  TO 400, 700 COLORS 0, 16777215 PIXEL
-		oMSNewGe2 := MsNewGetDados():New( 036, 001, 200, 350, GD_INSERT + GD_DELETE + GD_UPDATE, "AllwaysTrue", "AllwaysTrue", "", aAlterFields, 0, Len(aColsRe),;
+		oMSNewGe2 := MsNewGetDados():New( 046, 001, 200, 350, GD_INSERT + GD_DELETE + GD_UPDATE, "AllwaysTrue", "AllwaysTrue", "", aAlterFields, 0, Len(aColsRe),;
 		 						 "AllwaysTrue",, "AllwaysTrue", oDlgReprocessa, aHeaderRe, aColsRe)	
 		oMSNewGe2:oBrowse:Refresh()    
 
-    @ 021, 060 MSGET oGet1 VAR dGet1 SIZE 060, 010 OF oDlgReprocessa COLORS 0, 16777215 PIXEL
-    @ 021, 187 MSGET oGet2 VAR dGet2 SIZE 060, 010 OF oDlgReprocessa COLORS 0, 16777215 ON CHANGE Processa({|| GridProc()},"Buscando Registros...") PIXEL
-    @ 022, 013 SAY oSay1 PROMPT "Processados De" SIZE 043, 007 OF oDlgReprocessa COLORS 0, 16777215 PIXEL
-    @ 022, 140 SAY oSay2 PROMPT "Processados Até" SIZE 044, 007 OF oDlgReprocessa COLORS 0, 16777215 PIXEL
+    @ 031, 070 MSGET oGet1 VAR dGet1 SIZE 060, 010 OF oDlgReprocessa COLORS 0, 16777215 PIXEL
+    @ 031, 197 MSGET oGet2 VAR dGet2 SIZE 060, 010 OF oDlgReprocessa COLORS 0, 16777215 ON CHANGE Processa({|| GridProc()},"Buscando Registros...") PIXEL
+    @ 032, 033 SAY oSay1 PROMPT "Processados De" SIZE 043, 007 OF oDlgReprocessa COLORS 0, 16777215 PIXEL
+    @ 032, 150 SAY oSay2 PROMPT "Processados Até" SIZE 044, 007 OF oDlgReprocessa COLORS 0, 16777215 PIXEL
 	
 	ACTIVATE MSDIALOG oDlgReprocessa CENTER ON INIT; 	
 	EnchoiceBar(oDlgReprocessa,{|| U_ProcGravaE2(aClone(oMsNewGe2:aCols),aClone(oMsNewGe2:aHeader)),;
@@ -374,7 +374,7 @@ for i := 1 to len(aColsTmp)
 	
 	// Cria chave baseada no aColsOld (aCols original, sem alterações)
 	cChvAnt := aColsOld[i, nPosFil] + aColsOld[i, nPosFor] + aColsOld[i, nPosLoj] +; 
-			  DtoS(aColsOld[i, nPosVen]) + aColsOld[i, nPosTit]
+			  DtoS(aColsOld[i, nPosVen]) + aColsOld[i, nPosTit] 
 	
 	// Valida se a linha está deletada e elimina o registro da tabela FIG
 	lDeleted := GDDeleted(i, aHeaderTmp, aColsTmp)
@@ -387,7 +387,7 @@ for i := 1 to len(aColsTmp)
       ZZY->(DbSetOrder(1))                                             
       cUser := AllTrim(SubStr(cUsuario, 7, 15))
       DbSeek(xFilial("ZZY") + cUser)
-      if ZZY->ZZY_EXCLUI != "1"
+      if ZZY->ZZY_EXCLUI == "2"
       	MsgStop("Usuário "+cUser+" não tem permissão para excluir registros :( "+CHR(13)+CHR(10)+;
       					"As linhas excluídas não sofrerão alterações!","Item NÃO excluído")
       else
@@ -908,7 +908,9 @@ for i := 1 to len(aColsTmp)
 	cSql += " FROM "+retSqlName("SE2")+" E2 "                                                                      + cEol
 	cSql += "WHERE E2.D_E_L_E_T_ <> '*' "                                                                          + cEol
 	cSql += "  AND E2.E2_VALOR   = E2.E2_SALDO "                                                                   + cEol
+	cSql += "  AND E2.E2_CODBAR   = ' '        "                                                                   + cEol
 	cSql += "  AND E2.E2_FORNECE = '"+ aColsTmp[i, nPosFor]       +"' "                                            + cEol
+	cSql += "  AND E2.E2_LOJA =    '"+ aColsTmp[i, nPosLoj]       +"' "                                            + cEol
 	cSql += "  AND E2.E2_VENCTO  = '"+ DtoS(aColsTmp[i, nPosVen]) +"' "                                            + cEol
 	cSql += "  AND E2.E2_VALOR   = " + Str(aColsTmp[i, nPosVal])  +"  "                                            + cEol
 	cSql += "  AND E2.E2_TIPO NOT IN ('PA','PR') "                                                                 + cEol

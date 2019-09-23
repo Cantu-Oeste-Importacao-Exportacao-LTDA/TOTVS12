@@ -19,6 +19,7 @@
 *-------------------------*
 User Function FA460FIL()
 *-------------------------*
+Local	cVtxCLVL := SuperGetmv ("VT_CODCLVL", , "003001001")
 Private cCODCLVL := Space(TAMSX3("CTH_CLVL")[1])
 Private cDESCLVL := Space(TAMSX3("CTH_DESC01")[1])
 Private cCONDFIL   
@@ -31,17 +32,24 @@ U_USORWMAKE(ProcName(),FunName())
 	/*컴컴컴컴컴컴컨컴컴컴컴좔컴컴컨컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴袂�
 	굇 Definicao do Dialog e todos os seus componentes.                        굇
 	袂굼컴컴컴컴컴컴컴좔컴컴컴컨컴컴컴좔컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�*/
-
-	DEFINE MSDIALOG oDlg FROM 010,100 TO 130,350 TITLE "Filtrar Segmento/Classe de Valor"  OF oMainWnd PIXEL
-	@ 005, 005 TO 040, 123 OF oDlg  PIXEL
+	If !(AllTrim(FunName()) $ "U_TFINA02")
 	
-	@ 011,010 SAY "Segmento:" SIZE 200,10 OF oDlg PIXEL 
-	@ 010,060 MSGET oCLAS VAR cCODCLVL F3 "CTH" VALID (fCheckCTH(cCODCLVL,@cDESCLVL)) SIZE 050,09 OF oDlg PIXEL 
-	@ 022,010 MSGET oCLAS VAR cDESCLVL WHEN .F. SIZE 100,09 OF oDlg PIXEL 
+		DEFINE MSDIALOG oDlg FROM 010,100 TO 130,350 TITLE "Filtrar Segmento/Classe de Valor"  OF oMainWnd PIXEL
+		@ 005, 005 TO 040, 123 OF oDlg  PIXEL
+		
+		@ 011,010 SAY "Segmento:" SIZE 200,10 OF oDlg PIXEL 
+		@ 010,060 MSGET oCLAS VAR cCODCLVL F3 "CTH" VALID (fCheckCTH(cCODCLVL,@cDESCLVL)) SIZE 050,09 OF oDlg PIXEL 
+		@ 022,010 MSGET oCLAS VAR cDESCLVL WHEN .F. SIZE 100,09 OF oDlg PIXEL 
+		
+		DEFINE SBUTTON FROM 046, 090 TYPE 1 ACTION (oDlg:End()) ENABLE OF oDlg PIXEL
+		
+		ACTIVATE MSDIALOG oDlg CENTERED
 	
-	DEFINE SBUTTON FROM 046, 090 TYPE 1 ACTION (oDlg:End()) ENABLE OF oDlg PIXEL
+	Else
 	
-	ACTIVATE MSDIALOG oDlg CENTERED
+		cCODCLVL := PadR(cVtxCLVL, TamSX3("E1_CLVLCR")[1])
+	
+	Endif
 	
 	cCONDFIL := " AND E1_CLVLCR = '" + cCODCLVL + "' "
 

@@ -24,6 +24,29 @@
 User Function M460FIM() 
 *---------------------------*
 Local aArea := GetArea()
+
+// Integração Protheus x VTEX - Atos Data Consultoria
+	If ExistBlock("ADM460FIM")
+		ExecBlock("ADM460FIM", .F., .F.)
+	EndIf
+
+
+//Douglas Martins -Atos Data - 08/04/2019 
+// Tratamento para Gravar CPF no C—digo de Rastreio da NF
+
+	If SC5->(FieldPos("C5_XSTATUS")) <> 0 .And. SC5->(FieldPos("C5_XPEDLV")) <> 0 .And.  SF2->(FieldPos("F2_XTRACKI")) <> 0 
+		If !Empty(Alltrim(SF2->F2_XTRACKI)) .And. !Empty(Alltrim(SC5->C5_XPEDLV))
+			RecLock("SF2", .F.)
+				SF2->F2_XTRACKI := SA1->A1_CGC
+			SF2->(MSUnLock())
+		EndIf
+	EndIf
+
+
+	/*------------------------------------------------------ Augusto Ribeiro | 17/10/2018 - 11:59:18 AM
+		Carrega campos de cartao de credito para o SE1
+	------------------------------------------------------------------------------------------*/
+	cpoCard()
 	
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 	//³Atualiza campo classe de valor e centro de custo sobre os registros relacionados.       ³
@@ -1436,3 +1459,127 @@ cCommandLine += '"' + cCodRel + '" "' + cGrupoMail + '" "' + cTitMail + '" "' + 
 
 Return
 */
+
+
+
+/*/{Protheus.doc} cpoCard
+Carrega campos de cartão de credito para o módulo Financeiro
+@author Augusto Ribeiro | www.compila.com.br
+@since 17/10/2018
+@version undefined
+@return return, return_description
+@example
+(examples)
+@see (links_or_references)
+/*/
+Static Function cpoCard()
+
+	Local aAreaSE1	:= SE1->(GetArea())
+	Local cChvPed 	:= ""
+	Local nlNumParc := 0
+	Local aRetParc	:= {}
+				
+	DBSELECTAREA("ZE1")
+	ZE1->(DBSETORDER(1)) //| 
+	cChvPed	:= SC5->C5_FILIAL+SC5->C5_NUM 
+	
+	IF ZE1->(DBSEEK(cChvPed )) 
+			
+		WHILE ZE1->(!EOF()) .and. cChvPed == ZE1->ZE1_FILIAL+ZE1->ZE1_PEDIDO 
+			
+			nParcela := 0
+			
+			FOR nI := 1 TO ZE1->ZE1_QTDE
+				
+				nlNumParc := nlNumParc + 1
+				nParcela := nParcela + 1
+				aadd(aRetParc, {nlNumParc ,ZE1->ZE1_FORMPG,ZE1->ZE1_AUTORI,StrZero(nParcela,3)})
+				
+			NEXT nI
+
+			ZE1->(DBSKIP()) 
+			
+		ENDDO
+		
+		DbSelectArea("SE1")	
+		
+		SE1->(DbSetOrder(1))
+		SE1->(DbGotop())
+		
+		If SE1->(DBSEEK(xFilial("SE1")+SF2->F2_SERIE+SF2->F2_DOC))
+						
+			//| Verifica todas as parecalelas geradas.	
+			nlNumParc := 0	
+			While SE1->(!EOF()) .AND. SE1->E1_FILIAL == SF2->F2_FILIAL .AND. SE1->E1_PREFIXO == SF2->F2_SERIE .AND. SE1->E1_NUM == SF2->F2_DOC
+					
+				IF ALLTRIM(SE1->E1_TIPO) <> "NF"	
+					SE1->(DbSkip())		
+					Loop
+				ENDIF
+				
+				nlNumParc := nlNumParc + 1
+						
+				nPosParc := aScan(aRetParc,{|x| x[1] == nlNumParc})
+				
+				IF  nPosParc > 0
+					
+					//| verifica se forma de pagamento é cartão de crédito ou débito.
+					
+					IF ALLTRIM(aRetParc[nPosParc][2]) $ "CC|CD"
+				
+						SE1->(RecLock("SE1",.F.))
+								 					 			
+							SE1->E1_XCODAUT := aRetParc[nPosParc][3]
+							SE1->E1_XPARCAR := aRetParc[nPosParc][4]
+							
+		 				SE1->(MsUnLock())
+		 				
+		 			ENDIF
+						
+				ENDIF					 	
+				
+				SE1->(DbSkip())
+				
+			Enddo	
+			
+		ENDIF
+	ELSE
+
+	
+		IF !empty(SC5->C5_XCODAUT) 
+		
+			DbSelectArea("SE1")				
+			SE1->(DbSetOrder(1))
+			SE1->(DbGotop())
+						
+			If SE1->(DBSEEK(xFilial("SE1")+SF2->F2_SERIE+SF2->F2_DOC))
+							
+				//| Verifica todas as parecalelas geradas.	
+				nlNumParc := 0	
+				While SE1->(!EOF()) .AND. SE1->E1_FILIAL == SF2->F2_FILIAL .AND. SE1->E1_PREFIXO == SF2->F2_SERIE .AND. SE1->E1_NUM == SF2->F2_DOC
+						
+					IF ALLTRIM(SE1->E1_TIPO) <> "NF" .OR. !EMPTY(SE1->E1_XCODAUT)	
+						SE1->(DbSkip())		
+						Loop
+					ENDIF
+					
+					nlNumParc := nlNumParc + 1
+
+					SE1->(RecLock("SE1",.F.))
+					
+						SE1->E1_XCODAUT := SC5->C5_XCODAUT
+						SE1->E1_XPARCAR := STRZERO(nlNumParc,3)
+						
+	 				SE1->(MsUnLock())
+						 	
+
+					SE1->(DbSkip())
+				Enddo	
+				
+			ENDIF	
+		ENDIF
+	ENDIF
+
+	RestArea(aAreaSE1)
+
+RETURN()

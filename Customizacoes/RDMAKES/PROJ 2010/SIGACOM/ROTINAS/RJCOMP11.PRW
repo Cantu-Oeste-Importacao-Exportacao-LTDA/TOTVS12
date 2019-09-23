@@ -251,7 +251,7 @@ U_USORWMAKE(ProcName(),FunName())
 		//Ё CabeГalho                                                    Ё
 		//юдддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 
-		Enchoice(cAliasZ30,nRegE,nOpc,,,,aCpoEnch,{013,aPosObj[1,2],105,aPosObj[1,4]},aAlterEnch,nModelo,,,'',oDlgEmp,lF3,lMemoria,lColumn,,lNoFolder,lProperty)
+		Enchoice(cAliasZ30,nRegE,nOpc,,,,aCpoEnch,{026,aPosObj[1,2],120,aPosObj[1,4]},aAlterEnch,nModelo,,,'',oDlgEmp,lF3,lMemoria,lColumn,,lNoFolder,lProperty)
 		
 		//здддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 		//Ё Pastas                                                       Ё
