@@ -2781,9 +2781,13 @@ If cTipo == "1"
 								if lCodLan
 									cCodlan:= CDV->CDV_CODAJU
 								endif	
+								
+								
 							elseif lSemCbenef
 								cCodlan := getCodLan( alltrim(SM0->M0_ESTENT), SF4->F4_SITTRIB )
 							EndIF
+							
+							
 						Else
 							cCodlan := ""	
 							If CDA->(ColumnPos("CDA_CODLAN")) > 0
@@ -11400,7 +11404,20 @@ if !empty(cUF) .and. !empty(cCST)
 		case cUF == "PR"
 			if cCST == "90"
 				cCodlan := "SEM CBENEF"
-			endif
+			
+			//INICIO
+			//AJUSTE EDISON 03/10/2019 GAMBIARA PARA LEVAR O CÓDIGO NA TAG CBENEF	
+			elseif  cCST == "40"
+				cCodlan := "PR810128"		
+				
+			elseif  cCST == "41"
+				cCodlan := "PR810128"	
+				
+			elseif  cCST == "51"
+				cCodlan := "PR830001"	
+			endif	
+			//FIM
+			
 		case cUF == "RS"
 			cCodlan := "SEM CBENEF"
 			if date() > sToD('20200331') .and. cCST <> "90"

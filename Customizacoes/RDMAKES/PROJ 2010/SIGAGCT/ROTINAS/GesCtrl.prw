@@ -1555,7 +1555,7 @@ aCab := { 	{"C7_NUM"     , cNumero			, NIL},;		// Numero do Pedido
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define variáveis de itens do pedido.                   ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-cFORPGT := "BO"
+//cFORPGT := "BO"
 For nX := 1 to len(aCols)
 	// se tiver excluído não processa
 	if aCols[nX, Len(aHeader) + 1]
@@ -1574,7 +1574,7 @@ For nX := 1 to len(aCols)
 			      	{"C7_QUANT"   ,	aCols[nX, nPosQtde], NIL},;  		// Quantidade
 			      	{"C7_PRECO"   ,	aCols[nX, nPosValM] / aCols[nX, nPosQtde]	, NIL},; 		// Preco
 			      	{"C7_DATPRF"  ,	dDatabase		, NIL},; 		// Data De Entrega
-			      	{"C7_FORMPAG" ,	cFORPGT    		, NIL},; 		// Forma de pagamento
+			      	{"C7_FORMPAG" ,	SA2->A2_FORMPAG    		, NIL},; 		// Forma de pagamento
 			      	{"C7_FLUXO"   ,	"S"			 	, NIL},; 		// Fluxo de Caixa (S/N)
 			      	{"C7_CLVL"    ,	aCols[nX, nPosSegm]	, NIL},; 		// Classe Valor
 			      	{"C7_CC"   	  ,	aCols[nX, nPosCC]			 	, NIL},; 		// Centro de custo

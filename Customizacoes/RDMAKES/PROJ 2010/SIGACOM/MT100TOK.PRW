@@ -129,7 +129,7 @@ if !ISINCALLSTACK("U_SCHCLACTE") .and. !ISINCALLSTACK("SPEDINUT")
 		If lRetPAD                                                        		
 			Do Case
 				Case !Alltrim(M->cTipo) $ "D/I/P/B/C" .and. Empty(cFormpg)  
-					 MsgBox("Divergencia na forma de pagamento para este fornecedor, favor entrar em contato com o cadastro, tel: (46) 2101-4084, após ajuste refaça o lançamento!","Alerta","ERRO")
+					 MsgBox("Divergencia na forma de pagamento para este fornecedor, favor entrar em contato com o cadastro, tel: 46 2101-4091, após ajuste refaça o lançamento!","Alerta","ERRO")
 					 lRetPAD := .F.
 				 	   
 			End Case

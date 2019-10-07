@@ -23,12 +23,26 @@ Ponto de entrada para adicionar campos específicos no cabeçalho do pedido de ven
 User Function VTX46FIM()
 	
 	Local cVend			:= ""
+	
+	Do Case
+	
+		Case cAffiliateId == "BWW"
+			cVend := "L00016"
 		
-	If Empty(cMktPlcId)
-		cVend := "000059"
-	Else
-		cVend := "L00009"
-	EndIf
+		Case cAffiliateId == "CNV"
+			cVend := "L00010"
+			
+		Case cAffiliateId == "MLB"
+			cVend := "L00017"
+			
+		Case cAffiliateId == "MZL"
+			cVend := "L00014"		
+			
+		Case Empty (cAffiliateId)
+			cVend := "000059"	
+			
+	EndCase
+		
 	
 	DbSelectArea("SC5")
 	RecLock("SC5",.F.)
