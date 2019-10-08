@@ -747,9 +747,13 @@ WHILE SE1->(!EOF())
 	//³Verifica se o título tem desconto condicional.
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 	
-	If (SE1->E1_DESCONT > 0)
-		Aadd(aMensagem, "Para pagamento até "+ Transform(SE1->E1_VENCREA,"@E") + " conceder desconto de R$ " +;
-		AllTrim(Transform(SE1->E1_DESCONT,PesqPict("SE1","E1_VALOR"))))
+	If (SE1->E1_DESCFIN > 0)
+		  Aadd(aMensagem, "Para pagamento até " + Transform(SE1->E1_VENCREA,"@E") + " conceder desconto de R$ " +AllTrim(Transform((e1_valor*e1_descfin/100)," @E 99,999.99")))
+		//AllTrim(Transform(SE1->E1_DESCONT,PesqPict("SE1","E1_VALOR")))) EDISON, NÃO ESTA MAIS GRAVANDO O CAMPO E1_DESCONT, NECESSARIO FAZER O CÁCLULO
+		 
+		
+	
+		
 	endIf    
 	         
 	
@@ -1466,6 +1470,8 @@ Local cBarDV    := ""
 Private cBco    := cBanco
 
 M->FatorVcto := StrZero( SE1->E1_VENCREA - Ctod("07/10/1997"), 04)
+
+//banco sicoob edison
 M->FatVtoSic := StrZero( SE1->E1_VENCREA - Ctod("03/07/2000") + 1000, 04)
 
 Do Case
@@ -3554,7 +3560,7 @@ Do Case
 		nResto  := 0
 		nResult := 0
 		nVal1   := 0
-		nBoleta :=  "0756" + "0000" + SubStr(aDadosBanco[09] ,01, 06) + AllTrim(cNumBco)
+		nBoleta :=  SubStr(aDadosBanco[03] ,01, 04) + "0000" + SubStr(aDadosBanco[09] ,01, 06) + AllTrim(cNumBco)
 		
 		
 		
@@ -3564,12 +3570,16 @@ Do Case
 				nVal1   += nResult
 			Next
 			
-			nResto := nVal1 % 11
-			If nResto < 10
-				cDv := Alltrim(Str(nResto))
-			ElseIf nResto == 0 .or. nResto == 1
-				cDv := "0"
-			EndIf
+				    
+		    nResto := ( nVal1 % 11 )
+		
+		Do Case
+			Case nResto == 1 .or. nResto == 0
+				cDv   := "0"
+			OtherWise
+				nResto := ( 11 - nResto )
+				cDv   := AllTrim(Str(nResto))
+		EndCase
 	
 
 EndCase
@@ -3858,7 +3868,7 @@ Do Case
 		//ÀÄÄÄÄÄÄÄÄÙ
 		
 		Case cBanco == "756"
-		cRet := "PAGÁVEL PREFERENCIALMENTE NAS COOPERATIVAS DA REDE OU QUALQUER OUTRO BANCO ATÉ O VENCIMENTO"
+		cRet := "Pagavel Preferencialmente Nas Cooperativas Da Rede ou Qualquer Outro Banco Ate o Vencimento"
 		
 EndCase
 

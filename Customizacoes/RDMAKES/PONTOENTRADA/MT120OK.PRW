@@ -109,6 +109,8 @@ Local lBlq     := .F.
 Local aDADOS   := {} 
 Local nNumDayPas := SuperGetMV("MV_X_NDMPS",,0)
 Local lNumDayPas := .F.
+Local cFormpg := ALLTRIM(SA2->A2_FORMPAG)
+Local cForcdp := ALLTRIM(SA2->A2_COND)
 
 Public __cUSRSUP := "" 
 
@@ -173,6 +175,8 @@ U_USORWMAKE(ProcName(),FunName())
 		lRet := .F.
 	EndIf
 	
+	
+	
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 	//³Verifica se usuario deseja incluir pedido com data bloqueada            ³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ		
@@ -181,6 +185,20 @@ U_USORWMAKE(ProcName(),FunName())
 		If MsgYesNo("Deseja realmente incluir o pedido com autorização do superior ?")
 			lRet := fLogSUP()
 		EndIf
+	EndIf
+	
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³Validação da forma e condição de pagamento.³
+	//³Edison G. Barbieri             30/09/2019  ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	
+	If lRet                                                        		
+			Do Case
+				Case cForcdp != Alltrim(M->cCondicao)   
+					 MsgBox("Divergencia na CONDIÇÃO DE PAGAMENTO para este fornecedor, entrar em contato com o cadastro para ajuste ou lançar com a que esta pré configurada, CONDICAO: " + cForcdp + " , tel: 46 2101-4091!","Alerta","ERRO")
+					 lRet := .F.
+				 	   
+			End Case
 	EndIf
 	
 	RestArea(aArea)

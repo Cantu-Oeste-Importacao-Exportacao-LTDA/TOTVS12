@@ -25,9 +25,12 @@ Local lRet := .T.
 Local nPosConta := aScan(aHeader,{|x| AllTrim(x[2])=="C7_CONTA"})
 Local nPosIT    := aScan(aHeader,{|x| AllTrim(x[2])=="C7_ITEMCTA"})
 Local nPosCC    := aScan(aHeader,{|x| AllTrim(x[2])=="C7_CC"})
-Local nPosCL    := aScan(aHeader,{|x| AllTrim(x[2])=="C7_CLVL"})  
+Local nPosCL    := aScan(aHeader,{|x| AllTrim(x[2])=="C7_CLVL"})
+Local nPospfo   := aScan(aHeader,{|x| AllTrim(x[2])=="C7_FORMPAG"})  
 Local nPosTES   := aScan(aHeader,{|x| AllTrim(x[2])=="C7_TES"})  
 Local nPosProd  := aScan(aHeader,{|x| AllTrim(x[2])=="C7_PRODUTO"})
+Local nPosForn  := aScan(aHeader,{|x| AllTrim(x[2])=="C7_FORNECE"})
+Local nPosLoja  := aScan(aHeader,{|x| AllTrim(x[2])=="C7_LOJA"})
 Local nPQUANT   := aScan(aHeader,{|x| AllTrim(x[2])=="C7_QUANT"})
 Local nPPRECO   := aScan(aHeader,{|x| AllTrim(x[2])=="C7_PRECO"})
 Local nPNUMSC   := aScan(aHeader,{|x| AllTrim(x[2]) == "C7_NUMSC"})  
@@ -38,13 +41,17 @@ Local nMVLMPQAE := SuperGetMV("MV_X_LPQAE",,0)	//--PERCENTUAL DE LIMITE MAXIMO A
 cConta  := aCols[n, nPosConta]
 cItem   := aCols[n, nPosIT ]
 cCCusto := aCols[n, nPosCC]
-cClasse := aCols[n, nPosCL]  
-cProduto:= aCols[n, nPosProd] 
+cClasse := aCols[n, nPosCL]
+cCformpg := aCols[n, nPospfo]  
+cProduto:= aCols[n, nPosProd]
+//cFornece:= aCols[n, nPosForn]
+//cLoja   := aCols[n, nPosLoja]  
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 U_USORWMAKE(ProcName(),FunName())	
+  
 
 //--Validação sobre Quantidade/Valor Unitário do pedido de Autorizaçào de Entrega
 If nTipoPed == 2 .and. nPosProd > 0 .and. nPNUMSC > 0 .and. nPITESC > 0
@@ -82,6 +89,8 @@ EndIf
 
 
 
+
+
 //-- Validação do preenchimento do TES quando pedido de importação:
 If lCheckTES .and. !ALLTRIM(FUNNAME()) $ "CNTA120/CNTA260/RPC"
 	If Empty(aCols[n, nPosTES])
@@ -96,7 +105,7 @@ If lCheckTES .and. !ALLTRIM(FUNNAME()) $ "CNTA120/CNTA260/RPC"
 	If Empty(SB1->B1_POSIPI)
 		Aviso ("NCM Obrigatório!", "Favor verificar o código NCM no cadastro do produto: "+SB1->B1_COD , {"OK"}, 3)
 		Return(.F.)            	
-	EndIf                    
+	EndIf           
 		
 EndIf
 
@@ -132,6 +141,18 @@ If !ALLTRIM(FUNNAME()) $ "CNTA120/CNTA260/RPC"
 			Aviso( "Segmento Obrigatório!", "Favor informar Segmento,  conforme obrigatoriedade da Conta Contábil. "+CHR(13)+CHR(10)+CHR(13)+CHR(10)+;
 			"Qualquer dúvida entre em contato com o Departamento Contábil."+CHR(13)+CHR(10)+CHR(13)+CHR(10)+" U_MT120LOK ", { "Ok" }, 3 )
 			lRet := .F.
+		Endif
+	
+		//valida se A condição de pagamento esta igual ao cadastro de fornecedor.
+		dbSelectArea("SA2")
+		dbSetOrder(1)
+		If dbSeek(xFilial() + CA120FORN + CA120LOJ)
+		
+			If  SA2->A2_FORMPAG != cCformpg
+				//MsgBox ("Divergencia na Forma de Pagamento!", "Cadastro do Fornecedor esta configurada a Forma : "+SA2->A2_FORMPAG , {"Entrar em contato com o cadastro ou usar a que esta configurada"}, 3)
+				MsgBox("Divergencia na FORMA DE PAGAMENTO para este fornecedor, entrar em contato com o cadastro para ajuste ou lançar com a que esta pré configurada, FORMA: " + SA2->A2_FORMPAG + " , tel: (46) 46 2101-4091!","Alerta","ERRO")
+				Return(.F.)            	
+				EndIf 
 		Endif
 	EndIf	
 Endif         
