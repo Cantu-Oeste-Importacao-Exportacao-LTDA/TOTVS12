@@ -395,7 +395,7 @@ Private lConsFin := .F.
 		
 			
 		aAdd(aCabPed, {"C5_TIPOCLI",SA1->A1_TIPO,Nil})
-		aAdd(aCabPed, {"C5_TABELA" ,aPedidos[nX, 08],Nil})
+		aAdd(aCabPed, {"C5_TABELA" ," ",Nil})
   		aAdd(aCabPed, {"C5_CONDPAG",cCondPag,Nil}) 
   		aAdd(aCabPed, {"C5_VEND1"  ,aPedidos[nX, 10],Nil})
 	  	aAdd(aCabPed, {"C5_PEDCLI" ," ",Nil})
@@ -414,11 +414,12 @@ Private lConsFin := .F.
 		
 		lSemItens := .F.
 		lSemEst   := .F.
+		lAlterado := .F.
   		ConfirmSX8()
   	  	
-   		aItemPed := BuscaItens(aPedidos[nX, 01], cNumPed, @lSemItens, @lSemEst)
+   		aItemPed := BuscaItens(aPedidos[nX, 01], cNumPed, @lSemItens, @lSemEst, @lAlterado)
    		
-   		If Empty(aItemPed)
+   		If Empty(aItemPed) .and. !lSemEst //@aqui
    			lSemItens := .T.
    		EndIf
 		
@@ -438,7 +439,7 @@ Private lConsFin := .F.
 			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 			//³Chamada de uma nova thread para a inclusão do pedido³
 			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-			StartJob("U_JOBNETINT", GetEnvServer(), lAguarda, cEmpAnt, cFilAnt, aClone(aCabPed), aClone(aItemPed), lSemItens, cNumPed, aPedidos[nX, 01], cIP, cPort, aPedidos[nX,16])
+			StartJob("U_JOBNETINT", GetEnvServer(), lAguarda, cEmpAnt, cFilAnt, aClone(aCabPed), aClone(aItemPed), lSemItens, cNumPed, aPedidos[nX, 01], cIP, cPort, aPedidos[nX,16], lAlterado)
 		EndIf
 	Next nX
 	
@@ -460,7 +461,7 @@ Return
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
 *---------------------------------------------------*
-Static Function BuscaItens(cPedido, cNumPed, lSemItens, lSemEst)     
+Static Function BuscaItens(cPedido, cNumPed, lSemItens, lSemEst, lAlterado)     
 *---------------------------------------------------*
 
 Local aItemLinha 	:= {}
@@ -474,6 +475,7 @@ Local cEol 			:= CHR(13)+CHR(10)
 Local cMotBon		:= ""
 Local cLote			:= ""
 Local cPedCom		:= ""
+Local cSeg			:= ""
 
 Private aItem     := {}   
 Private aCortes   := {}
@@ -483,22 +485,28 @@ Private cItemNovo := PadL("00", Len(SC6->C6_ITEM))
 //³Busca dos itens relacionados ao pedido que está sendo processado.³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-cSql := "SELECT DISTINCT (ITENS.CODIGO_PRODUTO) AS CODIGO, "	 				+cEol            
-cSql += "       ITENS.QUANTIDADE AS QUANTIDADE, "                               +cEol 
-cSql += "       ITENS.PRECO_VENDA AS PRECOVENDA, " 			                    +cEol
-cSql += "       ITENS.PRECO_BASE AS PRECOBASE, " 			                    +cEol
-cSql += "       ROUND(ITENS.QUANTIDADE * ITENS.PRECO_VENDA,2) AS TOTALVENDA, "  +cEol			                    
-cSql += "       ITENS.CODIGO_PEDIDO, "                                          +cEol
-cSql += "       (Z85.Z85_ESTOQ - Z85.Z85_RESERV) AS ESTOQUE, "                  +cEol
-cSql += "       ITENS.AGUARDA_TRANSF, "        	                                +cEol
-cSql += "       CAB.IMP_CORTE "		        	                                +cEol         
-cSql += "  FROM POLIBRAS.POLIBRAS_PEDCORP2 ITENS "                 			    +cEol 
-cSql += " INNER JOIN POLIBRAS.POLIBRAS_PEDCAB2 CAB "					        +cEol
-cSql += "    ON CAB.CODIGO_PEDIDO = ITENS.CODIGO_PEDIDO "						+cEol
-cSql += " INNER JOIN " + RetSQLName("Z85") + " Z85 "							+cEol
-cSql += "    ON Z85.Z85_FILIAL = CAB.FILIAL "									+cEol
-cSql += "   AND TRIM(Z85.Z85_PRODUT) = TRIM(ITENS.CODIGO_PRODUTO) "				+cEol
-cSql += "   AND Z85.D_E_L_E_T_ = ' ' "											+cEol
+cSql := "SELECT DISTINCT (ITENS.CODIGO_PRODUTO) AS CODIGO, " + cEol             
+cSql += "       ITENS.QUANTIDADE AS QUANTIDADE,  " + cEol                           
+cSql += "       ITENS.PRECO_VENDA AS PRECOVENDA, " + cEol   	
+cSql += "       CASE Z85.Z85_TPEST WHEN 'A' THEN " + cEol 
+cSql += "          CASE WHEN (Z85.Z85_ESTOQ - Z85.Z85_RESERV) < 0 THEN 0 ELSE (Z85.Z85_ESTOQ - Z85.Z85_RESERV) END " + cEol 
+cSql += "        WHEN 'B' " + cEol 
+cSql += "          THEN CASE WHEN (Z85.Z85_VIRTUA - Z85.Z85_RESERV) < 0 THEN 0 ELSE ((Z85.Z85_VIRTUA)- Z85.Z85_RESERV) END " + cEol 
+cSql += "        WHEN 'C' " + cEol 
+cSql += "          THEN CASE WHEN ((Z85.Z85_VIRTUA + Z85_ESTOQ) - Z85.Z85_RESERV) < 0 THEN 0 ELSE ((Z85.Z85_VIRTUA + Z85_ESTOQ)- Z85.Z85_RESERV) END " + cEol 
+cSql += "        ELSE  0  END ESTOQUE, " + cEol 
+cSql += "       ITENS.PRECO_BASE AS PRECOBASE, " + cEol 			                   
+cSql += "       ROUND(ITENS.QUANTIDADE * ITENS.PRECO_VENDA,2) AS TOTALVENDA, " + cEol 			                    
+cSql += "       ITENS.CODIGO_PEDIDO,    " + cEol                                    
+cSql += "       ITENS.AGUARDA_TRANSF,  " + cEol       	                                
+cSql += "       CAB.IMP_CORTE 	" + cEol         	                                    
+cSql += "  FROM POLIBRAS.POLIBRAS_PEDCORP2 ITENS " + cEol               			
+cSql += " INNER JOIN POLIBRAS.POLIBRAS_PEDCAB2 CAB	" + cEol 			     
+cSql += "    ON CAB.CODIGO_PEDIDO = ITENS.CODIGO_PEDIDO " + cEol 
+cSql += " INNER JOIN " + RetSqlName("Z85") + " Z85 " + cEol 
+cSql += "    ON Z85.Z85_FILIAL = CAB.FILIAL " + cEol 
+cSql += "   AND TRIM(Z85.Z85_PRODUT) = TRIM(ITENS.CODIGO_PRODUTO)" + cEol 
+cSql += "   AND Z85.D_E_L_E_T_ = ' ' " + cEol 
 cSql += " WHERE CAB.CODIGO_PEDIDO = '" + Alltrim(cPedido) + "'"
 
 
@@ -516,6 +524,7 @@ If ITENS->(Eof())
 	Return aItem
 EndIf
 
+cSeg := BuscaSeg(Alltrim(cPedido))
 
 While (ITENS->(!Eof()))	    
     
@@ -531,8 +540,8 @@ While (ITENS->(!Eof()))
 			Return aItem
 		EndIf	
 		
-		//-- Gustavo 23/02/17 - Calcular 10% de IPI quando consumidor final do vinho
 		/*
+		//-- Gustavo 23/02/17 - Calcular 10% de IPI quando consumidor final do vinho
 		If cEmpAnt == "10" .and. lConsFin .and. aPedidos[nX, 04] == "003001001"
 			nValor := Round(ITENS->TOTALVENDA * 1.1, 2)
 			nPrcVen := Round(nValor / ITENS->QUANTIDADE, 5)   
@@ -541,9 +550,11 @@ While (ITENS->(!Eof()))
 			nPrcVen := Round(ITENS->TOTALVENDA / ITENS->QUANTIDADE,5)
 			nValor := ITENS->TOTALVENDA
 		EndIf
-		*/  
+		*/
+		
+		nQuant := ITENS->QUANTIDADE  
 		nPrcVen := Round(ITENS->PRECOVENDA,TamSX3("C6_PRCVEN")[2])
-		nValor := ITENS->TOTALVENDA
+		nValor := Round(ITENS->PRECOVENDA,TamSX3("C6_PRCVEN")[2])
 		//-- Gustavo 23/02/17 - FIM
 		
 		 
@@ -556,13 +567,30 @@ While (ITENS->(!Eof()))
 			EndIf
 		EndIf
 		//-- Gustavo - 19/04/2018 - FIM
+		
+		
+		
+		//-- Gustavo - 13/02/2019 - Corte Pedido FLV
+		If ((cEmpAnt == "40") .and. (cFilAnt == "88") .and. (cSeg != "003001001"))
+			If (ITENS->(QUANTIDADE) > ITENS->(ESTOQUE))
+				lAlterado := .T.
+				Conout("IMPPEDNET - EXECUTANDO CORTE AUTOMATICO " + Str(ITENS->(ESTOQUE)))
+				//-- Se o estoque for maior que zero assume o estoque, senão pula o item na integração para "corta-lo"
+				If ITENS->(ESTOQUE) > 0
+					nQuant := ITENS->(ESTOQUE)
+				Else
+					ITENS->(dbskip())
+					Loop
+				EndIf
+			EndIf
+		EndIf
 	
 		
 		cItemNovo := Soma1(cItemNovo)
 		aAdd(aItemLinha, {"C6_NUM"        ,cNumPed,Nil})
 		aAdd(aItemLinha, {"C6_ITEM"       ,cItemNovo,Nil})  
 		aAdd(aItemLinha, {"C6_PRODUTO"    ,AllTrim(ITENS->CODIGO),Nil})
-		aAdd(aItemLinha, {"C6_QTDVEN"	  ,ITENS->QUANTIDADE,Nil})
+		aAdd(aItemLinha, {"C6_QTDVEN"	  ,nQuant,Nil})
 		aAdd(aItemLinha, {"C6_PRCVEN"	  ,nPrcVen,Nil})  
 							
 	
@@ -579,7 +607,7 @@ While (ITENS->(!Eof()))
 	
 		aAdd(aItemLinha, {"C6_DESCRI",SB1->B1_DESC,Nil})
 		aAdd(aItemLinha, {"C6_PRCTAB",Round(ITENS->PRECOBASE,TamSX3("C6_PRCTAB")[2]),Nil})
-		aAdd(aItemLinha, {"C6_VALOR" ,nValor,Nil})
+		aAdd(aItemLinha, {"C6_VALOR" ,Round((nQuant * nPrcVen),TamSX3("C6_VALOR")[2]),Nil})
 		aAdd(aItemLinha, {"C6_LOCAL" ,SBZ->BZ_LOCPAD,Nil})
 		aAdd(aItemLinha, {"C6_OPER"	 ,cOper,Nil})
 		aAdd(aItemLinha, {"C6_QTDEMP",0,Nil})   
@@ -609,25 +637,25 @@ While (ITENS->(!Eof()))
 		//³Verifica se é para o pedido entrar liberado no sistema ³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 		If lLibPed .And. (aPedidos[nX, 04] != '003001001')
-			aAdd(aItemLinha, {"C6_QTDLIB",ITENS->QUANTIDADE,Nil})
+			aAdd(aItemLinha, {"C6_QTDLIB",nQuant,Nil})
 		Else
 			aAdd(aItemLinha, {"C6_QTDLIB",0,Nil})	
 		EndIf
 		
 		//-- Busca menor lote para produtos com lote ativo
-		If Alltrim(SB1->B1_RASTRO) == 'L'
-			cLote := BuscaLote(ITENS->CODIGO,SBZ->BZ_LOCPAD,ITENS->QUANTIDADE)
-			aAdd(aItemLinha, {"C6_LOTECTL",cLote,Nil})
-		EndIf
+		//If Alltrim(SB1->B1_RASTRO) == 'L'
+			//cLote := BuscaLote(ITENS->CODIGO,SBZ->BZ_LOCPAD,nQuant)
+		//	aAdd(aItemLinha, {"C6_LOTECTL",cLote,Nil})
+		//EndIf
 	
-		aAdd(aItemLinha, {"C6_X_VLORI",Round(ITENS->QUANTIDADE * ITENS->PRECOVENDA,TamSX3("C6_X_VLORI")[2]),Nil})
+		aAdd(aItemLinha, {"C6_X_VLORI",Round(nQuant * ITENS->PRECOVENDA,TamSX3("C6_X_VLORI")[2]),Nil})
 	  
 		aAdd(aItem, aItemLinha)
 		ConOut("ITEM: "    +AllTrim(ITENS->CODIGO)+;
 					 " DESC: "   +SubStr(SB1->B1_DESC, 01, 20)+;
-					 " QUANT: "  +Transform(ITENS->QUANTIDADE,"@E 9,999,999.999")+;
+					 " QUANT: "  +Transform(nQuant,"@E 9,999,999.999")+;
 			 		 " VL UN: "  +Transform(ITENS->PRECOVENDA,"@E 9,999,999.99")+;
-			 		 " VL TOT: " +Transform((ITENS->QUANTIDADE * ITENS->PRECOVENDA),"@E 9,999,999.99")+;
+			 		 " VL TOT: " +Transform((nQuant * ITENS->PRECOVENDA),"@E 9,999,999.99")+;
 			 		 " OPER: "   +cOper)
 	
 		aItemLinha := {} 
@@ -824,7 +852,7 @@ Return Nil
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
 *--------------------------------------------------------------------------------------------------*
-User Function JOBNETINT(cEmp, cFil, aCabPed, aItemPed, lSemItens, cNumPed, idPedido, cIP, cPort, cCorte)      
+User Function JOBNETINT(cEmp, cFil, aCabPed, aItemPed, lSemItens, cNumPed, idPedido, cIP, cPort, cCorte, lAlterado)      
 *--------------------------------------------------------------------------------------------------*
 Local cIdPedido := AllTrim(idPedido)
 Local cSql 		:= ""
@@ -869,14 +897,20 @@ lSincr   := !Empty(cPedSinc)
                             
 If lSincr
 	
-	if (nQtdERP < nQtdeNet) .and. (cCorte != 'S')
+	if (nQtdERP < nQtdeNet) .and. (cCorte != 'S') .and. !lAlterado
 		cErro := "PEDIDO INCLUIDO FALTANDO "+ AllTrim(Str(nQtdeNet - nQtdERP)) +" ITENS. NUMERO NO PROTHEUS: "+ cNumPed
 		GrvStatus(AllTrim(cIdPedido), 3, cErro)	
-		EnviaErro(cErro, aCabPed, aItemPed, 2)
+		EnviaErro(cErro, aCabPed, aItemPed, 2)		
 	Else
-		GrvStatus(idPedido, 2, "PEDIDO PROTHEUS "+ AllTrim(cNumPed), cNumPed)
-		//EnviaPedOk(cNumPed, aCabPed, aItemPed)			
-	
+		//-- Gustavo 13/02/19 - Caso o pedido tenha sido alterado pela integração
+		If(nQtdERP < nQtdeNet) .and. (cCorte != 'S') .and. lAlterado
+			cErro := "PEDIDO ALTERADO PELA INTEGRACAO " + AllTrim(cNumPed)
+			GrvStatus(AllTrim(cIdPedido), 2, cErro, cNumPed, lAlterado)	
+		Else
+		//-- Fim Gustavo 13/02/2019
+			GrvStatus(idPedido, 2, "PEDIDO PROTHEUS "+ AllTrim(cNumPed), cNumPed)
+			//EnviaPedOk(cNumPed, aCabPed, aItemPed)			
+		EndIf
 		cHORA := TIME()
 		
 	    //-- Realiza liberação total do pedido
@@ -1061,9 +1095,21 @@ Return
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Função responsável pela gravação de status do processamento na tabela intermediária³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Static Function GrvStatus(cPedido, nStatus, cMsg, cPedidoERP)
+Static Function GrvStatus(cPedido, nStatus, cMsg, cPedidoERP, lAlterado)
+
 Local cSql 		:= " "
 Local cRetorno 	:= '2'
+Local cSitua	:= ""
+Default lAlterado := .F.
+
+//-- Gustavo 13/02/19 - Controle da situação de retorno caso o pedido tenha sido alterado pela integração
+If (nStatus == 2) .and. lAlterado
+	cSitua := "576"
+Elseif nStatus == 2
+	cSitua := "76"
+Else
+	cSitua := "0"
+EndIf
 
 ConOut("IMPPEDNET - PEDIDO: "+ cMsg +" STATUS: ("+ Alltrim(Str(nStatus)) +") "+;
 			 iif(nStatus == 3, "ERRO DE INTEGRACAO", iif(nStatus == 9, "INICIANDO INTEGRACAO", iif(nStatus == 2, "INTEGRADO COM SUCESSO", "NAO INICIADO"))))
@@ -1074,7 +1120,7 @@ cSql += "       OBSERVACAO_GESTAO = '" + AllTrim(cMsg) +"', "
 cSql += "       NUMPED = '" + Alltrim(cPedidoERP) + "', "
 cSql += "       COD_PED_GESTAO = '" + Alltrim(cPedidoERP) + "', "
 cSql += "       RETORNO = '" + cRetorno + "',"
-cSql += "       SITUACAO_RETORNO = " + Str(Iif(nStatus == 2,76,0))
+cSql += "       SITUACAO_RETORNO = " + cSitua
 cSql += " WHERE CODIGO_PEDIDO = '"+ AllTrim(cPedido) +"'" 
 
 TcSqlExec(cSql)
@@ -1208,7 +1254,7 @@ Static Function BuscaObs(cPedido,nInd)
 Local cSql := ""
 
 cSql := "SELECT VALOR FROM POLIBRAS.POLIBRAS_OBSERVACAO "
-cSql += " WHERE INDICE = " + nInd
+cSql += " WHERE INDICE = " + Str(nInd)
 cSql += "   AND CODIGO_PEDIDO = " + Alltrim(cPedido)
 
 TCQUERY cSql NEW ALIAS "ALIASTMP3"
@@ -1688,7 +1734,7 @@ Private cPort := FGETPORT()
 	PED_NET->(DbGoTop())
 	Do While !PED_NET->(Eof())
 		If !Empty(PED_NET->MARK) 
-			If ( PED_NET->STATUS == 3 .OR. PED_NET->STATUS == 0 .OR. PED_NET->STATUS == 1 .OR. PED_NET->STATUS == 5 )
+			If ( PED_NET->STATUS == 3 .OR. PED_NET->STATUS == 0 .OR. PED_NET->STATUS == 1 .OR. PED_NET->STATUS == 5 .OR. PED_NET->STATUS == 9)
 				nPOSEMP := 0
 				If Len(aPEDIDO) > 0
 					nPOSEMP := aScan (aPEDIDO, {|x| x[1] == PED_NET->EMPRESA .and. x[2] == PED_NET->FILIAL })
