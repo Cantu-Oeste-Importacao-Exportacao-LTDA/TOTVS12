@@ -8089,7 +8089,7 @@ If  !lIssQn
 			    If cArt274 == "1"  .And. IIF(!lEndFis,ConvType(SM0->M0_ESTCOB),ConvType(SM0->M0_ESTENT)) == "SP"
 					// cMensFis += "Imposto Recolhido por Substituição - Artigo 274 do RICMS (Lei 6.374/89, art.67,Paragrafo 1o., e Ajuste SINIEF-4/93',cláusa terceira, na redação do Ajuste SINIEF-1/94) 'Cod.Produto:  " +ConvType(aProd[02])+" ' Valor da Base de ST: R$ " +str(nBaseIcm,15,2)+" Valor de ICMS ST: R$ "+str(nValICM,15,2)+" "
 					if Empty(At("Artigo 274 do RICMS", cMensFis))
-						cMensFis += "Imposto Recolhido por Substituição - Artigo 274 do RICMS (Lei 6.374/89, art.67,Paragrafo 1o., e Ajuste SINIEF-4/93',cláusa terceira, na redação do Ajuste SINIEF-1/94) &|"+ConvType(aProd[02])+"|"+AllTrim(str(nValICM,15,2))+"|&"
+						cMensFis += "Imposto Recolhido por Substituição - Artigo 274 do RICMS (Lei 6.374/89, art.67,Paragrafo 1o., e Ajuste SINIEF-4/93',cláusa terceira, na redação do Ajuste SINIEF-1/94) |"+ConvType(aProd[02])+"|"+AllTrim(str(nValICM,15,2))+"|&"
 					else
 						cMensFis := AllTrim(cMensFis) + "|"+ConvType(aProd[02])+"|"+AllTrim(str(nValICM,15,2))+"|&"
 					endif
@@ -11409,14 +11409,23 @@ if !empty(cUF) .and. !empty(cCST)
 			//AJUSTE EDISON 03/10/2019 GAMBIARA PARA LEVAR O CÓDIGO NA TAG CBENEF	
 			elseif  cCST == "40"
 				cCodlan := "PR810128"		
-				
+			
 			elseif  cCST == "41"
-				cCodlan := "PR810128"	
+				cCodlan := "PR809999"
+					
+			elseif  cCST == "50"
+				cCodlan := "PR849998"	
 				
 			elseif  cCST == "51"
 				cCodlan := "PR830001"	
-			endif	
-			//FIM
+			endif
+			
+		case cUF == "RJ"
+			if cCST == "40"
+				cCodlan := "RJ801016"		
+			endif
+			
+			//FIM GAMBIARA PARA LEVAR O CÓDIGO NA TAG CBENEF
 			
 		case cUF == "RS"
 			cCodlan := "SEM CBENEF"

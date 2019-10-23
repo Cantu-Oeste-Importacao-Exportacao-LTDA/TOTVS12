@@ -1673,13 +1673,13 @@ Do Case
 		
 	Case cBanco == "748"
 		    
-		    cBarDV += "3" + aDadosBanco[08] + SuBStr(M->NumBoleta, 01, 08) + dvBol + AllTrim(ADadosBanco[03]) + left(ADadosBanco[09],2)
+		    cBarDV += "1" + aDadosBanco[08] + SuBStr(M->NumBoleta, 01, 08) + dvBol + AllTrim(ADadosBanco[03]) + left(ADadosBanco[09],2)
 			cBarDV += right(ADadosBanco[09],5) + "1" + "0"
 		
 		
 			_cBarra := "748"  + "9" + M->FatorVcto
 			_cBarra += StrZero(nValLiq*100,10)
-			_cBarra += "3" + aDadosBanco[08] + SuBStr(M->NumBoleta, 01, 08) + dvBol + AllTrim(ADadosBanco[03]) + left(ADadosBanco[09],2)
+			_cBarra += "1" + aDadosBanco[08] + SuBStr(M->NumBoleta, 01, 08) + dvBol + AllTrim(ADadosBanco[03]) + left(ADadosBanco[09],2)
 			_cBarra += right(ADadosBanco[09],5) + "1" + "0" 
 			_cBarra += fDvCpoLv(cBarDV)
 			
@@ -2205,10 +2205,7 @@ Do Case
 	 
 	Case cBco == "748"
 		nCont := 0
-		nPeso := 2  
-		nCalc1 := 0
-		nCalc2 := 0
-		
+		nPeso := 2
 		
 		For i := len(_cBarCampo) to 1 step -1
 			nCont += Val(SubStr(_cBarCampo, i, 01)) * nPeso
@@ -2217,12 +2214,13 @@ Do Case
 				nPeso := 2
 			EndIf
 		Next i
-		       
 		
-		nCalc1 := mod(nCont,11)
-        nCalc2 := 11 - nCalc1
-                         
-    	Iif(((nCalc2 < 2) .OR. (nCalc2 > 9)),DV_BAR := "1", DV_BAR := alltrim(str(nCalc2)))
+		Resto  := nCont % 11
+		DV_BAR := AllTrim(Str(11 - Resto))
+		
+		if (11 - Resto) == 0 .or. (11 - Resto) == 1 .or. (11 - Resto) > 9
+			DV_BAR := "1"
+		EndIf
     	
     	
     	//旼컴컴컴컴컴컴컴컴컴컴컴��
@@ -3534,7 +3532,7 @@ Do Case
 		i       := 0
 		nFator  := 2
 		Resto   := 0
-		nBoleta := AllTrim(ADadosBanco[03]) + left(ADadosBanco[09],2) + right(ADadosBanco[09],5) + right(alltrim(str(year(dDatabase))),2) + "2" + right((cNumBco),5)
+		nBoleta := AllTrim(ADadosBanco[03]) + left(ADadosBanco[09],2) + right(ADadosBanco[09],5) + right(alltrim(str(year(dDatabase))),2) + "2" + SubStr(cNumBco ,04, 05) 
 		
 		For i := len(nBoleta) to 1 step -1
 			nCont += Val(SubStr(nBoleta,i,01)) * nFator
