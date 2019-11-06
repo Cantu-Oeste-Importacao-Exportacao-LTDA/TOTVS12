@@ -99,10 +99,8 @@ User Function XMLCTE14()
 						For iD4 := 1 To Len(oGetD1Cte:aHeader)
 							If Alltrim(oGetD1Cte:aHeader[iD4,2]) == Alltrim(aAlterD1[iD3])
 								aTotItem[iD1,iD2,2]	:= oGetD1Cte:aCols[iD1,iD4]
-								Exit
 							Endif
 						Next
-						Exit
 					Endif
 				Next	
 			Next

@@ -31,15 +31,15 @@ User Function VTX47SA1()
 	Local 	aCpos 		:= {}
     Local	cPais		:= "105"	// Brasil
     Local 	cCodPais	:= "01058"	// Brasil
-    Local	cNaturez	:= SuperGetMV("VT_VVNNAT", ,"1012001") // Natureza Ecommerce
+    Local	cNatur		:= SuperGetMV("VT_VVNNAT", ,"1012001") // Natureza Ecommerce
+    
     
     //-------------------------------------------------------------------
     // Campos que serão incluídos no array para a rotina MATA030
     //------------------------------------------------------------------- 	
-	
 	AAdd(aCpos, {"A1_PAIS"		, cPais		,	Nil} )
 	AAdd(aCpos, {"A1_CODPAIS"	, cCodPais	,	Nil} )
 	AAdd(aCpos, {"A1_X_SERAS"	, "N"		,	Nil} )
-	AAdd(aCpos, {"A1_NATUREZ"	, cNaturez	,	Nil} )
+	AAdd(aCpos, {"A1_NATUREZ"	, cNatur	,	Nil} )
 	
 Return aCpos

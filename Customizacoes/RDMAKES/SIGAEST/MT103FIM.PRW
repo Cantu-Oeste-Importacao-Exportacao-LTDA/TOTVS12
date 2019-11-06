@@ -2139,7 +2139,8 @@ Local oDlg
 				ACTIVATE DIALOG oDlg CENTER ON INIT EnchoiceBar(oDlg,{|| lVctoSE1 := .T., ODlg:End(), Nil }, {|| oDlg:End() })
 				
 				If lVctoSE1
-					If SE1->E1_EMISSAO < dVctoSE1  //-- Gustavo 17/07/17
+					//If SE1->E1_EMISSAO < dVctoSE1  //-- Gustavo 17/07/17
+					If SE1->E1_EMISSAO + 6 < dVctoSE1  //-- Gustavo 17/07/17
 						If RecLock("SE1",.F.)
 							SE1->E1_VENCTO  := dVctoSE1
 							SE1->E1_VENCREA := DataValida(dVctoSE1)
@@ -2148,7 +2149,7 @@ Local oDlg
 							lRet := .T.
 						EndIf
 					Else
-						ShowHelpDlg("Atenção",{"Data do vencimento não pode ser menor que da emissão."},5,{"Verifique a data de vencimento informada."},5)				
+						ShowHelpDlg("Atenção",{"Data do vencimento não pode ser menor que 7 dias da data de emissão."},5,{"Verifique a data de vencimento informada."},5)				
 					EndIf                                      				
 				EndIf
 			EndDo				

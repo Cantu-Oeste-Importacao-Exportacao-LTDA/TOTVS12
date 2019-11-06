@@ -2,7 +2,7 @@
 // Projeto: VTEX
 // Modulo : Integração E-Commerce
 // Fonte  : VTX46SC5
-// ---------+---;----------------+-----------------------------------------------------------
+// ---------+-------------------+-----------------------------------------------------------
 // Data     | Autor             | Descricao
 // ---------+-------------------+-----------------------------------------------------------
 // 21/11/18 | Adriano R. Ribeiro| Ponto de entrada para adicionar campos específicos no 
@@ -24,24 +24,35 @@ User Function VTX46SC5()
 	
 	Local aArea			:= GetArea()
 	Local aCpos 		:= {}
-	Local cClvl			:= SuperGetMV ("VT_VVNCLVL", ,"003001001")
-	Local cVend			:= ""
-	local cCentroC		:= SuperGetMV ("VT_CENCUST", ,"020202001")
+	Local cClvl			:= SuperGetMV ("VT_VVNCLVL", , "003001001")
+	Local cCentroC		:= SuperGetMV ("VT_CENCUST", , "020202001")
+	Local cVend1		:= cVendedor	// cVendedor = Variável Private gravada no pedido (C5_VEND1)
 	local _cCodAdm		:= SuperGetMV ("VT_VVCODAD", ,"005")
 	
-	If Empty(cMktPlcId)
-		cVend := "000059"
-	Else
-		cVend := "L00009"
-	EndIf
+	
+	Do Case
+		Case cAffiliateId == "BWW"
+			cVend1 := "L00016"
+		Case cAffiliateId == "CNV"
+			cVend1 := "L00010"
+		Case cAffiliateId == "MLB"
+			cVend1 := "L00017"
+		Case cAffiliateId == "MZL"
+			cVend1 := "L00014"
+		Case Empty(cAffiliateId)
+			cVend1 := "000059"
+		OtherWise
+			cVend1 := "L00009"
+	EndCase
+	
+	// cVendedor = Variável Private gravada no pedido (C5_VEND1)
+	cVendedor 	:= cVend1
 	
 	AAdd(aCpos, {"C5_X_CLVL"	, cClvl		, Nil}) 
-	AAdd(aCpos, {"C5_VEND1"		, cVend		, Nil})
 	AAdd(aCpos, {"C5_X_CC"		, cCentroC	, Nil})
-	AADD(aCpos, {"C5_XCODAUT"   , cAuthId  	, Nil})
-	AADD(aCpos, {"C5_XCODADQ"  	, _cCodAdm  	, Nil})
-	
-	
+	AAdd(aCpos, {"C5_XCODAUT"   , cAuthId  	, Nil})
+	AAdd(aCpos, {"C5_XCODADQ"  	, _cCodAdm  , Nil})
+		
 	RestArea(aArea)
 	
 Return aCpos

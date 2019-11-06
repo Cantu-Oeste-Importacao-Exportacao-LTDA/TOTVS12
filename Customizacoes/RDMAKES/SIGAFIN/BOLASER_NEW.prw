@@ -89,7 +89,7 @@ If ValType(_lAuto) == "U"
 	//³Verifica se o banco selecionado pode ser utilizado para emissão de boletos.³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	
-	if !MV_PAR16 $ "001/004/033/104/224/237/246/320/341/399/422/623/655/707/745/748/756"
+	if !MV_PAR16 $ "001/004/033/104/224/237/246/320/341/399/422/623/655/707/745/748/756/600"
 		aAdd(aMsg, "O BANCO " + AllTrim(MV_PAR16) + " NÃO ESTÁ PREPARADO PARA EMITIR BOLETOS.")
 		Return
 	EndIf
@@ -234,7 +234,7 @@ Else
 	//³Verifica se o banco selecionado pode ser utilizado para emissão de boletos.³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	
-	if !MV_PAR16 $ "001/004/033/104/224/237/246/320/341/422/623/655/707/745/748/756"
+	if !MV_PAR16 $ "001/004/033/104/224/237/246/320/341/422/623/655/707/745/748/756/600"
 		aAdd(aMsg, "O BANCO " + AllTrim(MV_PAR16) + " NÃO ESTÁ PREPARADO PARA EMITIR BOLETOS.")
 		Return
 	EndIf
@@ -505,11 +505,9 @@ WHILE SE1->(!EOF())
 	//³Valida CEP do Cliente³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	lBcoValCep := .F.
-	//lBcoValCep := cBanco $ "224/246/320/422/623/745" tirado validação de validação de cep do banco safra 422
 	lBcoValCep := cBanco $ "224/246/320/623/745"
 	
 	if lBcoValCep .and. MV_PAR15 != 1
-		//if cBanco $ "224/246/422/320/623" tirado validação de validação de cep do banco safra 422
 		if cBanco $ "224/246/320/623"
 			
 			if !U_ValCepBrd("237", SA1->A1_CEP)
@@ -1471,7 +1469,8 @@ Private cBco    := cBanco
 
 M->FatorVcto := StrZero( SE1->E1_VENCREA - Ctod("07/10/1997"), 04)
 
-//banco sicoob edison
+//Edison
+//banco sicoob considera outra data para o fator vencimento
 M->FatVtoSic := StrZero( SE1->E1_VENCREA - Ctod("03/07/2000") + 1000, 04)
 
 Do Case
@@ -1616,7 +1615,20 @@ Do Case
 		_cBarra += StrZero(SE1->E1_SALDO*100,10)
 		_cBarra += "7" + aDadosBanco[03] + aDadosBanco[04] + aDadosBanco[05] + aDadosBanco[06] +;
 		Trim(M->Numboleta) + "2"
-		                                         
+		                    
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso cod³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case cBanco == "600"
+		cAgeCor := ""
+		cAgeCor := SubStr(aDadosBanco[11], 01, 04)
+		cCtaCor := ""
+		cCtaCor := SubStr(aDadosBanco[12], 01, 07)
+		
+		_cBarra := "237"  + "9" + M->FatorVcto
+		_cBarra += StrZero(SE1->E1_SALDO*100,10)
+		_cBarra += cAgeCor + aDadosBanco[08] + Trim(M->Numboleta) + cCtaCor + "0"	                                         
 		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Banco Panamericano³
@@ -2088,6 +2100,33 @@ Do Case
 				DV_BAR := "1"
 			OtherWise
 				DV_BAR := AllTrim(Str(11 - nResto))
+		EndCase
+		
+		
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case cBco == "600"
+		i      := 0
+		nCont  := 0
+		Resto  := 0
+		Result := 0
+		cPeso  := 2
+		For i := Len(_cBarCampo) To 1 Step -1
+			nCont += Val( SUBSTR( _cBarCampo,i,1 )) * cPeso
+			cPeso++
+			If cPeso >  9
+				cPeso := 2
+			Endif
+		Next
+		Resto  := nCont % 11
+		Result := 11 - Resto
+		Do Case
+			Case Result == 10 .or. Result == 11
+				DV_BAR := "1"
+			OtherWise
+				DV_BAR := Str(Result,1)
 		EndCase
 		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -2704,6 +2743,41 @@ Do Case
 			_cResult := AllTrim(Str(Resto))
 		Endif
 		
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case cBco == "600"
+		nVal   := 0
+		Dezena := 0
+		Resto  := 0
+		nCont  := 0
+		Peso   := 2
+		
+		For i := Len(_cCampo) to 1 Step -1
+			
+			If Peso == 3
+				Peso := 1
+			Endif
+			
+			If Val(SUBSTR(_cCampo,i,1)) * Peso >= 10
+				nVal  := Val(SUBSTR(_cCampo,i,1)) * Peso
+				nCont += Val(SUBSTR(Str(nVal,2),1,1)) + Val(SUBSTR(Str(nVal,2),2,1))
+			Else
+				nCont += Val(SUBSTR(_cCampo,i,1)) * M->Peso
+			Endif
+			
+			Peso++
+		Next
+		
+		Dezena  := Substr(Str(nCont,2),1,1)
+		Resto   := ((Val(Dezena)+1) * 10) - nCont
+		If Resto  == 10
+			_cResult := "0"
+		Else
+			_cResult := Str(Resto,1)
+		Endif
+		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Banco Panamericano³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
@@ -3072,6 +3146,13 @@ Do Case
 		
 	Case aDadosBanco[01] == "422"
 		cSeqNNro := StrZero(Val(cSeqBco)+1,9)
+		
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco ABC³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "600"
+		cSeqNNro := StrZero(Val(cSeqBco)+1,11)	
 		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Banco Panamericano³
@@ -3446,6 +3527,37 @@ Do Case
 		EndCase
 		*/
 		
+			//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "600"
+		nCont   := 0
+		cPeso   := 2
+		nBoleta := aDadosBanco[08] + cNumBco
+		
+		For i := len(nBoleta) To 1 Step -1
+			nCont := nCont + (Val(SubStr(nBoleta,i,1))) * cPeso
+			cPeso := cPeso + 1
+			If cPeso == 8
+				cPeso := 2
+			Endif
+			
+		Next i
+		
+		Resto := ( nCont % 11 )
+		
+		Do Case
+			Case Resto == 1
+				cDv := "P"
+			Case Resto == 0
+				cDv := "0"
+			OtherWise
+				Resto := ( 11 - Resto )
+				cDv := AllTrim(Str(Resto))
+		EndCase		
+		
+		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Banco Panamericano³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
@@ -3680,6 +3792,13 @@ Do Case
 	Case aDadosBanco[01] == "422"
 		cSeq := StrZero(Val(SubStr(cNNro,01,09)),09) 
 		
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "600"
+		cSeq := StrZero(Val(SubStr(cNNro,01,11)),11)	
+		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Banco Panamericano³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
@@ -3825,7 +3944,13 @@ Do Case
 		
 	Case cBanco == "422"
 		cRet := "PAGÁVEM EM QUALQUER BANCO ATÉ A DATA DE VENCIMENTO."
+	
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
 		
+	Case cBanco == "600"
+		cRet := "PAGAVEL PREFERENCIALMENTE NAS AGÊNCIAS BRADESCO."	
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 		//³Banco Panamericano³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
@@ -3995,6 +4120,13 @@ Do Case
 		
 	Case cBanco == "422"
 		cRet := Upper(AllTrim(SM0->M0_NOMECOM)) + "   " + Transform(AllTrim(SM0->M0_CGC),"@R 99.999.999/9999-99")
+
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Bic Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case cBanco == "600"
+	    cRet := "59.118.133/0001-00 Banco Luso Brasileiro R Pascoal,525 14° Andar Brookilm 04.581-060 SP/SP  " 
 		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ?
 		//³Banco Panamericano³
@@ -4157,6 +4289,15 @@ Do Case
 	Case aDadosBanco[01] == "422" //aqui
 		cCodAge := aDadosBanco[03] + aDadosBanco[04]
 		cCodCed := aDadosBanco[05] + aDadosBanco[06]
+		cRet := cCodAge + " / " + cCodCed
+		
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "600"
+		cCodAge := SubStr(aDadosBanco[11], 01, 04) + "-" + SubStr(aDadosBanco[11], 05, 01)
+		cCodCed := SubStr(aDadosBanco[12], 01, 07) + "-" + SubStr(aDadosBanco[12], 08, 01)
 		cRet := cCodAge + " / " + cCodCed
 		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -4375,6 +4516,12 @@ Do Case
 	Case aDadosBanco[01] == "422"  
 		cRet :=  Trim(cBoleto)
 		
+   	    //ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "600"
+		cRet := aDadosBanco[08] + " / " + Trim(cBoleto) + "-" + Trim(cDv)
 		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ?
 		//³Banco Panamericano³
@@ -4571,6 +4718,12 @@ Do Case
 	Case cBanco == "422"
 		cRet := "-7"
 		
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case cBanco == "600"
+		cRet := "-2"	
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Banco Panamericano³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
@@ -4704,6 +4857,13 @@ Do Case
 	Case aDadosBanco[01] == "422"
 		cRet := aDadosBanco[08]
 		
+	    //ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case aDadosBanco[01] == "600"
+		cRet := aDadosBanco[08]
+		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Banco Panamericano³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
@@ -4829,6 +4989,13 @@ Do Case
 		
 	//Case cBanco == "422"
 		//cRet := "237"
+		
+		//ÚÄÄÄÄÄÄÄÄÄ¿
+		//³Banco Luso³
+		//ÀÄÄÄÄÄÄÄÄÄÙ
+		
+	Case cBanco == "600"
+		cRet := "237"	
 		
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Banco Panamericano³

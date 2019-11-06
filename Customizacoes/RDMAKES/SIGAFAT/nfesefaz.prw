@@ -11399,33 +11399,37 @@ default cUF 	:= ""
 default cCST 	:= ""
 
 if !empty(cUF) .and. !empty(cCST)
+	//INICIO
+	//AJUSTE EDISON 03/10/2019 GAMBIARA PARA LEVAR O CÓDIGO NA TAG CBENEF	
 
 	do case
-		case cUF == "PR"
-			if cCST == "90"
+		case  cUF == "PR"
+		
+			if cCST == "90" .and. cEmpAnt $ "01/02/03/04/05/06/07/09/13/14/15/16/17/40/41" 
 				cCodlan := "SEM CBENEF"
 			
-			//INICIO
-			//AJUSTE EDISON 03/10/2019 GAMBIARA PARA LEVAR O CÓDIGO NA TAG CBENEF	
-			elseif  cCST == "40"
+			elseif cCST == "40" .and. cEmpAnt $ "01/02/03/04/05/06/07/09/13/14/15/16/17/40/41" 
 				cCodlan := "PR810128"		
 			
-			elseif  cCST == "41"
-				cCodlan := "PR809999"
+			elseif cCST == "41" .and. cEmpAnt $ "01/02/03/04/05/06/07/09/13/14/15/16/17/40/41" 
+				cCodlan := "PR809998"
 					
-			elseif  cCST == "50"
+			elseif cCST == "50" .and. cEmpAnt $ "01/02/03/04/05/06/07/09/13/14/15/16/17/40/41" 
 				cCodlan := "PR849998"	
 				
-			elseif  cCST == "51"
-				cCodlan := "PR830001"	
+			elseif cCST == "51" .and. cEmpAnt $ "01/03/04/05/06/07/09/13/14/15/16/17/40/41" 
+				cCodlan := "PR830001"
+			
+			elseif cCST == "51" .and. cEmpAnt $ "02" 		
+			    cCodlan := "PR830002"
 			endif
+				
 			
 		case cUF == "RJ"
-			if cCST == "40"
+			if cCST == "40" .and. cEmpAnt $ "02/42"
 				cCodlan := "RJ801016"		
 			endif
 			
-			//FIM GAMBIARA PARA LEVAR O CÓDIGO NA TAG CBENEF
 			
 		case cUF == "RS"
 			cCodlan := "SEM CBENEF"
@@ -11433,6 +11437,8 @@ if !empty(cUF) .and. !empty(cCST)
 				cCodlan := ""
 			endif
 	endCase
+
+	//FIM GAMBIARA PARA LEVAR O CÓDIGO NA TAG CBENEF
 
 endif
 
