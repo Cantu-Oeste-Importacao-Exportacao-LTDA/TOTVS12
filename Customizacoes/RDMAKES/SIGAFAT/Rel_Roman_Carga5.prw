@@ -1,7 +1,10 @@
 #include "rwmake.ch"
 #include "TopConn.ch"
-#INCLUDE "RCAOMS.CH"
+//#INCLUDE "RCAOMS.CH"
 #define DMPAPER_A4 9
+
+
+
 
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -472,7 +475,7 @@ PrintS(IncLin(0), 010, Transform(TMPDAK->DAK_PESO, PesqPict("DAK","DAK_PESO")), 
 PrintS(IncLin(0), 030, "VOL. UTIL: " + Transform(TMPDAK->DAK_CAPVOL, PesqPict("DAK","DAK_CAPVOL")), 2)
 PrintS(IncLin(0), 052, OemtoAnsi("PTOS ENTREGA : "), 2) 
 PrintS(IncLin(0), 067, Transform(TMPDAK->DAK_PTOENT, PesqPict("DAK","DAK_PTOENT")), 2)
-PrintS(IncLin(1), 000, OemtoAnsi(STR0013) +DtoC(SToD(TMPDAK->DAK_DATA)) + OemtoAnsi(STR0014) + TMPDAK->DAK_HORA, 2)
+PrintS(IncLin(1), 000, OemtoAnsi("DATA    :") +DtoC(SToD(TMPDAK->DAK_DATA)) + OemtoAnsi(" AS ") + TMPDAK->DAK_HORA, 2)
 
 if nOrient == 2  //PAISAGEM
 	DrawH(IncLin(1), 0, 124, 3)

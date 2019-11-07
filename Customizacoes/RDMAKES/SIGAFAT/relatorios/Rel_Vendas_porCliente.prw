@@ -1,4 +1,4 @@
-#INCLUDE "MATR780.CH" 
+//#INCLUDE "MATR780.CH" 
 #INCLUDE "FIVEWIN.CH"  
 
 
@@ -54,19 +54,22 @@ Return
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 /*/
+	
+
+
 User Function Matr780A()
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define Variaveis                                             ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 LOCAL wnrel
 LOCAL tamanho:=IIF(cPaisLoc=="MEX","G","M")
-LOCAL titulo := OemToAnsi(STR0001)	//"Estatisticas de Vendas (Cliente x Produto)"
-LOCAL cDesc1 := OemToAnsi(STR0002)	//"Este programa ira emitir a relacao das compras efetuadas pelo Cliente,"
-LOCAL cDesc2 := OemToAnsi(STR0003)	//"totalizando por produto e escolhendo a moeda forte para os Valores."
+LOCAL titulo := OemToAnsi("Estatisticas de Vendas (Cliente x Produto)")	//"Estatisticas de Vendas (Cliente x Produto)"
+LOCAL cDesc1 := OemToAnsi("Este programa ira emitir a relacao das compras efetuadas pelo Cliente,")	//"Este programa ira emitir a relacao das compras efetuadas pelo Cliente,"
+LOCAL cDesc2 := OemToAnsi("totalizando por produto e escolhendo a moeda forte para os Valores.")	//"totalizando por produto e escolhendo a moeda forte para os Valores."
 LOCAL cDesc3 := ""
 LOCAL cString:= "SD2"
 
-PRIVATE aReturn := { OemToAnsi(STR0004), 1,OemToAnsi(STR0005), 1, 2, 1, "",1 }		//"Zebrado"###"Administracao"
+PRIVATE aReturn := { OemToAnsi("Zebrado"), 1,OemToAnsi("Administracao"), 1, 2, 1, "",1 }		//"Zebrado"###"Administracao"
 PRIVATE nomeprog:="MATR780"
 PRIVATE nLastKey := 0
 PRIVATE cPerg   :="MR780A"
@@ -113,9 +116,9 @@ pergunte(cPerg,.F.)
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Monta o Cabecalho de acordo com o tipo de emissao            ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-titulo := STR0006	//"ESTATISTICAS DE VENDAS (Cliente X Produto)"
-Cabec1 := STR0007	//"CLIENTE   RAZAO SOCIAL"
-Cabec2 := STR0008 //"PRODUTO         DESCRICAO                  NOTA FISCAL        EMISSAO   UN   QUANTIDADE    PRECO UNITARIO            TOTAL  VENDEDOR"
+titulo := "ESTATISTICAS DE VENDAS (Cliente X Produto)"	//"ESTATISTICAS DE VENDAS (Cliente X Produto)"
+Cabec1 := "CLIENTE   RAZAO SOCIAL"	//"CLIENTE   RAZAO SOCIAL"
+Cabec2 := "PRODUTO         DESCRICAO                  NOTA FISCAL        EMISSAO   UN   QUANTIDADE    PRECO UNITARIO            TOTAL  VENDEDOR" //"PRODUTO         DESCRICAO                  NOTA FISCAL        EMISSAO   UN   QUANTIDADE    PRECO UNITARIO            TOTAL  VENDEDOR"
 // 123456789012345 123456789012345678901234567890 123456/123 12/12/1234 123456789012 1234567890123456 1234567890123456 123456/123456/123456/123456/123456
 
 wnrel:="MATR780"
@@ -159,9 +162,9 @@ LOCAL nTotCli1:= 0,nTotCli2:=0,nTotGer1 := 0,nTotGer2 := 0
 LOCAL nOrdem
 LOCAL tamanho:= "P"
 LOCAL limite := IIF(cPaisLoc=="MEX",80,80)
-LOCAL titulo := OemToAnsi(STR0006)	//"ESTATISTICAS DE VENDAS (Cliente X Produto)"
-LOCAL cDesc1 := OemToAnsi(STR0002)	//"Este programa ira emitir a relacao das compras efetuadas pelo Cliente,"
-LOCAL cDesc2 := OemToAnsi(STR0003)	//"totalizando por produto e escolhendo a moeda forte para os Valores."
+LOCAL titulo := OemToAnsi("ESTATISTICAS DE VENDAS (Cliente X Produto)")	//"ESTATISTICAS DE VENDAS (Cliente X Produto)"
+LOCAL cDesc1 := OemToAnsi("Este programa ira emitir a relacao das compras efetuadas pelo Cliente,")	//"Este programa ira emitir a relacao das compras efetuadas pelo Cliente,"
+LOCAL cDesc2 := OemToAnsi("totalizando por produto e escolhendo a moeda forte para os Valores.")	//"totalizando por produto e escolhendo a moeda forte para os Valores."
 LOCAL cDesc3 := ""
 LOCAL cMoeda
 LOCAL nAcN1  := 0, nAcN2 := 0, nV := 0
@@ -226,7 +229,7 @@ cbcont   := 0
 li       := 80
 m_pag    := 1
 
-cMoeda := STR0010+GetMV("MV_SIMB"+Str(mv_par09,1))		//"Valores em "
+cMoeda := "Valores em "+GetMV("MV_SIMB"+Str(mv_par09,1))		//"Valores em "
 titulo := titulo+" "+cMoeda
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -254,14 +257,14 @@ cArqTrab1  := CriaTrab( "" , .F. )
 	    cQuery += " AND SD1.D1_LOCAL BETWEEN '" + MV_PAR20 + "' AND '" + MV_PAR21 + "' "
 	    cQuery += " ORDER BY SD1.D1_FILIAL,SD1.D1_FORNECE,SD1.D1_LOJA,SD1.D1_COD"
 	    cQuery := ChangeQuery(cQuery)
-	    MsAguarde({|| dbUseArea(.T., "TOPCONN", TCGenQry(,,cQuery),'SD1TRB', .F., .T.)},OemToAnsi(STR0011)) //"Seleccionado registros"
+	    MsAguarde({|| dbUseArea(.T., "TOPCONN", TCGenQry(,,cQuery),'SD1TRB', .F., .T.)},OemToAnsi("Selecionando Registros...")) //"Seleccionado registros"
 	    For nj := 1 to Len(aStru)
 		    If aStru[nj,2] != 'C'
 			   TCSetField('SD1TRB', aStru[nj,1], aStru[nj,2],aStru[nj,3],aStru[nj,4])
 		    EndIf	
 	    Next nj
 	    A780CriaTmp(cArqTrab1, aStru, cSD1, "SD1TRB")
-	    IndRegua(cSD1,cArqTrab1,"D1_FILIAL+D1_FORNECE+D1_LOJA+D1_COD",,".T.",STR0011)		//"Selecionando Registros..."
+	    IndRegua(cSD1,cArqTrab1,"D1_FILIAL+D1_FORNECE+D1_LOJA+D1_COD",,".T.","Selecionando Registros...")		//"Selecionando Registros..."
 	Else    
 #ENDIF
 	    cSD1	   := "SD1"
@@ -275,7 +278,7 @@ cArqTrab1  := CriaTrab( "" , .F. )
 	    cCondicao1 += 'D1_TIPO=="D" .And. !('+IsRemito(2,'SD1->D1_TIPODOC')+')'	    		
 
 	    cArqTrab1  := CriaTrab("",.F.)
-	    IndRegua(cSD1,cArqTrab1,"D1_FILIAL+D1_FORNECE+D1_LOJA+D1_COD",,cCondicao1,STR0011)		//"Selecionando Registros..."
+	    IndRegua(cSD1,cArqTrab1,"D1_FILIAL+D1_FORNECE+D1_LOJA+D1_COD",,cCondicao1,"Selecionando Registros...")		//"Selecionando Registros..."
 	    nIndD1 := RetIndex()
 
         #IFNDEF TOP	    
@@ -338,7 +341,7 @@ cArqTrab2  := CriaTrab( "" , .F. )
 	    // fim do específico Cantu
 	    cQuery += "ORDER BY SD2.D2_FILIAL,SD2.D2_CLIENTE,SD2.D2_LOJA,SD2.D2_SERIE, SD2.D2_DOC,SD2.D2_ITEM"
 	    cQuery := ChangeQuery(cQuery)
-	    MsAguarde({|| dbUseArea(.T., "TOPCONN", TCGenQry(,,cQuery),'SD2TRB', .F., .T.)},OemToAnsi(STR0011)) //"Seleccionado registros"
+	    MsAguarde({|| dbUseArea(.T., "TOPCONN", TCGenQry(,,cQuery),'SD2TRB', .F., .T.)},OemToAnsi("Selecionando Registros...")) //"Seleccionado registros"
 	    // monta a mesma estrutra da query
 	    ///aStru := SD2TRB->(dbStruct())
 	    
@@ -349,7 +352,7 @@ cArqTrab2  := CriaTrab( "" , .F. )
 	    Next nj
 
 	    CriaTmpSD2(cArqTrab2, aStru, cSD2, "SD2TRB")
-	    IndRegua(cSD2,cArqTrab2,"D2_FILIAL+D2_CLIENTE+D2_LOJA+D2_SERIE+D2_DOC+D2_COD+D2_ITEM",,".T.",STR0011)		//"Selecionando Registros..."
+	    IndRegua(cSD2,cArqTrab2,"D2_FILIAL+D2_CLIENTE+D2_LOJA+D2_SERIE+D2_DOC+D2_COD+D2_ITEM",,".T.","Selecionando Registros...")		//"Selecionando Registros..."
     Else
 #ENDIF                   
 	    cSD2	  := "SD2"
@@ -363,7 +366,7 @@ cArqTrab2  := CriaTrab( "" , .F. )
 	    cCondicao += '!(D2_TIPO $ "BD")'
 	    cCondicao += '.And. !('+IsRemito(2,'SD2->D2_TIPODOC')+')'		
  
-	    IndRegua(cString,cArqTrab2,"D2_FILIAL+D2_CLIENTE+D2_LOJA+D2_COD+D2_SERIE+D2_DOC+D2_ITEM",,cCondicao,STR0011)		//"Selecionando Registros..."
+	    IndRegua(cString,cArqTrab2,"D2_FILIAL+D2_CLIENTE+D2_LOJA+D2_COD+D2_SERIE+D2_DOC+D2_ITEM",,cCondicao,"Selecionando Registros...")		//"Selecionando Registros..."
 	    nIndD2 := RetIndex()
 
         #IFNDEF TOP	    
@@ -418,7 +421,7 @@ Endif
 While (cAliasSA1)->( ! EOF() .AND. A1_COD <= MV_PAR02 ) .And. lContinua .And. (cAliasSA1)->A1_FILIAL == xFilial("SA1")
 	
 	If lEnd
-		@Prow()+1,001 Psay STR0012	//"CANCELADO PELO OPERADOR"
+		@Prow()+1,001 Psay "CANCELADO PELO OPERADOR"	//"CANCELADO PELO OPERADOR"
 		lContinua := .F.
 		Exit
 	EndIf
@@ -504,7 +507,7 @@ While (cAliasSA1)->( ! EOF() .AND. A1_COD <= MV_PAR02 ) .And. lContinua .And. (c
 					@ Li,000 Psay (cSD2)->D2_CLIENTE+"   "+(cAliasSA1)->A1_NOME
 					If !Empty((cAliasSA1)->A1_OBSERV)
 						Li++
-						@ Li,000 Psay STR0013+(cAliasSA1)->A1_OBSERV		//"Obs.: "
+						@ Li,000 Psay "Obs.: "+(cAliasSA1)->A1_OBSERV		//"Obs.: "
 					EndIf
 					Li++
 					lNewCli := .F.
@@ -520,7 +523,7 @@ While (cAliasSA1)->( ! EOF() .AND. A1_COD <= MV_PAR02 ) .And. lContinua .And. (c
 					@ Li,000 Psay (cSD2)->D2_CLIENTE+"   "+(cAliasSA1)->A1_NOME
 					If !Empty((cAliasSA1)->A1_OBSERV)
 						Li++
-						@ Li,000 Psay STR0013+(cAliasSA1)->A1_OBSERV		//"Obs.: "
+						@ Li,000 Psay "Obs.: "+(cAliasSA1)->A1_OBSERV		//"Obs.: "
 					EndIf
 					Li+=2
 				EndIf
@@ -577,7 +580,7 @@ While (cAliasSA1)->( ! EOF() .AND. A1_COD <= MV_PAR02 ) .And. lContinua .And. (c
 					//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 					If nDevQtd!=0
 						//Li++
-						//@Li,023 Psay STR0017 // "DEV"
+						//@Li,023 Psay "DEV" // "DEV"
 						nVlrTot:= nDevVal
 						//@Li,aColuna[3] Psay cUM
 						//@Li,aColuna[4] Psay nDevQtd          PICTURE "@)"+PesqPictqt("D2_QUANT",14)
@@ -617,7 +620,7 @@ While (cAliasSA1)->( ! EOF() .AND. A1_COD <= MV_PAR02 ) .And. lContinua .And. (c
 			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 			If nAcN1#0 .Or. nAcN2#0	.Or. nDevQtd#0
 				//Li++
-				//@Li ,  07 Psay STR0014+cProdAnt	//"TOTAL DO PRODUTO - "
+				//@Li ,  07 Psay "TOTAL DO PRODUTO - "+cProdAnt	//"TOTAL DO PRODUTO - "
 				//@Li ,  52 Psay "---->"
 				//@Li , aColuna[3] Psay cUM
 				//@Li , aColuna[4] Psay nAcN1 PICTURE PesqPictqt("D2_QUANT",14)
@@ -633,7 +636,7 @@ While (cAliasSA1)->( ! EOF() .AND. A1_COD <= MV_PAR02 ) .And. lContinua .And. (c
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 		If !(lNewCli)
 			LI+=2
-			@Li , 07 Psay STR0015+cClieAnt+'/'+cLojaAnt	//"TOTAL DO CLIENTE - "
+			@Li , 07 Psay "TOTAL DO CLIENTE - "+cClieAnt+'/'+cLojaAnt	//"TOTAL DO CLIENTE - "
 			@Li , 42 Psay "---->"
 			//@Li ,aColuna[4] Psay nTotCli1 PICTURE PesqPictqt("D2_QUANT",16)
 			@Li ,aColuna[3] Psay nTotCli2 PICTURE PesqPict("SD2","D2_TOTAL",16,mv_par09)
@@ -723,7 +726,7 @@ While (cAliasSA1)->( ! EOF() .AND. A1_COD <= MV_PAR02 ) .And. lContinua .And. (c
 						@ Li,009 Psay (cAliasSA1)->A1_NOME
 						If !Empty((cAliasSA1)->A1_OBSERV)
 							Li++
-							@ Li,000 Psay STR0013+(cAliasSA1)->A1_OBSERV		//"Obs.: "
+							@ Li,000 Psay "Obs.: "+(cAliasSA1)->A1_OBSERV		//"Obs.: "
 						EndIf
 					
 						Li+=2
@@ -737,7 +740,7 @@ While (cAliasSA1)->( ! EOF() .AND. A1_COD <= MV_PAR02 ) .And. lContinua .And. (c
 					cUM := (cSD1)->D1_UM
 				
 					//@Li ,  0 Psay (cSD1)->D1_COD
-					@li , 5 Psay STR0017 //"DEV"
+					@li , 5 Psay "DEV" //"DEV"
 					@Li , aColuna[1] Psay (cSD1)->(D1_DOC+'/'+D1_SERIE) // 
 					nVlrTot:=xMoeda((cSD1)->(D1_TOTAL-D1_VALDESC),SF1->F1_MOEDA,mv_par09,(cSD1)->D1_DTDIGIT,nDecs,SF1->F1_TXMOEDA)
 					//@Li,aColuna[3] Psay cUM
@@ -753,7 +756,7 @@ While (cAliasSA1)->( ! EOF() .AND. A1_COD <= MV_PAR02 ) .And. lContinua .And. (c
 			
 			If (nTotCli1 != 0) .or. (nTotCli2 != 0)
 				LI+=2
-				@Li , 07 Psay STR0015+(cAliasSA1)->A1_COD	//"TOTAL DO CLIENTE - "
+				@Li , 07 Psay "TOTAL DO CLIENTE - "+(cAliasSA1)->A1_COD	//"TOTAL DO CLIENTE - "
 				@Li , 40 Psay "---->"
 				//@Li ,aColuna[4] Psay nTotCli1 PICTURE "@)"+PesqPictqt("D2_QUANT",16)
 				@Li ,aColuna[3] Psay nTotCli2 PICTURE PesqPict("SD2","D2_TOTAL",16,mv_par09)

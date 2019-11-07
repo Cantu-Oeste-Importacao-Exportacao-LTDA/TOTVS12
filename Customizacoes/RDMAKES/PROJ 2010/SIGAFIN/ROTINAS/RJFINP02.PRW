@@ -1,8 +1,9 @@
-#include "FINA410.CH"
+//#include "FINA410.CH"
 #Include "PROTHEUS.CH"
 #include "rwmake.ch"
 #include "topconn.ch"
 #include "tbiconn.ch"
+
 
 /*/
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -39,7 +40,7 @@ Private lDireto   := .T.
 //³Título do Processo: "Refaz Dados Clientes/Fornecedores"³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-Private cCadastro := OemToAnsi(STR0003)  
+Private cCadastro := OemToAnsi("Refaz Dados Clientes/fornecedores")  
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Seta o tipo 'Processo' ou 'Relatório', Grupo de Pergunta e Título do Processamento³
@@ -77,8 +78,8 @@ If lDireto
 Else
 
 	Pergunte("AFI410",.f.)
-	AADD(aSays, OemToAnsi(STR0004))  //"  Este programa tem como objetivo recalcular os saldos acumulados de    "
-	AADD(aSays, OemToAnsi(STR0005))  //"clientes e/ou fornecedores.                                             "
+	AADD(aSays, OemToAnsi("  este programa tem como objectivo recalcular os saldos acumulados de    "))  //"  Este programa tem como objetivo recalcular os saldos acumulados de    "
+	AADD(aSays, OemToAnsi("Clientes e/ou fornecedores.                                             "))  //"clientes e/ou fornecedores.                                             "
 	AADD(aButtons, { 1,.T.,{|o| nOpca:= 1,o:oWnd:End()}} )
 	AADD(aButtons, { 2,.T.,{|o| o:oWnd:End() }} )
 	AADD(aButtons, { 5,.T.,{|| Pergunte("AFI410",.T. ) } } )

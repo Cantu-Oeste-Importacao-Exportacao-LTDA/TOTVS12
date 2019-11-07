@@ -1,5 +1,5 @@
 #Include "PROTHEUS.CH"
-#INCLUDE "GPER040.CH"
+//#INCLUDE "GPER040.CH"
 
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -77,17 +77,17 @@ User Function GpeR040()
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define Variaveis Locais (Basicas)                            ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Local cDesc1 	:= STR0001		//"Folha de Pagamento"
-Local cDesc2 	:= STR0002		//"Ser  impresso de acordo com os parametros solicitados pelo usuario."
-Local cDesc3 	:= STR0003		//"Obs. Dever  ser impressa uma Folha/Resumo para cada Tipo de Contrato."
+Local cDesc1 	:= "Folha De Pagamento"		//"Folha de Pagamento"
+Local cDesc2 	:= "Sera impresso de acordo com os parâmetro s solicitados pelo utilizador."		//"Ser  impresso de acordo com os parametros solicitados pelo usuario."
+Local cDesc3 	:= "Obs. Deverá Ser Impressa Uma Folha/resumo Para Cada Tipo De Contrato."		//"Obs. Dever  ser impressa uma Folha/Resumo para cada Tipo de Contrato."
 Local cString	:= "SRA"        				// alias do arquivo principal (Base)
-Local aOrd      := {STR0004,STR0005,STR0006,STR0007,STR0008,'Segmento+C.Custo'}		//"C.Custo do Cadastro"###"Matricula"###"Nome"###"C.Custo do Movto."###"C.Custo + Nome"###"C.Custo + Item + Classe"
+Local aOrd      := {"C.custo Do Registo","Registro","Nome","C.custo Do Movimento","C.custo + Nome",'Segmento+C.Custo'}		//"C.Custo do Cadastro"###"Matricula"###"Nome"###"C.Custo do Movto."###"C.Custo + Nome"###"C.Custo + Item + Classe"
 Local cMesAnoRef
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define Variaveis Private(Basicas)                            ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Private aReturn := { STR0009, 1,STR0010, 2, 2, 1,"",1 }	//"Zebrado"###"Administra‡„o"
+Private aReturn := { "Código de barras", 1,"Administração", 2, 2, 1,"",1 }	//"Zebrado"###"Administra‡„o"
 Private nomeprog:= "GPER040"
 Private aLinha  := {},nLastKey := 0
 Private cPerg   := "GPR040CUS"
@@ -95,7 +95,7 @@ Private cPerg   := "GPR040CUS"
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Variaveis Utilizadas na funcao IMPR                          ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Private Titulo	:= STR0011		//"IMPRESSŽO DA FOLHA DE PAGAMENTO"
+Private Titulo	:= 'IMPRESSÄO DA FOLHA DE PAGAMENTO'		//"IMPRESSŽO DA FOLHA DE PAGAMENTO"
 Private AT_PRG  := "GPER040"
 Private wCabec0 := 1
 Private wCabec1 := ""
@@ -120,7 +120,7 @@ Private lTemClVlRC	 := SRC->( FieldPos( "RC_X_CLVL" ) # 0 )
 U_USORWMAKE(ProcName(),FunName())
 
 If lTemItemRA .AND. lTemClVlRA .AND. lTemItemRI .AND. lTemClVlRI .AND. lTemItemRC .AND. lTemClVlRC
-	aAdd( aOrd, STR0072 ) // "C.Custo + Item + Classe"
+	aAdd( aOrd, "C.custo + Item + Classe" ) // "C.Custo + Item + Classe"
 EndIf
 ValidPerg()
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -203,17 +203,17 @@ cSegAte  := mv_par25
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³  Pega descricao da semana                                    ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-cDesOrdem:=If(nOrdem == 1,STR0012,If(nOrdem==2,STR0013,If(nOrdem==3,STR0014,If(nOrdem==4,STR0015,If(nOrdem==5,STR0016,STR0072)))))		//"  ORDEM: C.C. DO CADASTRO"###"  ORDEM: MATRICULA"###"  ORDEM: NOME"###"  C.C. DO MOVTO."###"  C.CUSTO + NOME"
+cDesOrdem:=If(nOrdem == 1,"  Ordem: C.c. Do Registo",If(nOrdem==2,"  Ordem: Registo",If(nOrdem==3,"  Ordem: Nome",If(nOrdem==4,"  C.C. DO MOVTO.",If(nOrdem==5,"  C.custo + Nome","C.custo + Item + Classe")))))		//"  ORDEM: C.C. DO CADASTRO"###"  ORDEM: MATRICULA"###"  ORDEM: NOME"###"  C.C. DO MOVTO."###"  C.CUSTO + NOME"
 
 If Semana # Space(2) .And. Semana # "99"
 	cCabec := fRetPer( Semana,dDataRef )
 Else
-	cCabec := " / "+Upper(MesExtenso(Month(dDataRef)))+STR0017+STR(YEAR(dDataRef),4) + cDesOrdem	//" DE "
+	cCabec := " / "+Upper(MesExtenso(Month(dDataRef)))+" de "+STR(YEAR(dDataRef),4) + cDesOrdem	//" DE "
 Endif
 
-Titulo := STR0018+If(nRelat==1,STR0019,;				//"FOLHA "###"DO ADIANTAMENTO "
-Iif(nRelat==2,STR0020,If(nRelat==3,STR0021,;	//"DE PAGAMENTO "###"DA 1a. PARCELA 13o SAL. "
-STR0022))) + cCabec 							//"DA 2a. PARCELA 13o SAL."
+Titulo := "Folha "+If(nRelat==1,"Do adiantamento ",;				//"FOLHA "###"DO ADIANTAMENTO "
+Iif(nRelat==2,"De pagamento ",If(nRelat==3,"Da 1ª. parcela subsídio de Natal. ",;	//"DE PAGAMENTO "###"DA 1a. PARCELA 13o SAL. "
+"Da 2ª. Parcela Subsídio De Natal."))) + cCabec 							//"DA 2a. PARCELA 13o SAL."
 
 NewHead    := Nil
 
@@ -778,9 +778,9 @@ Else
 Endif
 
 If cPaisLoc == "URU"
-	WCabec1 := STR0023+aInfo[3]+" "+If(nTipo#4,STR0027+cFilAnterior+" - "+aInfo[1],Space(26))+Space(23)	//"Empresa: "
+	WCabec1 := "Empresa: "+aInfo[3]+" "+If(nTipo#4,"Fil.: "+cFilAnterior+" - "+aInfo[1],Space(26))+Space(23)	//"Empresa: "
 Else
-	WCabec1 := STR0023+aInfo[3]+" "+If(nTipo#4,STR0027+cFilAnterior+" - "+aInfo[1],Space(26))+Space(23)+STR0024+If(cTpC$' *1',STR0025,STR0026)	//"Empresa: "###" Contrato do Tipo : "###"Indeterminado"###"Determinado"
+	WCabec1 := "Empresa: "+aInfo[3]+" "+If(nTipo#4,"Fil.: "+cFilAnterior+" - "+aInfo[1],Space(26))+Space(23)+" contrato do tipo : "+If(cTpC$' *1',"Indeterminado","Determinado")	//"Empresa: "###" Contrato do Tipo : "###"Indeterminado"###"Determinado"
 Endif
 If nTipo == 1 
 
@@ -789,7 +789,7 @@ If nTipo == 1
 	  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
 	fBuscaFunc(dDataRef,@cCodFunc, @cDescFunc ) 
 
-	DET:= ALLTRIM(STR0028)		 //" C.CUSTO: "
+	DET:= ALLTRIM(" c.custo: ")		 //" C.CUSTO: "
 	If cTipCC == 1              //-- Codigo
 		Det:= Det + If (nOrdem # 4 .and. nOrdem # 6,Subs(SRA->RA_CC+Space(20),1,20),Subs(cCcto+Space(20),1,20))
 	ElseIf cTipCC == 2          //-- Descricao
@@ -797,8 +797,8 @@ If nTipo == 1
 	ElseIf cTipCC == 3          //-- Ambos
 		Det:= Det + AllTrim(Subs(If(nOrdem # 4 .and. nOrdem # 6,SRA->RA_CC,cCcto)+Space(20),1,20))+"-"+DescCc(If(nOrdem # 4 .and. nOrdem # 6,SRA->RA_CC,cCcto),cFilAnterior,20)
 	Endif
-	Det:= Det+STR0029+SRA->RA_MAT+STR0030+Subs(SRA->RA_NOME,1,30)+;									//" MAT.: "###" NOME: "
-	      STR0031 + cCodFunc + " " + cDescFunc															 //" FUNCAO: "
+	Det:= Det+" REG.: "+SRA->RA_MAT+" nome: "+Subs(SRA->RA_NOME,1,30)+;									//" MAT.: "###" NOME: "
+	      " função: " + cCodFunc + " " + cDescFunc															 //" FUNCAO: "
 
 	 If ExistBlock("GP040Det")
      cDetAux	:= ExecBlock( "GP040Det" , .F. , .F. , { "1", DET } , .F. )
@@ -807,21 +807,21 @@ If nTipo == 1
      	Endif
      EndIf     
 Elseif nTipo == 2
-	DET:= STR0032+cFilAnterior+STR0035+cCcAnt+DescCc(cCcAnt,cFilAnterior)+If(nOrdem==6," - "+cItAnt+cClAnt,'')//"Filial: "###" C.CUSTO: "
+	DET:= "Filial: "+cFilAnterior+" c.custo: "+cCcAnt+DescCc(cCcAnt,cFilAnterior)+If(nOrdem==6," - "+cItAnt+cClAnt,'')//"Filial: "###" C.CUSTO: "
 Elseif nTipo == 3
-	DET:= STR0033+cFilAnterior+" - "+aInfo[1]		//"Filial: "
+	DET:= "Filial: "+cFilAnterior+" - "+aInfo[1]		//"Filial: "
 Elseif nTipo == 4
-	DET:= STR0034+aInfo[3]		//"Empresa: "
+	DET:= "Empresa: "+aInfo[3]		//"Empresa: "
 Elseif nTipo == 5
 
 	cDESCSEG := " - SEGMENTO: "+ALLTRIM(SRA->RA_X_SEGME)+"-"+ALLTRIM(POSICIONE("CTH",1,xFilial("CTH")+SRA->RA_X_SEGME,"CTH_DESC01"))
-	DET:= STR0033+cFilAnterior+STR0035+cCt+" - "+DescCc(ALLTRIM(cCt),ALLTRIM(cFilAnterior))+If(nOrdem==6,cDESCSEG,'')//"Filial: "###" C.CUSTO: "
+	DET:= "Filial: "+cFilAnterior+" c.custo: "+cCt+" - "+DescCc(ALLTRIM(cCt),ALLTRIM(cFilAnterior))+If(nOrdem==6,cDESCSEG,'')//"Filial: "###" C.CUSTO: "
 
 	/*
 	If cCt # Nil
-		DET:= STR0033+cFilAnterior+STR0035+cCt+" - "+DescCc(cCt,cFilAnterior)+If(nOrdem==6," - "+cIt+cCl,'')//"Filial: "###" C.CUSTO: "
+		DET:= "Filial: "+cFilAnterior+" c.custo: "+cCt+" - "+DescCc(cCt,cFilAnterior)+If(nOrdem==6," - "+cIt+cCl,'')//"Filial: "###" C.CUSTO: "
 	Else
-		DET:= STR0033+cFilAnterior+STR0035+cCcAnt+"-"+DescCc(cCcAnt,cFilAnterior)+If(nOrdem==6," - "+cItAnt+cClAnt,'')	//"Filial: "###" C.CUSTO: "
+		DET:= "Filial: "+cFilAnterior+" c.custo: "+cCcAnt+"-"+DescCc(cCcAnt,cFilAnterior)+If(nOrdem==6," - "+cItAnt+cClAnt,'')	//"Filial: "###" C.CUSTO: "
 	Endif
 	*/
 Endif
@@ -830,10 +830,10 @@ IMPR(DET,"C")
 If	nTipo == 1
 	//--vERIFICA SE EXISTEW O CAMPO PARA IMPRESSAO
 	If Type("SRA->RA_NOMECOM") # "U" .And. ! Empty(SRA->RA_NOMECOM)
-		Det := 	STR0067+" "+SRA->RA_NOMECOM
+		Det := 	"Nome da empresa : "+" "+SRA->RA_NOMECOM
 		IMPR(DET,"C")	
 	Endif	
-	DET:= STR0036+Dtoc(SRA->RA_ADMISSA)+STR0037+fDesc("SX5","28"+SRA->RA_CATFUNC,"X5DESCRI()",12,SRA->RA_FILIAL)+" "
+	DET:= "Dt.adm.:"+Dtoc(SRA->RA_ADMISSA)+"  categ.: "+fDesc("SX5","28"+SRA->RA_CATFUNC,"X5DESCRI()",12,SRA->RA_FILIAL)+" "
 	If !Empty( cAliasMov )
 		nValSal := 0
 		nValSal := fBuscaSal(dDataRef,,,.f.)
@@ -843,8 +843,8 @@ If	nTipo == 1
 	Else
 		nValSal := SRA->RA_SALARIO
 	EndIf
-	DET+= STR0043+TRANSFORM(nValSal,"@E 999,999,999.99")+STR0044		//"SAL.: "###"  DEP.I.R.: "
-	DET+= SRA->RA_DEPIR+STR0045+SRA->RA_DEPSF+Iif(nRelat<4,STR0046+StrZero(SRA->RA_PERCADT,3) + " %","")+" HR.MES: "	//"  DEP.SAL.FAM.: "###"  PERC.ADTO: "
+	DET+= "Sal.: "+TRANSFORM(nValSal,"@E 999,999,999.99")+"  dep.i.r.: "		//"SAL.: "###"  DEP.I.R.: "
+	DET+= SRA->RA_DEPIR+"  dep.sal.fam.: "+SRA->RA_DEPSF+Iif(nRelat<4,"  perc.adto: "+StrZero(SRA->RA_PERCADT,3) + " %","")+" HR.MES: "	//"  DEP.SAL.FAM.: "###"  PERC.ADTO: "
 	DET+= STR(SRA->RA_HRSMES,6,2)
 	 If ExistBlock("GP040Det")
      cDetAux	:= ExecBlock( "GP040Det" , .F. , .F. , { "2", DET } , .F. )
@@ -856,17 +856,17 @@ Else
 	Det:=" "
 Endif
 IMPR(DET,"C")
-DET:= SPACE(15)+STR0047+SPACE(30)+STR0048+SPACE(30)+STR0049	//"P R O V E N T O S"###"D E S C O N T O S"###"B A S E S"
+DET:= SPACE(15)+"Lucro"+SPACE(30)+"Descontos"+SPACE(30)+"Bases"	//"P R O V E N T O S"###"D E S C O N T O S"###"B A S E S"
 IMPR(DET,"C")
 
 If cRefOco == 2 .And. cSinAna == "S"   //-- Ocorrencia
-	Det := STR0050					//"COD DESCRICAO         OCOR.          VALOR PC|"
-	Det += space(1)+STR0050		//"COD DESCRICAO         OCOR.          VALOR PC|"
-	Det += space(1)+STR0051		//"COD DESCRICAO              VALOR OCOR."
+	Det := "Cód. Descrição         Ocor.          Valor Pc|"					//"COD DESCRICAO         OCOR.          VALOR PC|"
+	Det += space(1)+"Cód. Descrição         Ocor.          Valor Pc|"		//"COD DESCRICAO         OCOR.          VALOR PC|"
+	Det += space(1)+"Cód. Descrição              Valor Ocor."		//"COD DESCRICAO              VALOR OCOR."
 Else
-	Det := STR0052				//"COD DESCRICAO          REF.          VALOR PC|"
-	Det += space(1)+STR0052		//"COD DESCRICAO          REF.          VALOR PC|"
-	Det += space(1)+STR0053		//"COD DESCRICAO                VALOR"
+	Det := "Cód. Descrição           Ref.          Valor Pc|"				//"COD DESCRICAO          REF.          VALOR PC|"
+	Det += space(1)+"Cód. Descrição           Ref.          Valor Pc|"		//"COD DESCRICAO          REF.          VALOR PC|"
+	Det += space(1)+"Cod Descrição                Valor"		//"COD DESCRICAO                VALOR"
 Endif
 
 IMPR(DET,"C")
@@ -906,22 +906,22 @@ nLIQ := nTVP - nTVD
 DET  := REPLICATE("-",132)
 IMPR(DET,"C")
 
-DET :=STR0054+If(cRefOco == 2 .and. cSinAna == "S",SPACE(5) ,SPACE(06))             +TRANSFORM(nTHP,"9999999999.99")+" "+TRANSFORM(nTVP,"@E 999,999,999.99")+;	//"TOTAIS ->"
+DET :="Totais ->"+If(cRefOco == 2 .and. cSinAna == "S",SPACE(5) ,SPACE(06))             +TRANSFORM(nTHP,"9999999999.99")+" "+TRANSFORM(nTVP,"@E 999,999,999.99")+;	//"TOTAIS ->"
       SPACE(20)                                                                       +TRANSFORM(nTHD,"9999999999.99")+" "+TRANSFORM(nTVD,"@E 999,999,999.99")+;
-              If(cRefOco ==2 .and. cSinAna == "S" ,SPACE(09),SPACE(12) )+STR0062+" "+TRANSFORM(nLIQ,"@E 999,999,999.99")					//"SALARIO LIQ."
+              If(cRefOco ==2 .and. cSinAna == "S" ,SPACE(09),SPACE(12) )+"Salário Liq."+" "+TRANSFORM(nLIQ,"@E 999,999,999.99")					//"SALARIO LIQ."
 IMPR(DET,"C")
 
 DET:=REPLICATE("-",132)
 IMPR(DET,"C")
 
 If nTipo # 1
-	Det:=STR0055+Strzero(If(nTipo==2,nCnor,If(nTipo==3,nFnor,If (nTipo==4,nEnor,nCnor&cNv))),5)		//"Sit.Normal: "
-	Det+=STR0068+Strzero(If(nTipo==2,nCadm,If(nTipo==3,nFadm,If (nTipo==4,nEadm,nCadm&cNv))),5)		//" Admitidos: "	
-	Det+=STR0056+Strzero(If(nTipo==2,nCafa,If(nTipo==3,nFafa,If (nTipo==4,nEafa,nCafa&cNv))),5)		//" Afastados: "
-	Det+=STR0057+Strzero(If(nTipo==2,nCdem,If(nTipo==3,nFdem,If (nTipo==4,nEdem,nCdem&cNv))),5)		//" Demitidos:"
-	Det+=STR0058+Strzero(If(nTipo==2,nCfer,If(nTipo==3,nFfer,If (nTipo==4,nEfer,nCfer&cNv))),5)		//" Ferias:"
-	Det+=STR0060+Strzero(If(nTipo==2,nCexc,If(nTipo==3,nFexc,If (nTipo==4,nEexc,nCexc&cNv))),5)		//" Outros C.Custo:"
-	Det+=STR0061+Strzero(If(nTipo==2,nCtot,If(nTipo==3,nFtot,If (nTipo==4,nEtot,nCtot&cNv))),5)		//" Total:"
+	Det:="Sit.normal: "+Strzero(If(nTipo==2,nCnor,If(nTipo==3,nFnor,If (nTipo==4,nEnor,nCnor&cNv))),5)		//"Sit.Normal: "
+	Det+=" Admitidos:"+Strzero(If(nTipo==2,nCadm,If(nTipo==3,nFadm,If (nTipo==4,nEadm,nCadm&cNv))),5)		//" Admitidos: "	
+	Det+=" afastados: "+Strzero(If(nTipo==2,nCafa,If(nTipo==3,nFafa,If (nTipo==4,nEafa,nCafa&cNv))),5)		//" Afastados: "
+	Det+=" Demitidos:"+Strzero(If(nTipo==2,nCdem,If(nTipo==3,nFdem,If (nTipo==4,nEdem,nCdem&cNv))),5)		//" Demitidos:"
+	Det+=" Férias:"+Strzero(If(nTipo==2,nCfer,If(nTipo==3,nFfer,If (nTipo==4,nEfer,nCfer&cNv))),5)		//" Ferias:"
+	Det+=" Outros C.custo:"+Strzero(If(nTipo==2,nCexc,If(nTipo==3,nFexc,If (nTipo==4,nEexc,nCexc&cNv))),5)		//" Outros C.Custo:"
+	Det+=" Total:"+Strzero(If(nTipo==2,nCtot,If(nTipo==3,nFtot,If (nTipo==4,nEtot,nCtot&cNv))),5)		//" Total:"
 	
 	Impr (Det,"C")
 	IMPR(REPL("=",132),"C")   // Salta Pagina apos Quebra Cc/Filial/Empresa
@@ -1305,8 +1305,8 @@ MvRet:=Alltrim(ReadVar())      // Carrega Nome da Variavel do Get em Questao
 	dbCloseArea()
 	ASORT(aTables,,, { |x, y| x > y })
 	If Len(aTables) # 0
-		DEFINE MSDIALOG oDlg FROM 5, 5 TO 16, 39 TITLE STR0065
-		@ nLin1,nCol1 LISTBOX oListBox VAR cVarQ Fields HEADER STR0064 SIZE 102,60 ;
+		DEFINE MSDIALOG oDlg FROM 5, 5 TO 16, 39 TITLE "Seleccione O Arquivo"
+		@ nLin1,nCol1 LISTBOX oListBox VAR cVarQ Fields HEADER " ficheiros " SIZE 102,60 ;
 		ON DBLCLICK (nOk := 1,oDlg:End()) ENABLE OF oDlg
 		oListBox:SetArray(aTables)
 		oListBox:bLine := { ||{aTables[oListBox:nAt]}}

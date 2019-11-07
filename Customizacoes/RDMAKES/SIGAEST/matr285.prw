@@ -1,5 +1,6 @@
-#INCLUDE "MATR285.CH"
+//#INCLUDE "MATR285.CH"
 #INCLUDE "PROTHEUS.CH"
+
 
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -38,13 +39,13 @@ User Function MATR285R3()
 //³ Define Variaveis                                             ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 Local Tamanho 
-Local Titulo  := STR0001 // 'Listagem dos Itens Inventariados'
-Local cDesc1  := STR0002 // 'Emite uma relacao que mostra o saldo em estoque e todas as'
-Local cDesc2  := STR0003 // 'contagens efetuadas no inventario. Baseado nestas duas in-'
-Local cDesc3  := STR0004 // 'formacoes ele calcula a diferenca encontrada.'
+Local Titulo  := "Listagem dos Itens Inventariados" // 'Listagem dos Itens Inventariados'
+Local cDesc1  := "Emite uma relacao que mostra o saldo em estoque e todas as" // 'Emite uma relacao que mostra o saldo em estoque e todas as'
+Local cDesc2  := "contagens efetuadas no inventario. Baseado nestas duas in-" // 'contagens efetuadas no inventario. Baseado nestas duas in-'
+Local cDesc3  := "formacoes ele calcula a diferenca encontrada." // 'formacoes ele calcula a diferenca encontrada.'
 Local cString := 'SB1'
 Local nTipo   := 0
-Local aOrd    := {OemToAnsi(STR0005),OemToAnsi(STR0006),OemToAnsi(STR0007),OemToAnsi(STR0008),OemToAnsi(STR0009)}		//' Por Codigo    '###' Por Tipo      '###' Por Grupo   '###' Por Descricao '###' Por Local    '
+Local aOrd    := {OemToAnsi(" Por Codigo    "),OemToAnsi(" Por Tipo      "),OemToAnsi(" Por Grupo   "),OemToAnsi(" Por Descricao "),OemToAnsi(" Por Armazem  ")}		//' Por Codigo    '###' Por Tipo      '###' Por Grupo   '###' Por Descricao '###' Por Local    '
 Local wnRel   := 'MATR285'
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Variaveis tipo Local para SIGAVEI, SIGAPEC e SIGAOFI         ³
@@ -63,7 +64,7 @@ Private nCOL1	 := 0
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Variaveis tipo Private padrao de todos os relatorios         ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Private aReturn  := {OemToAnsi(STR0010), 1,OemToAnsi(STR0011), 2, 2, 1, '',1 }   //'Zebrado'###'Administracao'
+Private aReturn  := {OemToAnsi("Zebrado"), 1,OemToAnsi("Administracao"), 2, 2, 1, '',1 }   //'Zebrado'###'Administracao'
 Private nLastKey := 0
 Private cPerg    := 'MTR285'
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -192,7 +193,7 @@ Local nTValDt  := 0
 Local nSValDt  := 0
 Local nCntImpr := 0
 Local cAnt     := '',cSeek:='',cCompara :='',cLocaliz:='',cNumSeri:='',cLoteCtl:='',cNumLote:=''
-Local cRodaTxt := STR0012 // 'PRODUTO(S)'
+Local cRodaTxt := "PRODUTO(S)" // 'PRODUTO(S)'
 Local aSaldo   := {}
 Local aSalQtd  := {}
 Local aCM      := {}
@@ -254,22 +255,22 @@ EndIf
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 If mv_par11 == 1
 	If mv_par13 == 1
-        Cabec1 := STR0023 // 'CODIGO          DESCRICAO                LOTE       SUB    LOCALIZACAO     NUMERO DE SERIE      TP GRP  UM AL DOCUMENTO            QUANTIDADE               VALOR        QTD NA DATA               VALOR  _____________DIFERENCA______________'
-        Cabec2 := STR0024 // '                                                    LOTE                                                                         INVENTARIADA                           DO INVENTARIO                      QUANTIDADE              VALOR'
+        Cabec1 := "CODIGO          DESCRICAO                      LOTE       SUB    ENDERECO        NUMERO DE SERIE      TP GRP UM AMZ DOCUMENTO         QUANTIDADE         QTD NA DATA       _____________DIFERENCA______________" // 'CODIGO          DESCRICAO                LOTE       SUB    LOCALIZACAO     NUMERO DE SERIE      TP GRP  UM AL DOCUMENTO            QUANTIDADE               VALOR        QTD NA DATA               VALOR  _____________DIFERENCA______________'
+        Cabec2 := "                                                          LOTE                                                                      INVENTARIADA        DO INVENTARIO         QUANTIDADE              VALOR" // '                                                    LOTE                                                                         INVENTARIADA                           DO INVENTARIO                      QUANTIDADE              VALOR'
         //--                  123456789012345 123456789012345678901234 1234567890 123456 123456789012345 12345678901234567890 12 1234 12 12 123456789012 999.999.999.999,99  999.999.999.999,99 999.999.999.999,99  999.999.999.999,99  999.999.999.999,99 999.999.999.999,99
         //--                  0         1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16        17        18        19        20
         //--                  01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 	Else
-        Cabec1 := STR0013 // 'CODIGO          DESCRICAO                LOTE       SUB    TP GRP  UM AL DOCUMENTO            QUANTIDADE               VALOR        QTD NA DATA               VALOR  _____________DIFERENCA______________'
-        Cabec2 := STR0014 // '                                                    LOTE                                    INVENTARIADA                           DO INVENTARIO                      QUANTIDADE              VALOR'
+        Cabec1 := "CODIGO          DESCRICAO                      LOTE       SUB    TP GRP UM AMZ DOCUMENTO         QUANTIDADE         QTD NA DATA       _____________DIFERENCA______________" // 'CODIGO          DESCRICAO                LOTE       SUB    TP GRP  UM AL DOCUMENTO            QUANTIDADE               VALOR        QTD NA DATA               VALOR  _____________DIFERENCA______________'
+        Cabec2 := "                                                          LOTE                                  INVENTARIADA       DO INVENTARIO         QUANTIDADE              VALOR" // '                                                    LOTE                                    INVENTARIADA                           DO INVENTARIO                      QUANTIDADE              VALOR'
         //--                  123456789012345 123456789012345678901234 1234567890 123456 12 1234 12 12 123456789012 999.999.999.999,99  999.999.999.999,99 999.999.999.999,99  999.999.999.999,99  999.999.999.999,99 999.999.999.999,99
         //--                  0         1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16   
         //--                  0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901
 	EndIf	
 Else
 	If mv_par13 == 1
-        Cabec1 := STR0025 // 'CODIGO          DESCRICAO                LOCALIZACAO     NUMERO DE SERIE      TP GRP  UM AL DOCUMENTO            QUANTIDADE               VALOR        QTD NA DATA               VALOR  _______________DIFERENCA_____________'
-        Cabec2 := STR0026 // '                                                                                                               INVENTARIADA                          DO INVENTARIO 	                          QUANTIDADE              VALOR'
+        Cabec1 := "CODIGO          DESCRICAO                      ENDERECO        NUMERO DE SERIE      TP GRP UM AMZ DOCUMENTO         QUANTIDADE         QTD NA DATA       _______________DIFERENCA_____________" // 'CODIGO          DESCRICAO                LOCALIZACAO     NUMERO DE SERIE      TP GRP  UM AL DOCUMENTO            QUANTIDADE               VALOR        QTD NA DATA               VALOR  _______________DIFERENCA_____________'
+        Cabec2 := "                                                                                                                   INVENTARIADA       DO INVENTARIO          QUANTIDADE              VALOR" // '                                                                                                               INVENTARIADA                          DO INVENTARIO 	                          QUANTIDADE              VALOR'
         //--                  123456789012345 123456789012345678901234 123456789012345 12345678901234567890 12 1234 12 12 123456789012 999.999.999.999,99  999.999.999.999,99 999.999.999.999,99  999.999.999.999,99  999.999.999.999,99 999.999.999.999,99
         //--                  0         1         2         3         4         5         6         7         8         9        10        11        12        13        14       15        16        17        18
         //--                  012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567801234567890123456789012345678901234567890123456789012345678901234567890123456789012
@@ -441,7 +442,7 @@ SetRegua(LastRec())
   	   If lVEIC
 			cNomArq := CriaTrab('', .F.) //-- Local
 			cKey    := "B1_FILIAL + B1_TIPO + B1_CODITE"
-			IndRegua('SB1',cNomArq,cKey,,,STR0015) // 'Selecionando Registros...'
+			IndRegua('SB1',cNomArq,cKey,,,"Selecionando Registros...") // 'Selecionando Registros...'
 		Else	
 			dbSetOrder(2) //-- Tipo
 		EndIf	
@@ -467,14 +468,14 @@ SetRegua(LastRec())
 		Else
 			cKey    := "B1_FILIAL + B1_LOCPAD + B1_COD"
 		EndIf
-		IndRegua('SB1',cNomArq,cKey,,,STR0015) // 'Selecionando Registros...'
+		IndRegua('SB1',cNomArq,cKey,,,"Selecionando Registros...") // 'Selecionando Registros...'
 		dbSeek(cFilial + mv_par06 +  mv_par01, .T.)
 		cCondicao += " .And. B1_LOCPAD <= mv_par07"
 	Else
 		If lVEIC
 			cNomArq := CriaTrab('', .F.) //-- CODITE
 			cKey    := "B1_FILIAL + B1_CODITE"
-			IndRegua('SB1',cNomArq,cKey,,,STR0015) // 'Selecionando Registros...'
+			IndRegua('SB1',cNomArq,cKey,,,"Selecionando Registros...") // 'Selecionando Registros...'
 			cCondicao += " .And. (B1_CODITE <= mv_par02)"
 		Else
 			dbSetOrder(1) //-- Codigo
@@ -534,7 +535,7 @@ Do While &cCondicao
 		EndIf
 	EndIf	
 	If lEnd
-		@ pRow()+1, 000 PSAY STR0016 // 'CANCELADO PELO OPERADOR'
+		@ pRow()+1, 000 PSAY "CANCELADO PELO OPERADOR" // 'CANCELADO PELO OPERADOR'
 		Exit
 	EndIF
 	
@@ -738,10 +739,10 @@ Do While &cCondicao
 					Li--
 				ElseIf nSB7Cnt > 1
 					If mv_par11 == 1
-						@ Li,If(mv_par13==1,	106,069) + nCOL1 PSAY STR0017 // 'TOTAL .................'
+						@ Li,If(mv_par13==1,	106,069) + nCOL1 PSAY "TOTAL ................." // 'TOTAL .................'
 						@ Li,If(mv_par13==1,129,092) + nCOL1 PSAY Transform(nTotal, (cAliasSB7)->(PesqPict("SB7",'B7_QUANT', 15)))
 					Else
-						@ Li,If(mv_par13==1,088,050) + nCOL1 PSAY STR0017 // 'TOTAL .................'
+						@ Li,If(mv_par13==1,088,050) + nCOL1 PSAY "TOTAL ................." // 'TOTAL .................'
 						@ Li,If(mv_par13==1,111,074) + nCOL1 PSAY Transform(nTotal, (cAliasSB7)->(PesqPict("SB7",'B7_QUANT', 15)))
 					EndIf
 				EndIf
@@ -805,10 +806,10 @@ Do While &cCondicao
 	If aReturn[8] == 2
 		If cAnt # B1_TIPO .And. nSB7Cnt >= 1
 			If mv_par11 == 1
-				@ Li,If(mv_par13==1,158,120) + nCOL1 PSAY STR0018 + Left(cAnt,2) + ' .............' // 'TOTAL DO TIPO '
+				@ Li,If(mv_par13==1,158,120) + nCOL1 PSAY "TOTAL DO TIPO " + Left(cAnt,2) + ' .............' // 'TOTAL DO TIPO '
 				@ Li,If(mv_par13==1,188,151) + nCOL1 PSAY Transform(nSubVal, (cAliasSB2)->(PesqPict("SB2",'B2_QFIM', 15)))
 			Else     
-				@ Li,If(mv_par13==1,102,058) + nCOL1 PSAY STR0018 + Left(cAnt,2) + ' ............' // 'TOTAL DO TIPO '
+				@ Li,If(mv_par13==1,102,058) + nCOL1 PSAY "TOTAL DO TIPO " + Left(cAnt,2) + ' ............' // 'TOTAL DO TIPO '
     			@ Li,If(mv_par13==1,131,094) + nCOL1 PSAY Transform(nSValIn, "@E 999,999,999,999.99")	
 				@ Li,If(mv_par13==1,172,135) + nCOL1 PSAY Transform(nSValDt, "@E 999,999,999,999.99")	
 				@ Li,If(mv_par13==1,215,178) + nCOL1 PSAY Transform(nSubVal, (cAliasSB2)->(PesqPict("SB2",'B2_QFIM', 15)))
@@ -823,10 +824,10 @@ Do While &cCondicao
 	ElseIf aReturn[8] == 3
 		If cAnt # B1_GRUPO  .And. nSB7Cnt >= 1
 			If mv_par11 == 1 
-				@ Li,If(mv_par13==1,155,117) + nCOL1 PSAY STR0019 + Left(cAnt,4) + ' .............' // 'TOTAL DO GRUPO '
+				@ Li,If(mv_par13==1,155,117) + nCOL1 PSAY "TOTAL DO GRUPO " + Left(cAnt,4) + ' .............' // 'TOTAL DO GRUPO '
 				@ Li,If(mv_par13==1,188,151) + nCOL1 PSAY Transform(nSubVal, (cAliasSB2)->(PesqPict("SB2",'B2_QFIM', 15)))
 			Else
-				@ Li,If(mv_par13==1,095,056) + nCOL1 PSAY STR0019 + Left(cAnt,4) + ' .............' // 'TOTAL DO GRUPO '
+				@ Li,If(mv_par13==1,095,056) + nCOL1 PSAY "TOTAL DO GRUPO " + Left(cAnt,4) + ' .............' // 'TOTAL DO GRUPO '
 				@ Li,If(mv_par13==1,131,094) + nCOL1 PSAY Transform(nSValIn, "@E 999,999,999,999.99")	
 				@ Li,If(mv_par13==1,172,135) + nCOL1 PSAY Transform(nSValDt, "@E 999,999,999,999.99")	
 				@ Li,If(mv_par13==1,215,178) + nCOL1 PSAY Transform(nSubVal, (cAliasSB2)->(PesqPict("SB2",'B2_QFIM', 15)))
@@ -845,10 +846,10 @@ EndDo
 If nTotVal # 0
 	Li++
 	If mv_par11 == 1
-		@ Li,If(mv_par13==1,145,107) + nCOL1 PSAY STR0020 // 'TOTAL DAS DIFERENCAS EM VALOR .............'
+		@ Li,If(mv_par13==1,145,107) + nCOL1 PSAY "TOTAL DAS DIFERENCAS EM VALOR ............." // 'TOTAL DAS DIFERENCAS EM VALOR .............'
 		@ Li,If(mv_par13==1,188,151) + nCOL1 PSAY Transform(nTotVal, (cAliasSB2)->(PesqPict("SB2",'B2_VFIM1', 15)))
 	Else
-		@ Li,If(mv_par13==1,120,046) + nCOL1 PSAY STR0020 // 'TOTAL DAS DIFERENCAS EM VALOR .............'
+		@ Li,If(mv_par13==1,120,046) + nCOL1 PSAY "TOTAL DAS DIFERENCAS EM VALOR ............." // 'TOTAL DAS DIFERENCAS EM VALOR .............'
 		@ Li,If(mv_par13==1,131,094) + nCOL1 PSAY Transform(nTValIn, "@E 999,999,999,999.99")	
 		@ Li,If(mv_par13==1,172,135) + nCOL1 PSAY Transform(nTValDt, "@E 999,999,999,999.99")	
 		@ Li,If(mv_par13==1,215,178) + nCOL1 PSAY Transform(nTotVal, (cAliasSB2)->(PesqPict("SB2",'B2_VFIM1', 15)))

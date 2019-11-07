@@ -1,4 +1,4 @@
-#INCLUDE "MATR550.CH"
+//#INCLUDE "MATR550.CH"
 #INCLUDE "FIVEWIN.CH"
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -18,6 +18,7 @@
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
+
 user function MATLAR()
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define Variaveis                                             ³
@@ -27,13 +28,13 @@ LOCAL CbCont,wnrel
 LOCAL nOrdem,cFiltro := ""
 LOCAL tamanho:= "G"
 LOCAL limite := 220
-LOCAL titulo := OemToAnsi(STR0001)	//"Relacao de Notas Fiscais"
-LOCAL cDesc1 := OemToAnsi(STR0002)	//"Este programa ira emitir a relacao de notas fiscais."
+LOCAL titulo := OemToAnsi("Relacao de Notas Fiscais")	//"Relacao de Notas Fiscais"
+LOCAL cDesc1 := OemToAnsi("Este programa ira emitir a relacao de notas fiscais.")	//"Este programa ira emitir a relacao de notas fiscais."
 LOCAL cDesc2 := ""
 LOCAL cDesc3 := ""
 LOCAL cString:= "SF2"
 
-PRIVATE aReturn := { OemToAnsi(STR0003), 1,OemToAnsi(STR0004), 1, 2, 1, "",1 }		//"Zebrado"###"Administracao"
+PRIVATE aReturn := { OemToAnsi("Zebrado"), 1,OemToAnsi("Administracao"), 1, 2, 1, "",1 }		//"Zebrado"###"Administracao"
 PRIVATE nomeprog:="MATRLAR"
 PRIVATE aLinha  := { },nLastKey := 0
 PRIVATE cPerg   :="MTR550"   
@@ -168,8 +169,8 @@ imprime  := .T.
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Monta o Cabecalho de acordo com o tipo de emissao            ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-titulo := STR0005 + " - " + GetMv("MV_MOEDA" + STR(mv_par16,1)) //"RELACAO DAS NOTAS FISCAIS  "
-//Cabec1 := STR0006	//"PRODUTO          DESCRICAO                       QUANTIDADE        VALOR UNITARIO VALOR MERCADORIA ALMOX CFO TES PEDIDO/IT        VALOR IPI         VALOR ICM        VALOR ISS          DESP. ACESSORIAS               TOTAL"
+titulo := "RELACAO DAS NOTAS FISCAIS  " + " - " + GetMv("MV_MOEDA" + STR(mv_par16,1)) //"RELACAO DAS NOTAS FISCAIS  "
+//Cabec1 := "PRODUTO         DESCRICAO                      QUANTIDADE        VALOR UNITARIO VALOR MERCADORIA ARMAZ CFO   TES PEDIDO/IT        VALOR IPI         VALOR ICM        VALOR ISS          DESP. ACESSORIAS               TOTAL"
 Cabec1 := "PRODUTO     DESCRICAO                QUANTIDADE    VALOR UNITARIO VALOR MERCADORIA ARMAZ CFO   TES COD. LAR     ALIQ. IPI    VALOR IPI         VALOR ICM        VALOR ISS          DESP. ACESSORIAS               TOTAL"
 // 0         1         2         3         4         5         6         7         8         9         10        11        12        13        14        15        16        17        18        19        20        21        22
 // 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901
@@ -216,7 +217,7 @@ SetRegua(RecCount())		// Total de Elementos da regua
 While !Eof() .and. lContinua
 
 	IF lEnd
-		@Prow()+1,001 PSAY STR0007		//"CANCELADO PELO OPERADOR"
+		@Prow()+1,001 PSAY "CANCELADO PELO OPERADOR"		//"CANCELADO PELO OPERADOR"
 		lContinua := .F.
 		Exit
 	Endif
@@ -257,12 +258,12 @@ While !Eof() .and. lContinua
 				dbSelectArea("SA2")
 				dbSetOrder(1)
 				dbSeek(xFilial()+SD2->D2_CLIENTE+SD2->D2_LOJA)
-                @Li ,   0 PSAY STR0008+A2_COD+" "+A2_LOJA+" - "+A2_NOME+" "+STR0009+DTOC(SF2->F2_EMISSAO)+STR0010+SD2->D2_TIPO     //"FORNECEDOR : "###"EMISSAO : "###" TIPO DA NOTA : "
+                @Li ,   0 PSAY "FORNECEDOR : "+A2_COD+" "+A2_LOJA+" - "+A2_NOME+" "+"EMISSAO : "+DTOC(SF2->F2_EMISSAO)+" TIPO DA NOTA : "+SD2->D2_TIPO     //"FORNECEDOR : "###"EMISSAO : "###" TIPO DA NOTA : "
 			Else
 				dbSelectArea("SA1")
 				dbSetOrder(1)
 				dbSeek(xFilial()+SD2->D2_CLIENTE+SD2->D2_LOJA)
-                @Li ,   0 PSAY STR0011+A1_COD+" "+A1_LOJA+" - "+A1_NOME+" "+STR0009+DTOC(SF2->F2_EMISSAO)+STR0010+SD2->D2_TIPO     //"CLIENTE    : "###"EMISSAO : "###" TIPO DA NOTA : "
+                @Li ,   0 PSAY "CLIENTE    : "+A1_COD+" "+A1_LOJA+" - "+A1_NOME+" "+"EMISSAO : "+DTOC(SF2->F2_EMISSAO)+" TIPO DA NOTA : "+SD2->D2_TIPO     //"CLIENTE    : "###"EMISSAO : "###" TIPO DA NOTA : "
 			EndIf
 			nCt++
 			Li++
@@ -400,7 +401,7 @@ While !Eof() .and. lContinua
 		//³ Se nota tem ICMS Solidario, imprime.			                 ³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 		If SF2->F2_ICMSRET > 0
-			@Li , 0   PSAY STR0012	//"ICMS SOLIDARIO ------------> "
+			@Li , 0   PSAY "ICMS SOLIDARIO ------------> "	//"ICMS SOLIDARIO ------------> "
 			@Li , 204 PSAY SF2->F2_ICMSRET	Picture PesqPict("SF2","F2_ICMSRET",16)
 			Li++
 		EndIf
@@ -411,7 +412,7 @@ While !Eof() .and. lContinua
 			nICMDesp := xMoeda(SF2->F2_VALICM,1,MV_PAR16,dEmiDia) - nAcN4
 			nAcN5 := xMoeda(SF2->F2_VALIPI,1,MV_PAR16,dEmiDia)
 			nAcN4 := xMoeda(SF2->F2_VALICM,1,MV_PAR16,dEmiDia)
-			@Li ,  0 PSAY STR0013	//"DESPESAS ACESSORIAS -------> "
+			@Li ,  0 PSAY "DESPESAS ACESSORIAS -------> "	//"DESPESAS ACESSORIAS -------> "
 			@Li ,123 PSAY nIPIDesp      PICTURE TM(D2_VALIPI	,16)
 			@Li ,141 PSAY nICMDesp      PICTURE TM(D2_VALICM	,16)
 			@Li ,184 PSAY nAcN3         PICTURE TM(nAcN3		,16)
@@ -419,7 +420,7 @@ While !Eof() .and. lContinua
 		EndIf		
 		nAcN6 := nAcN2 + nAcN3 + nAcN5 + xMoeda(SF2->F2_ICMSRET,1,MV_PAR16,dEmiDia) +IIF(SF2->F2_TIPO == "I",nCompIcm,0)        
 		nVlrISS:= xMoeda(SF2->F2_VALISS,1,MV_PAR16,dEmiDia)
-		@Li ,   0 PSAY STR0014+SF2->F2_DOC+" / "+SF2->F2_SERIE+" ---->"		//"TOTAL DA NOTA - "
+		@Li ,   0 PSAY "TOTAL DA NOTA - "+SF2->F2_DOC+" / "+SF2->F2_SERIE+" ---->"		//"TOTAL DA NOTA - "
         @Li ,  46 PSAY nAcN1    PICTURE PESQPICTQT("D2_QUANT",11)
         @Li ,  80 PSAY nAcN2    PICTURE TM(nAcN2    ,16)
 		@Li , 123 PSAY nAcN5    PICTURE TM(nAcN5	,16)
@@ -461,7 +462,7 @@ While !Eof() .and. lContinua
 
 	If nAcd1+nAcD4+nAcD5 > 0 .And. ( dEmisAnt != F2_EMISSAO .Or. Eof() )
 		Li++
-		@Li ,  0 PSAY STR0015+dtoc(dEmisAnt)		//"TOTAL DO DIA  ----> "
+		@Li ,  0 PSAY "TOTAL DO DIA  ----> "+dtoc(dEmisAnt)		//"TOTAL DO DIA  ----> "
         @Li , 46 PSAY nAcD1 PICTURE PESQPICTQT("D2_QUANT",11)
         @Li , 80 PSAY nAcD2 PICTURE TM(nAcD2,16)
 		@Li ,123 PSAY nAcD5 		PICTURE TM(nAcD5,16)
@@ -483,7 +484,7 @@ End // Documento, Serie
 
 IF li != 80
 
-	@Li ,  0 PSAY STR0016	//"TOTAL GERAL            ---->"
+	@Li ,  0 PSAY "TOTAL GERAL            ---->"	//"TOTAL GERAL            ---->"
     @Li , 46 PSAY nAcG1 PICTURE PESQPICTQT("D2_QUANT",11)
     @Li , 80 PSAY nAcG2 PICTURE TM(nAcG2,16)
 	@Li ,123 PSAY nAcG5	PICTURE TM(nAcG5,16)
@@ -579,12 +580,12 @@ imprime  := .T.
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Monta o Cabecalho de acordo com o tipo de emissao            ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-titulo	:= STR0005	//"RELACAO DAS NOTAS FISCAIS  "
-Cabec1	:= STR0018 //"PRODUCTO         DESCRIPCIàN                      DEP. PROD LAR   REMITO/ITEM        CANTIDAD    VALOR UNITARIO  VALOR MERCADERIA     GRAVAMENES NO        GRAVAMENES      OTROS GASTOS               TOTAL"
+titulo	:= "RELACAO DAS NOTAS FISCAIS  "	//"RELACAO DAS NOTAS FISCAIS  "
+Cabec1	:= "PRODUTO          DESCRICAO                        DEP. PEDIDO/IT  REMITO/ITEM      QUANTIDADE    VALOR UNITARIO  VALOR MERCADORIA            IMPOSTOS      IMPOSTOS NAO     OUTROS GASTOS               TOTAL"
 
 //                     0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
 //                               1         2         3         4         5         6         7         8         9         10        11        12        13        14        15        16        17        18        19
-Cabec2	:= STR0019 //
+Cabec2	:= "                                                                                                                                       INCL. NO PRECO    INCL. NO PRECO                                      "
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Cria Indice de Trabalho                                      ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
@@ -649,7 +650,7 @@ SetRegua(RecCount())    // Total de Elementos da regua
 While (!SF1->(Eof()) .Or. !SF2->(Eof()) ).And. lContinua
 
 	IF lEnd
-		@Prow()+1,001 PSAY STR0007		//"CANCELADO PELO OPERADOR"
+		@Prow()+1,001 PSAY "CANCELADO PELO OPERADOR"		//"CANCELADO PELO OPERADOR"
 		lContinua := .F.
 		Exit
 	Endif
@@ -684,16 +685,16 @@ While (!SF1->(Eof()) .Or. !SF2->(Eof()) ).And. lContinua
 			nAcN3 := xmoeda(SF1->F1_FRETE+SF1->F1_SEGURO+SF1->F1_DESPESA,SF1->F1_MOEDA,mv_par16,SF1->F1_DTDIGIT,nDecs+1,SF1->F1_TXMOEDA)
 		Endif
 		If nAcN3 != 0
-			@Li ,  0 PSAY STR0013	//"DESPESAS ACESSORIAS -------> "
+			@Li ,  0 PSAY "DESPESAS ACESSORIAS -------> "	//"DESPESAS ACESSORIAS -------> "
 			@Li ,167 PSAY nAcN3         PICTURE TM(nAcN3,16,nDecs)
 
 			Li++
 		EndIf
 
 		If cAliasPrt  == "SF2"
-			@Li ,   0 PSAY STR0014+SF2->F2_DOC+" / "+SF2->F2_SERIE+" ---->"      //"TOTAL DA NOTA - "
+			@Li ,   0 PSAY "TOTAL DA NOTA - "+SF2->F2_DOC+" / "+SF2->F2_SERIE+" ---->"      //"TOTAL DA NOTA - "
 		Else
-			@Li ,   0 PSAY STR0014+SF1->F1_DOC+" / "+SF1->F1_SERIE+" ---->"      //"TOTAL DA NOTA - "
+			@Li ,   0 PSAY "TOTAL DA NOTA - "+SF1->F1_DOC+" / "+SF1->F1_SERIE+" ---->"      //"TOTAL DA NOTA - "
 		Endif
         @Li, 81 PSAY nAcN1          PICTURE PESQPICT("SD2","D2_QUANT",11,mv_par16)
 		@Li,113 PSAY nAcN2 			PICTURE tm(nAcN2		,16,nDecs)
@@ -705,7 +706,7 @@ While (!SF1->(Eof()) .Or. !SF2->(Eof()) ).And. lContinua
 
 		nTotNetoNota:=nAcN2+nAcN3+nAcImpInc
 
-        @Li , 21 PSAY STR0017 //"Total Neto Factura ---->"
+        @Li , 21 PSAY "TOTAL LIQUIDO NOTA  ---->" //"Total Neto Factura ---->"
 		//      @Li , 54 PSAY xMoeda(nTotNetoNota,1,MV_PAR16,IIf(cAliasPrt=="SF2",SD2->D2_EMISSAO,SD1->D1_DTDIGIT)) PICTURE TM(nTotNetoDia,16)
         @Li , 53 PSAY nTotNetoNota PICTURE TM(nTotNetoDia,16,nDecs)
 		Li++
@@ -753,7 +754,7 @@ While (!SF1->(Eof()) .Or. !SF2->(Eof()) ).And. lContinua
 
 	If lNovoDia
 		Li++
-		@Li ,  0 PSAY STR0015+dtoc(dEmisAnt)		//"TOTAL DO DIA  ----> "
+		@Li ,  0 PSAY "TOTAL DO DIA  ----> "+dtoc(dEmisAnt)		//"TOTAL DO DIA  ----> "
         @Li , 81 PSAY nAcD1             PICTURE PESQPICT("SD2","D2_QUANT",11,mv_par16)
 		@Li ,113 PSAY nAcD2 			PICTURE TM(nAcD2		,16,nDecs)
 		@Li ,132 PSAY nAcDimpInc 		PICTURE TM(nAcDImpInc	,16,nDecs)
@@ -763,7 +764,7 @@ While (!SF1->(Eof()) .Or. !SF2->(Eof()) ).And. lContinua
 		Li++
 		nTotNetoDia:=nAcD2+nAcD3+nAcDImpInc
 
-        @Li , 21 PSAY STR0020 //"Total Neto Dia      ---->"
+        @Li , 21 PSAY "TOTAL LIQUIDO DIA   ---->" //"Total Neto Dia      ---->"
 		//@Li , 54 PSAY xMoeda(nTotNetoDia,1,MV_PAR16,dDia)  PICTURE TM(nTotNetoDia,16,nDecs)
         @Li , 53 PSAY nTotNetoDia  PICTURE TM(nTotNetoDia,16,nDecs)
 
@@ -788,7 +789,7 @@ IF li != 80
 	Endif
 
 	Li++
-	@Li ,  0 PSAY STR0016	//"TOTAL GERAL            ---->"
+	@Li ,  0 PSAY "TOTAL GERAL            ---->"	//"TOTAL GERAL            ---->"
     @Li , 81 PSAY nAcG1 PICTURE PESQPICT("SD2","D2_QUANT",11,mv_par16)
 	@Li ,113 PSAY nAcG2 PICTURE TM(nAcG2,16,nDecs)
 	@Li ,167 PSAY nAcG3 PICTURE TM(nAcG3,16,nDecs)
@@ -796,7 +797,7 @@ IF li != 80
 
 	nTotNetoGeral:=nAcG2+nAcG3+nAcGImpInc
 
-    @Li , 21 PSAY STR0021 //"Total Neto General ---->"
+    @Li , 21 PSAY "TOTAL LIQUIDO GERAL ---->" //"Total Neto General ---->"
     @Li , 53 PSAY nTotNetoGeral PICTURE TM(nTotNetoGeral,18,nDecs)
 	Li++
 	roda(cbcont,cbtxt,tamanho)
@@ -900,7 +901,7 @@ While !Eof() .and. D2_DOC+D2_SERIE == SF2->F2_DOC+SF2->F2_SERIE
 		dbSelectArea("SA1")
 		dbSetOrder(1)
 		dbSeek(xFilial()+SD2->D2_CLIENTE+SD2->D2_LOJA)
-        @Li ,   0 PSAY STR0011+A1_COD+" "+A1_LOJA+" - "+A1_NOME+" "+STR0009+DTOC(SF2->F2_EMISSAO)+STR0010+If(SD2->D2_TIPO=="C",STR0023,STR0024)  //"CLIENTE    : "###"EMISSAO : "###" TIPO DA NOTA : "###"Devolucion"###"Debito"###"Factura"
+        @Li ,   0 PSAY "CLIENTE    : "+A1_COD+" "+A1_LOJA+" - "+A1_NOME+" "+"EMISSAO : "+DTOC(SF2->F2_EMISSAO)+" TIPO DA NOTA : "+If(SD2->D2_TIPO=="C","Nota de Debito","N.Fiscal")  //"CLIENTE    : "###"EMISSAO : "###" TIPO DA NOTA : "###"Devolucion"###"Debito"###"Factura"
 		nCt++
 		Li++
 		dbSelectArea("SD2")
@@ -1088,7 +1089,7 @@ While !Eof() .and. D1_DOC+D1_SERIE+D1_FORNECE+D1_LOJA == SF1->F1_DOC+SF1->F1_SER
 		dbSelectArea("SA1")
 		dbSetOrder(1)
 		dbSeek(xFilial()+SD1->D1_FORNECE+SD1->D1_LOJA)
-		@Li ,   0 PSAY STR0011+A1_COD+" "+A1_LOJA+" - "+A1_NOME+"  "+STR0009+DTOC(SF1->F1_DTDIGIT)+STR0010+STR0022   //"CLIENTE    : "###"EMISSAO : "###" TIPO DA NOTA : "
+		@Li ,   0 PSAY "CLIENTE    : "+A1_COD+" "+A1_LOJA+" - "+A1_NOME+"  "+"EMISSAO : "+DTOC(SF1->F1_DTDIGIT)+" TIPO DA NOTA : "+"Nota de Credito"   //"CLIENTE    : "###"EMISSAO : "###" TIPO DA NOTA : "
 
 		nCt++
 		Li++

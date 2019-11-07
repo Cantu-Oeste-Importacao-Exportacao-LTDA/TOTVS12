@@ -1,8 +1,9 @@
-#INCLUDE "RCAOMS.CH"
+//#INCLUDE "RCAOMS.CH"
 #IFNDEF WINDOWS
 #DEFINE PSAY SAY
 #ENDIF
 #DEFINE CHRCOMP If(aReturn[4]==1,15,18)
+
 
 /*/
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -105,7 +106,7 @@ Local cNReduz := ""
 //³ExpC5 : Descricao                                                       ³
 //³                                                                        ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oReport := TReport():New("OMSR020",STR0001,"OMR020", {|oReport| ReportPrint(oReport,cAliasSC9,oItPedido,cAliasSD2,oITNF,oItPedido2,oItNF2,cAliasDAK,cAliasDAI,oCarga,cAliasSD2,@lQuery,cNReduz)},OemToAnsi(STR0002)+" "+OemToAnsi(STR0003)) //"Listagem de Cargas"###"Este relatorio ira imprimir a listagem de cargas de acordo"###"com os parametros informados pelo usuario"
+oReport := TReport():New("OMSR020","Listagem de cargas","OMR020", {|oReport| ReportPrint(oReport,cAliasSC9,oItPedido,cAliasSD2,oITNF,oItPedido2,oItNF2,cAliasDAK,cAliasDAI,oCarga,cAliasSD2,@lQuery,cNReduz)},OemToAnsi("Este relatorio ira imprimir a listagem de cargas de acordo")+" "+OemToAnsi("com os parametros informados pelo usuario")) //"Listagem de Cargas"###"Este relatorio ira imprimir a listagem de cargas de acordo"###"com os parametros informados pelo usuario"
 oReport:SetLandscape() 
 oReport:SetTotalInLine(.F.)
 Pergunte(oReport:uParam,.F.)
@@ -147,10 +148,10 @@ Pergunte(oReport:uParam,.F.)
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Section(1)                                                              ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oCarga:= TRSection():New(oReport,STR0026,{"DAK","DA3","DA4"},{STR0027,STR0028},/*Campos do SX3*/,/*Campos do SIX*/) //"Carga"###"Pedido/Item"###"Produto"
+oCarga:= TRSection():New(oReport,"Carga",{"DAK","DA3","DA4"},{"Pedido/Item","Produto"},/*Campos do SX3*/,/*Campos do SIX*/) //"Carga"###"Pedido/Item"###"Produto"
 oCarga:SetTotalInLine(.F.)
-TRCell():New(oCarga , "DAK_COD"    , "DAK" , STR0026    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/) //"Carga"
-TRCell():New(oCarga , "DAK_SEQCAR" , "DAK" , STR0037    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/) //"Seq."
+TRCell():New(oCarga , "DAK_COD"    , "DAK" , "Carga"    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/) //"Carga"
+TRCell():New(oCarga , "DAK_SEQCAR" , "DAK" , "Seq."    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/) //"Seq."
 TRCell():New(oCarga , "DAK_CAMINH" , "DAK" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oCarga , "DA3_DESC"   , "DA3" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oCarga , "DAK_MOTORI" , "DAK" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
@@ -165,7 +166,7 @@ TRCell():New(oCarga , "DAK_HORA"   , "DAK" , /*Titulo*/ , /*Picture*/ , /*Tamanh
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Section(1):Section(1)                                                   ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oItCarga:= TRSection():New(oCarga,STR0029,{"DAI","SA1","SF2"},/*{Array com as ordens do relatorio}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item da Carga"
+oItCarga:= TRSection():New(oCarga,"Item da Carga",{"DAI","SA1","SF2"},/*{Array com as ordens do relatorio}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item da Carga"
 oItCarga:SetTotalInLine(.F.)
 oItCarga:SetHeaderPage(.T.)
 oItCarga:SetHeaderSection(.F.)
@@ -186,7 +187,7 @@ TRCell():New(oItCarga , "F2_SERIE"   ,"SF2" , /*Titulo*/ , /*Picture*/ , /*Taman
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Section(1):Section(1):Section(1)                                        ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oItPedido:= TRSection():New(oItCarga,STR0030,{"SC9","SB1","SC6","SD2","SF2"},/*{Array com as ordens do relatório}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item da liberação do Pedido de venda"
+oItPedido:= TRSection():New(oItCarga,"Item da liberação do Pedido de venda",{"SC9","SB1","SC6","SD2","SF2"},/*{Array com as ordens do relatório}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item da liberação do Pedido de venda"
 oItPedido:SetTotalInLine(.F.)
 TRCell():New(oItPedido , "C9_ITEM"    , "SC9" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/  , /*{|| code-block de impressao }*/)
 TRCell():New(oItPedido , "C9_PRODUTO" , "SC9" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/  , /*{|| code-block de impressao }*/)
@@ -198,13 +199,13 @@ TRCell():New(oItPedido , "B1_UM"      , "SB1" , /*Titulo*/ , /*Picture*/ , /*Tam
 TRCell():New(oItPedido , "C9_QTDLIB2" , "SC9" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/  , /*{|| code-block de impressao }*/)
 TRCell():New(oItPedido , "B1_SEGUM"   , "SB1" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/  , /*{|| code-block de impressao }*/)
 TRCell():New(oItPedido , "C6_VALOR"   , "SC6" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/  , {|| (cAliasSC9)->C9_QTDLIB*(cAliasSC9)->C9_PRCVEN })
-TRCell():New(oItPedido , "D2_PESO"    , "SD2" , STR0031    , PesqPict("SB1","B1_PESO") , /*Tamanho*/ , /*lPixel*/ , {||IIf(SuperGetmv("MV_PESOCAR")=="L",SB1->B1_PESO,SB1->B1_PESBRU)*(cAliasSC9)->C9_QTDLIB}) //"Peso"
-TRCell():New(oItPedido , "F2_VOLUME1" , "SF2" , STR0032    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/  , {|| (cAliasSC9)->F2_VOLUME1 }) //"Volume"
+TRCell():New(oItPedido , "D2_PESO"    , "SD2" , "Peso"    , PesqPict("SB1","B1_PESO") , /*Tamanho*/ , /*lPixel*/ , {||IIf(SuperGetmv("MV_PESOCAR")=="L",SB1->B1_PESO,SB1->B1_PESBRU)*(cAliasSC9)->C9_QTDLIB}) //"Peso"
+TRCell():New(oItPedido , "F2_VOLUME1" , "SF2" , "Volume"    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/  , {|| (cAliasSC9)->F2_VOLUME1 }) //"Volume"
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Section(1):Section(1):Section(2)                                        ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oItNF:= TRSection():New(oItCarga,STR0033,{"SD2","SB1","SF2"},/*{Array com as ordens do relatorio}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item do documento de saída"
+oItNF:= TRSection():New(oItCarga,"Item do documento de saída",{"SD2","SB1","SF2"},/*{Array com as ordens do relatorio}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item do documento de saída"
 oItNF:SetTotalInLine(.F.)
 TRCell():New(oItNF , "D2_ITEM"    , "SD2" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oItNF , "D2_COD"     , "SD2" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
@@ -216,8 +217,8 @@ TRCell():New(oItNF , "B1_UM"      , "SB1" , /*Titulo*/ , /*Picture*/ , /*Tamanho
 TRCell():New(oItNF , "D2_QTSEGUM" , "SD2" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oItNF , "B1_SEGUM"   , "SB1" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oItNF , "D2_TOTAL"   , "SD2" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
-TRCell():New(oItNF , "D2_PESO"    , "SD2" , STR0031    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , {||IIf(SuperGetmv("MV_PESOCAR")=="L",SB1->B1_PESO,SB1->B1_PESBRU)*D2_QUANT}) //"Peso"
-TRCell():New(oItNF , "F2_VOLUME1" , "SF2" , STR0032    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/) //"Volume"
+TRCell():New(oItNF , "D2_PESO"    , "SD2" , "Peso"    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , {||IIf(SuperGetmv("MV_PESOCAR")=="L",SB1->B1_PESO,SB1->B1_PESBRU)*D2_QUANT}) //"Peso"
+TRCell():New(oItNF , "F2_VOLUME1" , "SF2" , "Volume"    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/) //"Volume"
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Ordem 2                                                                 ³
@@ -225,7 +226,7 @@ TRCell():New(oItNF , "F2_VOLUME1" , "SF2" , STR0032    , /*Picture*/ , /*Tamanho
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Section(1):Section(2)                                                  ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oItPedido2:= TRSection():New(oCarga,STR0030,{"SC9","SB1","SD2"},/*{Array com as ordens do relatorio}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item da liberação do Pedido de venda"
+oItPedido2:= TRSection():New(oCarga,"Item da liberação do Pedido de venda",{"SC9","SB1","SD2"},/*{Array com as ordens do relatorio}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item da liberação do Pedido de venda"
 oItPedido2:SetTotalInLine(.F.)
 TRCell():New(oItPedido2 , "C9_PRODUTO" , "SC9" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oItPedido2 , "B1_DESC"    , "SB1" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
@@ -236,12 +237,12 @@ TRCell():New(oItPedido2 , "B1_UM"      , "SB1" , /*Titulo*/ , /*Picture*/ , /*Ta
 TRCell():New(oItPedido2 , "C9_QTDLIB2" , "SC9" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , {|| IIF(MV_PAR11 == 1 .And. lQuery ,QTDE2,(cAliasSC9)->C9_QTDLIB2) })
 TRCell():New(oItPedido2 , "B1_SEGUM"   , "SB1" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oItPedido2 , "C6_VALOR"   , "SC6" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , {|| IIF(MV_PAR11 == 1 .And. lQuery,VALOR,(cAliasSC9)->C9_QTDLIB*(cAliasSC9)->C9_PRCVEN) })
-TRCell():New(oItPedido2 , "D2_PESO"    , "SD2" , STR0031    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , {|| IIF(SuperGetmv("MV_PESOCAR")=="L",SB1->B1_PESO,SB1->B1_PESBRU)*(IIF(MV_PAR11 == 1 .And. lQuery,QTDE,(cAliasSC9)->C9_QTDLIB))}) //"Peso"
+TRCell():New(oItPedido2 , "D2_PESO"    , "SD2" , "Peso"    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , {|| IIF(SuperGetmv("MV_PESOCAR")=="L",SB1->B1_PESO,SB1->B1_PESBRU)*(IIF(MV_PAR11 == 1 .And. lQuery,QTDE,(cAliasSC9)->C9_QTDLIB))}) //"Peso"
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Section(1):Section(3)                                                  ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oItNF2:= TRSection():New(oCarga,STR0033,{"DAI","SD2","SB1","SF2"},/*{Array com as ordens do relatorio}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item do documento de saída"
+oItNF2:= TRSection():New(oCarga,"Item do documento de saída",{"DAI","SD2","SB1","SF2"},/*{Array com as ordens do relatorio}*/,/*Campos do SX3*/,/*Campos do SIX*/) //"Item do documento de saída"
 oItNF2:SetTotalInLine(.F.)
 TRCell():New(oItNF2 , "D2_DOC"     , "SD2" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oItNF2 , "D2_SERIE"   , "SD2" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
@@ -255,8 +256,8 @@ TRCell():New(oItNF2 , "B1_UM"      , "SB1" , /*Titulo*/ , /*Picture*/ , /*Tamanh
 TRCell():New(oItNF2 , "D2_QTSEGUM" , "SD2" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oItNF2 , "B1_SEGUM"   , "SB1" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
 TRCell():New(oItNF2 , "D2_TOTAL"   , "SD2" , /*Titulo*/ , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/)
-TRCell():New(oItNF2 , "D2_PESO"    , "SD2" , STR0031    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , {||IIf(SuperGetmv("MV_PESOCAR")=="L",SB1->B1_PESO,SB1->B1_PESBRU)*(cAliasSC9)->C9_QTDLIB}) //"Peso"
-TRCell():New(oItNF2 , "F2_VOLUME1" , "SF2" , STR0032    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/) //"Volume"
+TRCell():New(oItNF2 , "D2_PESO"    , "SD2" , "Peso"    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , {||IIf(SuperGetmv("MV_PESOCAR")=="L",SB1->B1_PESO,SB1->B1_PESBRU)*(cAliasSC9)->C9_QTDLIB}) //"Peso"
+TRCell():New(oItNF2 , "F2_VOLUME1" , "SF2" , "Volume"    , /*Picture*/ , /*Tamanho*/ , /*lPixel*/ , /*{|| code-block de impressao }*/) //"Volume"
 
 Return( oReport )
       
@@ -304,21 +305,21 @@ MakeSqlExpr(oReport:uParam)
 If	MV_PAR11 == 2 // Analitico
 
 	If	oReport:Section(1):nOrder == 1	// Por Pedido
-		oBreak := TRBreak():New(oCarga,oCarga:Cell("DAK_COD"),STR0036,.F.) //"Total da Carga"
+		oBreak := TRBreak():New(oCarga,oCarga:Cell("DAK_COD"),"Total da Carga",.F.) //"Total da Carga"
 		TRFunction():New(oItNF:Cell("D2_QUANT")  ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 		TRFunction():New(oItNF:Cell("D2_QTSEGUM"),/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 		TRFunction():New(oItNF:Cell("D2_TOTAL")  ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 		TRFunction():New(oItNF:Cell("D2_PESO")   ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 		TRFunction():New(oItNF:Cell("F2_VOLUME1"),/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 	Else  // Ordem por Produto
-		oBreak := TRBreak():New(oItPedido,oItPedido:Cell("C9_PRODUTO" ),STR0034,.F.) 	// por Emissao //"TOTAL DO ITEM"
+		oBreak := TRBreak():New(oItPedido,oItPedido:Cell("C9_PRODUTO" ),"TOTAL DO ITEM",.F.) 	// por Emissao //"TOTAL DO ITEM"
 		TRFunction():New(oItPedido:Cell("C9_QTDLIB") ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,/*lEndPage*/,oItPedido)
 		TRFunction():New(oItPedido:Cell("C9_QTDLIB2"),/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,/*lEndPage*/,oItPedido)
 		TRFunction():New(oItPedido:Cell("C6_VALOR")  ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,/*lEndPage*/,oItPedido)
 		TRFunction():New(oItPedido:Cell("D2_PESO")   ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,/*lEndPage*/,oItPedido)
 		TRFunction():New(oItPedido:Cell("F2_VOLUME1"),/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,/*lEndPage*/,oItPedido)
 
-		oBreak := TRBreak():New(oCarga,oCarga:Cell("DAK_COD"),STR0036,.F.) //"Total da Carga"
+		oBreak := TRBreak():New(oCarga,oCarga:Cell("DAK_COD"),"Total da Carga",.F.) //"Total da Carga"
 		TRFunction():New(oItPedido2:Cell("C9_QTDLIB") ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 		TRFunction():New(oItPedido2:Cell("C9_QTDLIB2"),/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 		TRFunction():New(oItPedido2:Cell("C6_VALOR")  ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
@@ -328,7 +329,7 @@ Else		 		// Sintetico
 	If	oReport:Section(1):nOrder == 2 // Por produto
 		If	MV_PAR13 == 2	// Carga por Nota
 			//	oBreak := TRBreak():New(oItNF2,oItNF2:Cell("D2_COD"),"Total Produto",.F.)
-			oBreak := TRBreak():New(oCarga,oCarga:Cell("DAK_COD"),STR0036,.F.) //"Total da Carga"
+			oBreak := TRBreak():New(oCarga,oCarga:Cell("DAK_COD"),"Total da Carga",.F.) //"Total da Carga"
 			TRFunction():New(oItNF2:Cell("D2_QUANT")  ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 			TRFunction():New(oItNF2:Cell("D2_QTSEGUM"),/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 			TRFunction():New(oItNF2:Cell("D2_TOTAL")  ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
@@ -336,7 +337,7 @@ Else		 		// Sintetico
 			TRFunction():New(oItNF2:Cell("F2_VOLUME1"),/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 		Else
 			//	oBreak := TRBreak():New(oItPedido2,oItPedido2:Cell("C9_PRODUTO"),"Total Produto",.F.)
-			oBreak := TRBreak():New(oCarga,oCarga:Cell("DAK_COD"),STR0036,.F.) //"Total da Carga"
+			oBreak := TRBreak():New(oCarga,oCarga:Cell("DAK_COD"),"Total da Carga",.F.) //"Total da Carga"
 			TRFunction():New(oItPedido2:Cell("C9_QTDLIB") ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 			TRFunction():New(oItPedido2:Cell("C9_QTDLIB2"),/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
 			TRFunction():New(oItPedido2:Cell("C6_VALOR")  ,/* cID */,"SUM",oBreak,/*cTitle*/,/*cPicture*/,/*uFormula*/,.F./*lEndSection*/,.F./*lEndReport*/,.F./*lEndPage*/)
@@ -946,14 +947,14 @@ Static Function OMSR020R3()
 //³Define Variaveis                                                        ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 #IFDEF WINDOWS
-	Local Titulo := OemToAnsi(STR0001) //"Listagem de cargas"
-	Local cDesc1 := OemToAnsi(STR0002) //"Este relatorio ira imprimir a listagem de cargas de acordo"
-	Local cDesc2 := OemToAnsi(STR0003) //"com os parametros informados pelo usuario"
+	Local Titulo := OemToAnsi("Listagem de cargas") //"Listagem de cargas"
+	Local cDesc1 := OemToAnsi("Este relatorio ira imprimir a listagem de cargas de acordo") //"Este relatorio ira imprimir a listagem de cargas de acordo"
+	Local cDesc2 := OemToAnsi("com os parametros informados pelo usuario") //"com os parametros informados pelo usuario"
 	Local cDesc3 := OemToAnsi("")
 #ELSE
-	Local Titulo := STR0001 // "Listagem de Precos"
-	Local cDesc1 := STR0002
-	Local cDesc2 := STR0003
+	Local Titulo := "Listagem de cargas" // "Listagem de Precos"
+	Local cDesc1 := "Este relatorio ira imprimir a listagem de cargas de acordo"
+	Local cDesc2 := "com os parametros informados pelo usuario"
 	Local cDesc3 := ""
 #ENDIF
 Local cString  := "DAK" 	// Alias utilizado na Filtragem
@@ -966,8 +967,8 @@ Local nomeprog := "OMSR020"	// nome do programa
 Private Tamanho := "P" 		// P/M/G
 Private Limite  := 80 		// 80/132/220
 Private cPerg   := "OMR020"	// Pergunta do Relatorio
-Private aOrdem  := {STR0019,STR0020}
-Private aReturn := { STR0002, 1,STR0003, 1, 2, 1, "",1 } //"Zebrado"###"Administracao"
+Private aOrdem  := {"Por Pedidos","Por Produtos"}
+Private aReturn := { "Este relatorio ira imprimir a listagem de cargas de acordo", 1,"com os parametros informados pelo usuario", 1, 2, 1, "",1 } //"Zebrado"###"Administracao"
 						//[1] Reservado para Formulario
 						//[2] Reservado para N§ de Vias
 						//[3] Destinatario
@@ -1128,8 +1129,8 @@ Local cNReduz   := ""
 //|DATA    : XX/XX/XX AS XX:XX		                                                                                                                                                                                           |
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-Local cCabec1 := OemtoAnsi(STR0004) //"SEQUENCIA PEDIDO CLIENTE   NOME                                    PESO         VOLUME     NOTA  SERIE"
-Local cCabec2 := OemtoAnsi(STR0005) //"ENTREGA                                                                             M3   FISCAL"
+Local cCabec1 := OemtoAnsi("SEQUENCIA PEDIDO CLIENTE   NOME                                     PESO     VOLUME") //"SEQUENCIA PEDIDO CLIENTE   NOME                                    PESO         VOLUME     NOTA  SERIE"
+Local cCabec2 := OemtoAnsi("ENTREGA                                                                          M3") //"ENTREGA                                                                             M3   FISCAL"
 
 DbSelectArea(cString)
 DbSetOrder(2)
@@ -1297,7 +1298,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 		cCondicao += 'Dtos(DAK_DATA) >= "'+Dtos(mv_par09)+'".And.Dtos(DAK_DATA) <="'+Dtos(mv_par10)+'".And.'
 		cCondicao += 'DAK_FEZNF == "1"'
 
-		IndRegua("DAK",cIndDAK,cKey,,cCondicao,STR0016) //"Selecionando Registros ..."
+		IndRegua("DAK",cIndDAK,cKey,,cCondicao,"Selecionando Registros...") //"Selecionando Registros ..."
 		nIndDAK := RetIndex("DAK")
 		#IFNDEF TOP
 		dbSetIndex(cIndDAK+OrdBagExT())
@@ -1330,7 +1331,7 @@ While !Eof()
 		EndIf
 	#ENDIF
 	If lEnd
-		@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+		@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 		Exit
 	EndIf
 
@@ -1347,21 +1348,21 @@ While !Eof()
 	DbSetOrder(1)
 	MsSeek(xFilial("DA4")+(cAliasDAK)->DAK_MOTORI)
 
-	@ li,000 PSAY OemtoAnsi(STR0006)+(cAliasDAK)->DAK_COD+"-"+(cAliasDAK)->DAK_SEQCAR //"CARGA   : "
+	@ li,000 PSAY OemtoAnsi("CARGA   : ")+(cAliasDAK)->DAK_COD+"-"+(cAliasDAK)->DAK_SEQCAR //"CARGA   : "
 	li++
-	@ li,000 PSAY OemtoAnsi(STR0007)+ (cAliasDAK)->DAK_CAMINH + " - " + DA3->DA3_DESC //"VEICULO : "
-// Adriano	@ li,055 PSAY OemtoAnsi(STR0008)+(cAliasDAK)->DAK_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "	
+	@ li,000 PSAY OemtoAnsi("VEICULO : ")+ (cAliasDAK)->DAK_CAMINH + " - " + DA3->DA3_DESC //"VEICULO : "
+// Adriano	@ li,055 PSAY OemtoAnsi("MOTORISTA : ")+(cAliasDAK)->DAK_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "	
 	li++
-	@ li,000 PSAY OemtoAnsi(STR0009) //"PESO    :"
+	@ li,000 PSAY OemtoAnsi("PESO    :") //"PESO    :"
 	@ li,010 PSAY (cAliasDAK)->DAK_PESO Picture PesqPict("DAK","DAK_PESO")
-// Adriano	@ li,025 PSAY OemtoAnsi(STR0010) //"VOLUME M3 : "
+// Adriano	@ li,025 PSAY OemtoAnsi("VOLUME M3 : ") //"VOLUME M3 : "
 	@ li,037 PSAY (cAliasDAK)->DAK_CAPVOL Picture PesqPict("DAK","DAK_CAPVOL")
-	@ li,052 PSAY OemtoAnsi(STR0011) //"PTOS ENTREGA : "
+	@ li,052 PSAY OemtoAnsi("PTOS ENTREGA : ") //"PTOS ENTREGA : "
 	@ li,067 PSAY (cAliasDAK)->DAK_PTOENT Picture PesqPict("DAK","DAK_PTOENT")
-// Adriano	@ li,076 PSAY OemtoAnsi(STR0012) //"VALOR : "
+// Adriano	@ li,076 PSAY OemtoAnsi("VALOR : ") //"VALOR : "
 // Adriano	@ li,084 PSAY (cAliasDAK)->DAK_VALOR Picture PesqPict("DAK","DAK_VALOR")
 	li++ 
-	@ li,000 PSAY OemtoAnsi(STR0013) +DtoC((cAliasDAK)->DAK_DATA) + OemtoAnsi(STR0014) + (cAliasDAK)->DAK_HORA
+	@ li,000 PSAY OemtoAnsi("DATA    :") +DtoC((cAliasDAK)->DAK_DATA) + OemtoAnsi(" AS ") + (cAliasDAK)->DAK_HORA
 	li++
 	@ li,000 PSAY Replicate('-',limite)
 	li++
@@ -1415,9 +1416,9 @@ While !Eof()
 				SF2->(MSSeek(xFilial()+(cAliasDAI)->DAI_COD+(cAliasDAI)->DAI_SEQCAR))
 			EndIf
 			If IsRemito(1,"'"+(cAliasSF2)->F2_TIPODOC+"'")
-				@ li,089 PSAY Alltrim(GetDescRem()) + STR0018
+				@ li,089 PSAY Alltrim(GetDescRem()) + " Nro : "
 			Else
-				@ li,089 PSAY OemToAnsi(STR0017)
+				@ li,089 PSAY OemToAnsi("Nota Fiscal : ")
 			EndIf
 
 			@ li,109 PSAY (cAliasSF2)->F2_DOC+" "+(cAliasSF2)->F2_SERIE
@@ -1464,9 +1465,9 @@ While !Eof()
 				EndIf
 			EndIf
 			If IsRemito(1,"'"+(cAliasSF2)->F2_TIPODOC+"'")
-				@ li,089 PSAY Alltrim(GetDescRem()) + STR0018
+				@ li,089 PSAY Alltrim(GetDescRem()) + " Nro : "
 			Else
-				@ li,089 PSAY OemToAnsi(STR0017)
+				@ li,089 PSAY OemToAnsi("Nota Fiscal : ")
 			EndIf
 
 			@ li,109 PSAY (cAliasSF2)->F2_DOC+" "+(cAliasSF2)->F2_SERIE
@@ -1474,7 +1475,7 @@ While !Eof()
 
 			@ li,000 PSAY Replicate('-',limite)
 			li++
-			@ li,000 PSAY If(mv_par14==1,OemtoAnsi(STR0023),OemtoAnsi(STR0015))
+			@ li,000 PSAY If(mv_par14==1,OemtoAnsi("ITEM PRODUTO                         DESCRICAO                       LOTE       SUBLOTE     QTD. 1aUM  UNIDADE   QTD. 2aUM   SEG.UN.MED.        VALOR           PESO        VOLUME"),OemtoAnsi("ITEM PRODUTO                         DESCRICAO                           QTD 1aUM  UNID.      QTD 2aUM   SEG.UN.MED.        VALOR           PESO        VOLUME"))
 
 			//           1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16        17        18        19        20        21        22
 			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -1674,8 +1675,8 @@ Local li      := 100 // Contador de Linhas
 //|DATA    : XX/XX/XX AS XX:XX		                                                                                                                                                                                                 |
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-Local cCabec1 := If(mv_par14==1,OemtoAnsi(STR0022),OemtoAnsi(STR0021))
-
+ 
+Local cCabec1 := If(mv_par14==1,OemtoAnsi("PRODUTO                          DESCRICAO                      LOTE       SUBLOTE  QTD. 1aUM   UNID.     " ),OemtoAnsi("PRODUTO         DESCRICAO                             QTD UM      PESO SEP/CARR/CX" ))	//"PRODUTO                          DESCRICAO                      LOTE       SUBLOTE  QTD. 1aUM     UNID.     QTD. 2aUM 2aUM                 
 //           1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16        17        18        19        20        21        22
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //|PRODUTO           DESCRICAO                      LOTE       SUBLOTE	UNID.	QTD 1aUM      	QTD 2aUM     	2aUNI.	PESO      	VOLUME     	VALOR                                                                                |
@@ -1772,7 +1773,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 		While (cAliasQRY)->(!Eof())
 
 			If lEnd
-				@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+				@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 				Exit
 			EndIf
 
@@ -1792,21 +1793,21 @@ cIndDAK := CriaTrab(NIL,.F.)
 
 			cCarga := (cAliasQRY)->F2_CARGA+(cAliasQRY)->F2_SEQCAR
 
-			@ li,000 PSAY OemtoAnsi(STR0006)+(cAliasQRY)->F2_CARGA+"-"+(cAliasQRY)->F2_SEQCAR //"CARGA   : "
+			@ li,000 PSAY OemtoAnsi("CARGA   : ")+(cAliasQRY)->F2_CARGA+"-"+(cAliasQRY)->F2_SEQCAR //"CARGA   : "
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0007)+(cAliasQRY)->DAK_CAMINH + " - " + DA3->DA3_DESC //"VEICULO : "
-// Adriano			@ li,055 PSAY OemtoAnsi(STR0008)+(cAliasQRY)->DAK_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
+			@ li,000 PSAY OemtoAnsi("VEICULO : ")+(cAliasQRY)->DAK_CAMINH + " - " + DA3->DA3_DESC //"VEICULO : "
+// Adriano			@ li,055 PSAY OemtoAnsi("MOTORISTA : ")+(cAliasQRY)->DAK_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0009) //"PESO    :"
+			@ li,000 PSAY OemtoAnsi("PESO    :") //"PESO    :"
 			@ li,010 PSAY (cAliasQRY)->DAK_PESO Picture PesqPict("DAK","DAK_PESO")
-// Adriano			@ li,025 PSAY OemtoAnsi(STR0010) //"VOLUME M3 : "
+// Adriano			@ li,025 PSAY OemtoAnsi("VOLUME M3 : ") //"VOLUME M3 : "
 			@ li,037 PSAY (cAliasQRY)->DAK_CAPVOL Picture PesqPict("DAK","DAK_CAPVOL")
-			@ li,052 PSAY OemtoAnsi(STR0011) //"PTOS ENTREGA : "
+			@ li,052 PSAY OemtoAnsi("PTOS ENTREGA : ") //"PTOS ENTREGA : "
 			@ li,067 PSAY (cAliasQRY)->DAK_PTOENT Picture PesqPict("DAK","DAK_PTOENT")
-// Adriano			@ li,076 PSAY OemtoAnsi(STR0012) //"VALOR : "
+// Adriano			@ li,076 PSAY OemtoAnsi("VALOR : ") //"VALOR : "
 // Adriano			@ li,084 PSAY (cAliasQRY)->DAK_VALOR Picture PesqPict("DAK","DAK_VALOR")
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0013) +DtoC((cAliasQRY)->DAK_DATA) + OemtoAnsi(STR0014) + (cAliasQRY)->DAK_HORA
+			@ li,000 PSAY OemtoAnsi("DATA    :") +DtoC((cAliasQRY)->DAK_DATA) + OemtoAnsi(" AS ") + (cAliasQRY)->DAK_HORA
 			li++
 			@ li,000 PSAY Replicate('-',limite)
 			li++
@@ -1815,7 +1816,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 			While (cAliasQRY)->(!Eof()) .And. (cAliasQRY)->F2_CARGA+(cAliasQRY)->F2_SEQCAR == cCarga
 
 				If	lEnd
-					@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+					@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 					Exit
 				EndIf
 
@@ -1872,7 +1873,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 					li := cabec(Titulo,cCabec1,cCabec2,nomeprog,Tamanho,CHRCOMP)
 					li++
 				EndIf
-				@ li,000       PSAY STR0025    //"Total ---> "
+				@ li,000       PSAY "Total --->"    //"Total ---> "
 				@ li,046+nCols PSAY aTotais[1] Picture PesqPict("SD2","D2_QUANT")
 // Adriano				@ li,078+nCols PSAY aTotais[2] Picture PesqPict("SD2","D2_QUANT")
 				@ li,061+nCols PSAY aTotais[3] Picture "@E 99,999.99"
@@ -1974,7 +1975,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 		cCondicao += 'Dtos(DAK_DATA) >= "'+Dtos(mv_par09)+'".And.Dtos(DAK_DATA) <="'+Dtos(mv_par10)+'".And.'
 		cCondicao += 'DAK_FEZNF == "1"'
 
-		IndRegua("DAK",cIndDAK,cKey,,cCondicao,STR0016) //"Selecionando Registros ..."
+		IndRegua("DAK",cIndDAK,cKey,,cCondicao,"Selecionando Registros...") //"Selecionando Registros ..."
 		nIndDAK := RetIndex("DAK")
 		#IFNDEF TOP
 		dbSetIndex(cIndDAK+OrdBagExT())
@@ -2103,7 +2104,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 				EndIf
 			#ENDIF
 			If lEnd
-				@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+				@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 				Exit
 			EndIf
 
@@ -2114,21 +2115,21 @@ cIndDAK := CriaTrab(NIL,.F.)
 
 			cCarga := TRBPRO->TRB_CODCAR+TRBPRO->TRB_SEQCAR
 
-			@ li,000 PSAY OemtoAnsi(STR0006)+TRBPRO->TRB_CODCAR+"-"+TRBPRO->TRB_SEQCAR //"CARGA   : "
+			@ li,000 PSAY OemtoAnsi("CARGA   : ")+TRBPRO->TRB_CODCAR+"-"+TRBPRO->TRB_SEQCAR //"CARGA   : "
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0007)+TRBPRO->TRB_VEICUL + " - " + DA3->DA3_DESC //"VEICULO : "
-// Adriano			@ li,055 PSAY OemtoAnsi(STR0008)+TRBPRO->TRB_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
+			@ li,000 PSAY OemtoAnsi("VEICULO : ")+TRBPRO->TRB_VEICUL + " - " + DA3->DA3_DESC //"VEICULO : "
+// Adriano			@ li,055 PSAY OemtoAnsi("MOTORISTA : ")+TRBPRO->TRB_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0009) //"PESO    :"
+			@ li,000 PSAY OemtoAnsi("PESO    :") //"PESO    :"
 			@ li,010 PSAY TRBPRO->TRB_PESTOT Picture PesqPict("DAK","DAK_PESO")
-// Adriano			@ li,025 PSAY OemtoAnsi(STR0010) //"VOLUME M3 : "
+// Adriano			@ li,025 PSAY OemtoAnsi("VOLUME M3 : ") //"VOLUME M3 : "
 			@ li,037 PSAY TRBPRO->TRB_VOLTOT Picture PesqPict("DAK","DAK_CAPVOL")
-			@ li,052 PSAY OemtoAnsi(STR0011) //"PTOS ENTREGA : "
+			@ li,052 PSAY OemtoAnsi("PTOS ENTREGA : ") //"PTOS ENTREGA : "
 			@ li,067 PSAY TRBPRO->TRB_PTOENT Picture PesqPict("DAK","DAK_PTOENT")
-// Adriano			@ li,076 PSAY OemtoAnsi(STR0012) //"VALOR : "
+// Adriano			@ li,076 PSAY OemtoAnsi("VALOR : ") //"VALOR : "
 // Adriano			@ li,084 PSAY TRBPRO->TRB_VALTOT Picture PesqPict("DAK","DAK_VALOR")
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0013) +DtoC(TRBPRO->TRB_DATA) + OemtoAnsi(STR0014) + TRBPRO->TRB_HORA
+			@ li,000 PSAY OemtoAnsi("DATA    :") +DtoC(TRBPRO->TRB_DATA) + OemtoAnsi(" AS ") + TRBPRO->TRB_HORA
 			li++
 			@ li,000 PSAY Replicate('-',limite)
 			li++
@@ -2137,7 +2138,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 			While TRBPRO->(!Eof()) .And. TRBPRO->TRB_CODCAR+TRBPRO->TRB_SEQCAR == cCarga
 
 				If lEnd
-					@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+					@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 					Exit
 				EndIf
 
@@ -2185,7 +2186,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 					li++
 				EndIf
 
-				@ li,000       PSAY STR0025    //"Total ---> "
+				@ li,000       PSAY "Total --->"    //"Total ---> "
 				@ li,062+nCols PSAY aTotais[1] Picture PesqPict("SD2","D2_QUANT")
 				@ li,086+nCols PSAY aTotais[2] Picture PesqPict("SD2","D2_QUANT")
 				@ li,115+nCols PSAY aTotais[3] Picture "@E 99,999.99"
@@ -2221,7 +2222,7 @@ If MV_PAR11 == 1		//relatorio sintetico
 			li := cabec(Titulo,cCabec1,cCabec2,nomeprog,Tamanho,CHRCOMP)
 		EndIf
 		li += 2
-		@li,000 PSAY STR0024 //"Total Geral"
+		@li,000 PSAY "Total Geral" //"Total Geral"
 		@ li,062+nCols PSAY nTotQtd  Picture PesqPict("SD2","D2_QUANT")
 		@ li,078+nCols PSAY nTotQtd2 Picture PesqPict("SD2","D2_QUANT")
 		@ li,115+nCols PSAY nTotPes  Picture "@E 999,999.99"
@@ -2326,8 +2327,8 @@ Local cNReduz := ""
 //|DATA    : XX/XX/XX AS XX:XX		                                                                                                                                                                                           |
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-Local cCabec1 := OemtoAnsi(STR0004) //"SEQUENCIA PEDIDO CLIENTE   NOME                                    PESO         VOLUME     NOTA  SERIE"
-Local cCabec2 := OemtoAnsi(STR0005) //"ENTREGA                                                                             M3   FISCAL"
+Local cCabec1 := OemtoAnsi("SEQUENCIA PEDIDO CLIENTE   NOME                                     PESO     VOLUME") //"SEQUENCIA PEDIDO CLIENTE   NOME                                    PESO         VOLUME     NOTA  SERIE"
+Local cCabec2 := OemtoAnsi("ENTREGA                                                                          M3") //"ENTREGA                                                                             M3   FISCAL"
 
 DbSelectArea(cString)
 DbSetOrder(2)
@@ -2497,7 +2498,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 		cCondicao += 'DAK_MOTORI >= "'+mv_par07+'".And.DAK_MOTORI <="'+mv_par08+'".And.'
 		cCondicao += 'Dtos(DAK_DATA) >= "'+Dtos(mv_par09)+'".And.Dtos(DAK_DATA) <="'+Dtos(mv_par10)+'"'
 
-		IndRegua("DAK",cIndDAK,cKey,,cCondicao,STR0016) //"Selecionando Registros ..."
+		IndRegua("DAK",cIndDAK,cKey,,cCondicao,"Selecionando Registros...") //"Selecionando Registros ..."
 		nIndDAK := RetIndex("DAK")
 		#IFNDEF TOP
 			dbSetIndex(cIndDAK+OrdBagExT())
@@ -2529,7 +2530,7 @@ While !Eof()
 		EndIf
 	#ENDIF
 	If lEnd
-		@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+		@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 		Exit
 	EndIf
 
@@ -2547,21 +2548,21 @@ While !Eof()
 	DbSetOrder(1)
 	MsSeek(xFilial("DA4")+(cAliasDAK)->DAK_MOTORI)
 
-	@ li,000 PSAY OemtoAnsi(STR0006)+(cAliasDAK)->DAK_COD+"-"+(cAliasDAK)->DAK_SEQCAR //"CARGA   : "
+	@ li,000 PSAY OemtoAnsi("CARGA   : ")+(cAliasDAK)->DAK_COD+"-"+(cAliasDAK)->DAK_SEQCAR //"CARGA   : "
 	li++
-	@ li,000 PSAY OemtoAnsi(STR0007)+(cAliasDAK)->DAK_CAMINH + " - " + DA3->DA3_DESC //"VEICULO : "
-// Adriano	@ li,055 PSAY OemtoAnsi(STR0008)+(cAliasDAK)->DAK_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
+	@ li,000 PSAY OemtoAnsi("VEICULO : ")+(cAliasDAK)->DAK_CAMINH + " - " + DA3->DA3_DESC //"VEICULO : "
+// Adriano	@ li,055 PSAY OemtoAnsi("MOTORISTA : ")+(cAliasDAK)->DAK_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
 	li++
-	@ li,000 PSAY OemtoAnsi(STR0009) //"PESO    :" 
+	@ li,000 PSAY OemtoAnsi("PESO    :") //"PESO    :" 
 	@ li,010 PSAY (cAliasDAK)->DAK_PESO   Picture PesqPict("DAK","DAK_PESO")
-// Adriano	@ li,025 PSAY OemtoAnsi(STR0010) //"VOLUME M3 : "
+// Adriano	@ li,025 PSAY OemtoAnsi("VOLUME M3 : ") //"VOLUME M3 : "
 	@ li,037 PSAY (cAliasDAK)->DAK_CAPVOL Picture PesqPict("DAK","DAK_CAPVOL")
-	@ li,052 PSAY OemtoAnsi(STR0011) //"PTOS ENTREGA : "
+	@ li,052 PSAY OemtoAnsi("PTOS ENTREGA : ") //"PTOS ENTREGA : "
 	@ li,067 PSAY (cAliasDAK)->DAK_PTOENT Picture PesqPict("DAK","DAK_PTOENT")
-// Adriano	@ li,076 PSAY OemtoAnsi(STR0012) //"VALOR : "
+// Adriano	@ li,076 PSAY OemtoAnsi("VALOR : ") //"VALOR : "
 // Adriano	@ li,084 PSAY (cAliasDAK)->DAK_VALOR  Picture PesqPict("DAK","DAK_VALOR")
 	li++
-	@ li,000 PSAY OemtoAnsi(STR0013) +DtoC((cAliasDAK)->DAK_DATA) + OemtoAnsi(STR0014) + (cAliasDAK)->DAK_HORA //"DATA    :"###" AS "
+	@ li,000 PSAY OemtoAnsi("DATA    :") +DtoC((cAliasDAK)->DAK_DATA) + OemtoAnsi(" AS ") + (cAliasDAK)->DAK_HORA //"DATA    :"###" AS "
 	li++
 	@ li,000 PSAY Replicate('-',limite)
 	li++
@@ -2611,10 +2612,10 @@ While !Eof()
 			@ li,059 PSAY (cAliasDAI)->DAI_PESO Picture PesqPict("DAI","DAI_PESO")
 			@ li,074 PSAY (cAliasDAI)->DAI_CAPVOL Picture PesqPict("DAI","DAI_CAPVOL")
 			If lRemito .And. !Empty((cAliasDAI)->DAI_REMITO )
-				@ li,089 PSAY Alltrim(RetTitle("DAI_REMITO")) + STR0018
+				@ li,089 PSAY Alltrim(RetTitle("DAI_REMITO")) + " Nro : "
 				@ li,109 PSAY (cAliasDAI)->DAI_REMITO+" "+(cAliasDAI)->DAI_SERREM
 			ElseIf !Empty((cAliasDAI)->DAI_NFISCA )
-				@ li,089 PSAY OemToAnsi(STR0017)
+				@ li,089 PSAY OemToAnsi("Nota Fiscal : ")
 				@ li,109 PSAY (cAliasDAI)->DAI_NFISCA+" "+(cAliasDAI)->DAI_SERIE
 			EndIf
 
@@ -2639,10 +2640,10 @@ While !Eof()
 			@ li,059 PSAY (cAliasDAI)->DAI_PESO Picture PesqPict("DAI","DAI_PESO")
 			@ li,074 PSAY (cAliasDAI)->DAI_CAPVOL Picture PesqPict("DAI","DAI_CAPVOL")
 			If lRemito .And. !Empty((cAliasDAI)->DAI_REMITO )
-				@ li,089 PSAY Alltrim(RetTitle("DAI_REMITO")) + STR0018
+				@ li,089 PSAY Alltrim(RetTitle("DAI_REMITO")) + " Nro : "
 				@ li,109 PSAY (cAliasDAI)->DAI_REMITO+" "+(cAliasDAI)->DAI_SERREM 
 			ElseIf !Empty((cAliasDAI)->DAI_NFISCA )
-				@ li,089 PSAY OemToAnsi(STR0017)
+				@ li,089 PSAY OemToAnsi("Nota Fiscal : ")
 				@ li,109 PSAY (cAliasDAI)->DAI_NFISCA+" "+(cAliasDAI)->DAI_SERIE 
 			EndIf
 
@@ -2650,7 +2651,7 @@ While !Eof()
 
 			@ li,000 PSAY Replicate('-',limite)
 			li++
-			@ li,000 PSAY If(mv_par14==1,OemtoAnsi(STR0023),OemtoAnsi(STR0015))	//"ITEM PRODUTO                         DESCRICAO                       LOTE       SUBLOTE     QTD. 1aUM  UNIDADE   QTD. 2aUM   SEG.UN.MED.        VALOR           PESO        VOLUME"
+			@ li,000 PSAY If(mv_par14==1,OemtoAnsi("ITEM PRODUTO                         DESCRICAO                       LOTE       SUBLOTE     QTD. 1aUM  UNIDADE   QTD. 2aUM   SEG.UN.MED.        VALOR           PESO        VOLUME"),OemtoAnsi("ITEM PRODUTO                         DESCRICAO                           QTD 1aUM  UNID.      QTD 2aUM   SEG.UN.MED.        VALOR           PESO        VOLUME"))	//"ITEM PRODUTO                         DESCRICAO                       LOTE       SUBLOTE     QTD. 1aUM  UNIDADE   QTD. 2aUM   SEG.UN.MED.        VALOR           PESO        VOLUME"
 																					//"ITEM PRODUTO                         DESCRICAO                           QTD 1aUM  UNID.      QTD 2aUM   SEG.UN.MED.        VALOR           PESO        VOLUME"
 			li++
 			@ li,000 PSAY Replicate('-',limite)
@@ -2894,7 +2895,7 @@ Local li      := 100 // Contador de Linhas
 //|DATA    : XX/XX/XX AS XX:XX		                                                                                                                                                                                                 |
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-Local cCabec1 := If(mv_par14==1,OemtoAnsi(STR0022),OemtoAnsi(STR0021))	//"PRODUTO                          DESCRICAO                      LOTE       SUBLOTE  QTD. 1aUM     UNID.     QTD. 2aUM 2aUM                  PESO         VOLUME             VALOR"
+Local cCabec1 := If(mv_par14==1,OemtoAnsi("PRODUTO                          DESCRICAO                      LOTE       SUBLOTE  QTD. 1aUM   UNID.     " ),OemtoAnsi("PRODUTO         DESCRICAO                             QTD UM      PESO SEP/CARR/CX" ))	//"PRODUTO                          DESCRICAO                      LOTE       SUBLOTE  QTD. 1aUM     UNID.     QTD. 2aUM 2aUM
 																		//"PRODUTO                          DESCRICAO                      QTD. 1aUM     UNID.     QTD. 2aUM 2aUM                  PESO         VOLUME             VALOR"
 
 //           1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16        17        18        19        20        21        22
@@ -3019,7 +3020,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 		While (cAliasQRY)->(!Eof())
 
 			If lEnd
-				@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+				@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 				Exit
 			EndIf
 
@@ -3038,21 +3039,21 @@ cIndDAK := CriaTrab(NIL,.F.)
 
 			cCarga := (cAliasQRY)->C9_CARGA+(cAliasQRY)->C9_SEQCAR
 
-			@ li,000 PSAY OemtoAnsi(STR0006)+(cAliasQRY)->C9_CARGA+"-"+(cAliasQRY)->C9_SEQCAR //"CARGA   : "
+			@ li,000 PSAY OemtoAnsi("CARGA   : ")+(cAliasQRY)->C9_CARGA+"-"+(cAliasQRY)->C9_SEQCAR //"CARGA   : "
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0007)+(cAliasQRY)->DAK_CAMINH + " - " + DA3->DA3_DESC //"VEICULO : "
-// Adriano			@ li,055 PSAY OemtoAnsi(STR0008)+(cAliasQRY)->DAK_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
+			@ li,000 PSAY OemtoAnsi("VEICULO : ")+(cAliasQRY)->DAK_CAMINH + " - " + DA3->DA3_DESC //"VEICULO : "
+// Adriano			@ li,055 PSAY OemtoAnsi("MOTORISTA : ")+(cAliasQRY)->DAK_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0009) //"PESO    :"
+			@ li,000 PSAY OemtoAnsi("PESO    :") //"PESO    :"
 			@ li,010 PSAY (cAliasQRY)->DAK_PESO Picture PesqPict("DAK","DAK_PESO")
-// Adriano			@ li,025 PSAY OemtoAnsi(STR0010) //"VOLUME M3 : "
+// Adriano			@ li,025 PSAY OemtoAnsi("VOLUME M3 : ") //"VOLUME M3 : "
 			@ li,037 PSAY (cAliasQRY)->DAK_CAPVOL Picture PesqPict("DAK","DAK_CAPVOL")
-			@ li,052 PSAY OemtoAnsi(STR0011) //"PTOS ENTREGA : "
+			@ li,052 PSAY OemtoAnsi("PTOS ENTREGA : ") //"PTOS ENTREGA : "
 			@ li,067 PSAY (cAliasQRY)->DAK_PTOENT Picture PesqPict("DAK","DAK_PTOENT")
-// Adriano			@ li,076 PSAY OemtoAnsi(STR0012) //"VALOR : "
+// Adriano			@ li,076 PSAY OemtoAnsi("VALOR : ") //"VALOR : "
 // Adriano			@ li,084 PSAY (cAliasQRY)->DAK_VALOR Picture PesqPict("DAK","DAK_VALOR")
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0013) +DtoC((cAliasQRY)->DAK_DATA) + OemtoAnsi(STR0014) + (cAliasDAK)->DAK_HORA //"DATA    :"###" AS "
+			@ li,000 PSAY OemtoAnsi("DATA    :") +DtoC((cAliasQRY)->DAK_DATA) + OemtoAnsi(" AS ") + (cAliasDAK)->DAK_HORA //"DATA    :"###" AS "
 			li++
 			@ li,000 PSAY Replicate('-',limite)
 			li++
@@ -3061,7 +3062,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 			While (cAliasQRY)->(!Eof()) .And. (cAliasQRY)->C9_CARGA+(cAliasQRY)->C9_SEQCAR == cCarga
 
 				If lEnd
-					@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+					@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 					Exit
 				EndIf
 
@@ -3121,7 +3122,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 				li := cabec(Titulo,cCabec1,cCabec2,nomeprog,Tamanho,CHRCOMP)
 				li++
 			EndIf
-			@ li,000       PSAY STR0025     //"Total ---> "
+			@ li,000       PSAY "Total --->"     //"Total ---> "
 			@ li,046+nCols PSAY aTotais[1]  Picture PesqPict("SD2","D2_QUANT")
 // Adriano			@ li,088+nCols PSAY aTotais[2]  Picture PesqPict("SC9","C9_QTDLIB")
 			@ li,061+nCols PSAY aTotais[3]  Picture "@E 99,999.99"
@@ -3222,7 +3223,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 		cCondicao += 'DAK_MOTORI >= "'+mv_par07+'".And.DAK_MOTORI <="'+mv_par08+'".And.'
 		cCondicao += 'Dtos(DAK_DATA) >= "'+Dtos(mv_par09)+'".And.Dtos(DAK_DATA) <="'+Dtos(mv_par10)+'"'
 
-		IndRegua("DAK",cIndDAK,cKey,,cCondicao,STR0016) //"Selecionando Registros ..."
+		IndRegua("DAK",cIndDAK,cKey,,cCondicao,"Selecionando Registros...") //"Selecionando Registros ..."
 		nIndDAK := RetIndex("DAK")
 		#IFNDEF TOP
 			dbSetIndex(cIndDAK+OrdBagExT())
@@ -3343,7 +3344,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 				EndIf
 			#ENDIF
 			If lEnd
-				@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+				@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 				Exit
 			EndIf
 			
@@ -3354,21 +3355,21 @@ cIndDAK := CriaTrab(NIL,.F.)
 
 			cCarga := TRBPRO->TRB_CODCAR+TRBPRO->TRB_SEQCAR
 
-			@ li,000 PSAY OemtoAnsi(STR0006)+TRBPRO->TRB_CODCAR+"-"+TRBPRO->TRB_SEQCAR //"CARGA   : "
+			@ li,000 PSAY OemtoAnsi("CARGA   : ")+TRBPRO->TRB_CODCAR+"-"+TRBPRO->TRB_SEQCAR //"CARGA   : "
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0007)+TRBPRO->TRB_VEICUL + " - " + DA3->DA3_DESC //"VEICULO : "
-// Adriano			@ li,055 PSAY OemtoAnsi(STR0008)+TRBPRO->TRB_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
+			@ li,000 PSAY OemtoAnsi("VEICULO : ")+TRBPRO->TRB_VEICUL + " - " + DA3->DA3_DESC //"VEICULO : "
+// Adriano			@ li,055 PSAY OemtoAnsi("MOTORISTA : ")+TRBPRO->TRB_MOTORI + " - " + DA4->DA4_NOME //"MOTORISTA : "
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0009) //"PESO    :" 
+			@ li,000 PSAY OemtoAnsi("PESO    :") //"PESO    :" 
 			@ li,010 PSAY TRBPRO->TRB_PESTOT Picture PesqPict("DAK","DAK_PESO")
-// Adriano			@ li,025 PSAY OemtoAnsi(STR0010) //"VOLUME M3 : "
+// Adriano			@ li,025 PSAY OemtoAnsi("VOLUME M3 : ") //"VOLUME M3 : "
 			@ li,037 PSAY TRBPRO->TRB_VOLTOT Picture PesqPict("DAK","DAK_CAPVOL")
-			@ li,052 PSAY OemtoAnsi(STR0011) //"PTOS ENTREGA : "
+			@ li,052 PSAY OemtoAnsi("PTOS ENTREGA : ") //"PTOS ENTREGA : "
 			@ li,067 PSAY TRBPRO->TRB_PTOENT Picture PesqPict("DAK","DAK_PTOENT")
-// Adriano			@ li,076 PSAY OemtoAnsi(STR0012) //"VALOR : "
+// Adriano			@ li,076 PSAY OemtoAnsi("VALOR : ") //"VALOR : "
 // Adriano			@ li,084 PSAY TRBPRO->TRB_VALTOT Picture PesqPict("DAK","DAK_VALOR")
 			li++
-			@ li,000 PSAY OemtoAnsi(STR0013) +DtoC(TRBPRO->TRB_DATA) + OemtoAnsi(STR0014) + TRBPRO->TRB_HORA
+			@ li,000 PSAY OemtoAnsi("DATA    :") +DtoC(TRBPRO->TRB_DATA) + OemtoAnsi(" AS ") + TRBPRO->TRB_HORA
 			li++
 			@ li,000 PSAY Replicate('-',limite)
 			li++
@@ -3377,7 +3378,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 			While TRBPRO->(!Eof()) .And. TRBPRO->TRB_CODCAR+TRBPRO->TRB_SEQCAR == cCarga
 
 				If lEnd
-					@ Prow()+1,001 PSAY STR0006 //"CANCELADO PELO OPERADOR"
+					@ Prow()+1,001 PSAY "CARGA   : " //"CANCELADO PELO OPERADOR"
 					Exit
 				EndIf
 
@@ -3422,7 +3423,7 @@ cIndDAK := CriaTrab(NIL,.F.)
 				li++
 			EndIf
 
-			@ li,000       PSAY STR0025    // "Total ---> "
+			@ li,000       PSAY "Total --->"    // "Total ---> "
 			@ li,064+nCols PSAY aTotais[1] Picture PesqPict("SC9","C9_QTDLIB")
 			@ li,088+nCols PSAY aTotais[2] Picture PesqPict("SC9","C9_QTDLIB")
 			@ li,115+nCols PSAY aTotais[3] Picture "@E 99,999.99"
@@ -3455,7 +3456,7 @@ If MV_PAR11 == 1  //relatorio sintetico
 			li := cabec(Titulo,cCabec1,cCabec2,nomeprog,Tamanho,CHRCOMP)
 		EndIf
 		li += 2
-		@ li,000       PSAY STR0024  //"Total Geral"
+		@ li,000       PSAY "Total Geral"  //"Total Geral"
 		@ li,064+nCols PSAY nTotQtd  Picture PesqPict("SC9","C9_QTDLIB")
 		@ li,088+nCols PSAY nTotQtd2 Picture PesqPict("SC9","C9_QTDLIB")
 		@ li,015+nCols PSAY nTotPes  Picture "@E 999,999.99"

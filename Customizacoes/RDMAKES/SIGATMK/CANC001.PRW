@@ -40,8 +40,12 @@ Private cNomCli		:= ''
 Private cCodCli		:= ''
 Private nTotal		:= 0
 
+
 cCodCli := M->ACF_CLIENT
 cNomCli := Posicione("SA1",1,xFilial("SA1")+cCodCli,"A1_NOME")
+cFechar := "&Fechar"
+cSair   := "Sair"
+ 
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
@@ -113,7 +117,7 @@ DEFINE MSDIALOG oDlg1 TITLE "Títulos a Receber em Aberto - Outras Filiais" FROM 
 //Totais
 @ 207,005 SAY oSay1 PROMPT "Total em aberto:   R$"  SIZE 250, 030 OF oDlg1 FONT oBold COLORS CLR_BLACK, 16777215 PIXEL
 @ 207,060 SAY oSay1 PROMPT Str(nTotal,17,2)  SIZE 250, 030 OF oDlg1 FONT oBold COLORS CLR_BLUE, 16777215 PIXEL
-@ 207,370 BUTTON "&Fechar" PROMPT "Sair"     SIZE 037, 012 ACTION (oDlg1:End()) OF oDlg1 PIXEL
+@ 207,370 BUTTON cfechar PROMPT cSair      SIZE 037, 012 ACTION (oDlg1:End()) OF oDlg1 PIXEL
 
 
 //Criação do Grid

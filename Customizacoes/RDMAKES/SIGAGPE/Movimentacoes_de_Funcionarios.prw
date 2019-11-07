@@ -1,5 +1,5 @@
 #INCLUDE "FiveWin.ch"
-#INCLUDE "GPER500.CH"
+//#INCLUDE "GPER500.CH"
 #INCLUDE "Report.ch"
 #IFDEF TOP
 	#INCLUDE "TOPCONN.CH"
@@ -53,7 +53,7 @@ Local	aArea	:= GetArea()
 
 Private aEmpresa	:= {} 			//-- Array com  as filiais da Empresa 
 Private cPerg	:= "GPR500CUS" 
-Private cTitulo	:= OemToAnsi(STR0001)
+Private cTitulo	:= OemToAnsi("Detalle de movimiento de empleados (Turn-Over)  ")
 Private	cAliasSRA:= "SRA"
 Private lRelNew	:= .F.  
 
@@ -92,14 +92,14 @@ Static Function GPER500R3()
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 Local cString:= "SRA"        // Alias do arquivo principal (Base)
 Local aOrd   := {"C.Custo","Segmento"}
-Local cDesc1 := STR0001  //"Rela‡„o de Movimenta‡”es Funcionarios (Turn-Over)"
-Local cDesc2 := STR0002  //"Sera impresso de acordo com os parametros solicitados pelo"
-Local cDesc3 := STR0003  //"usuario."
+Local cDesc1 := "Detalle de movimiento de empleados (Turn-Over)  "  //"Rela‡„o de Movimenta‡”es Funcionarios (Turn-Over)"
+Local cDesc2 := "Se imprimira de acuerdo con los parametros solicitados por"  //"Sera impresso de acordo com os parametros solicitados pelo"
+Local cDesc3 := "Utilizador."  //"usuario."
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define Variaveis Private(Basicas)                            ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Private aReturn  := { STR0004, 1,STR0005, 2, 2, 1, "",1 }  //"Zebrado"###"Administra‡„o"
+Private aReturn  := { "Código de barras", 1,"Administração", 2, 2, 1, "",1 }  //"Zebrado"###"Administra‡„o"
 Private nomeprog := "GPER500"
 Private nLastKey := 0
 Private cPerg    := "GPR500CUS" 
@@ -118,7 +118,7 @@ Private Titulo
 Private Colunas  := 132
 Private AT_PRG   := "GPER500"
 Private wCabec0  := 1
-Private wCabec1  := Substr(STR0009,1,1) + Space(nTamCC)  + Space(30) + STR0009   			//--"| MES/ANO |  INICIO  | ADMISSAO | ENT.TRANSF.| SAI.TRANSF.| DEMISSAO |   FIM   |"
+Private wCabec1  := Substr("|mês/ano |  início  | admissão | ent.transf.| sai.transf.| demissão |   fim   |",1,1) + Space(nTamCC)  + Space(30) + "|mês/ano |  início  | admissão | ent.transf.| sai.transf.| demissão |   fim   |"   			//--"| MES/ANO |  INICIO  | ADMISSAO | ENT.TRANSF.| SAI.TRANSF.| DEMISSAO |   FIM   |"
 Private wCabec2  := ""
 Private Contfl   := 1
 Private Li       := 0
@@ -142,7 +142,7 @@ pergunte(cPerg,.F.)
 //³ mv_par05        //  Inicio do Mes/Ano Pesquisa               ³
 //³ mv_par06        //  Final  do Mes/Ano Pesquisa               ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Titulo := STR0006  //"RELA€O DE MOVIMENTA€™ES FUNCIONARIOS"
+Titulo := "RELAÇÃO DE MOVIMENTAÇÕES DE EMPREGADOS"  //"RELA€O DE MOVIMENTA€™ES FUNCIONARIOS"
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Envia controle para a funcao SETPRINT                        ³
@@ -527,7 +527,7 @@ Local nY
 		Endif
 
 		If Nw == 1
-			Det := "| " + STR0011 + aTurnOveF[Nw,1] + " - " + PadR(aInfo[1],15) + Space(nDescCC)  //"FILIAL: "
+			Det := "| " + "Filial:" + aTurnOveF[Nw,1] + " - " + PadR(aInfo[1],15) + Space(nDescCC)  //"FILIAL: "
 			Det := substr(Det,1,nDescCC) + " | "
 		Else
 			Det := "|" + Space(nDescCC ) + "| "

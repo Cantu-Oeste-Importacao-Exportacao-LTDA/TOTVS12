@@ -1,5 +1,5 @@
 #INCLUDE "FIVEWIN.CH"
-#INCLUDE "GPER190.CH"
+//#INCLUDE "GPER190.CH"
 #INCLUDE "report.ch"
 
 /*
@@ -37,13 +37,14 @@
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
+
 USER Function GPER190()
 Local	oReport   
 Local	aArea 	:= GetArea()
 Private	cString	:= "SRA"				// alias do arquivo principal (Base)
 Private cPerg	:= "GP190R"
-Private aOrd    := {OemToAnsi(STR0004),OemToAnsi(STR0005),OemToAnsi(STR0006)}	//"Matr¡cula"###"Centro de Custo"###"Nome"
-Private cTitulo	:= OemToAnsi(STR0001)	//"Relatorio Exame Médico / Contrato Experiência" 
+Private aOrd    := {OemToAnsi("Registo"),OemToAnsi("Centro De Custo"),OemToAnsi("Nome")}	//"Matr¡cula"###"Centro de Custo"###"Nome"
+Private cTitulo	:= OemToAnsi("Relatório Exame Médico / Contrato Experiência")	//"Relatorio Exame Médico / Contrato Experiência" 
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
@@ -58,16 +59,16 @@ Return
 
 
 Static Function GPER190R3()
-LOCAL cDesc1  := STR0001		//"Relatorio Exame M‚dico / Contrato Experiˆncia"
-LOCAL cDesc2  := STR0002		//"Ser  impresso de acordo com os parametros solicitados pelo"
-LOCAL cDesc3  := STR0003		//"usu rio."
+LOCAL cDesc1  := "Relatório Exame Médico / Contrato Experiência"		//"Relatorio Exame M‚dico / Contrato Experiˆncia"
+LOCAL cDesc2  := "Sera impresso de acordo com os parâmetro s solicitados pelo"		//"Ser  impresso de acordo com os parametros solicitados pelo"
+LOCAL cDesc3  := "Utilizador."		//"usu rio."
 LOCAL cString := "SRA"  					// Alias do arquivo principal (Base)
-LOCAL aOrd    := {STR0004,STR0005,STR0006,"Segmento"}	//"Matr¡cula"###"Centro de Custo"###"Nome"
+LOCAL aOrd    := {"Registo","Centro De Custo","Nome","Segmento"}	//"Matr¡cula"###"Centro de Custo"###"Nome"
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define Variaveis Private(Basicas)                            ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Private aReturn  := {STR0007,1,STR0008,2,2,1,"",1 }	// "Zebrado"###"Administra‡„o"
+Private aReturn  := {"Código de barras",1,"Administração",2,2,1,"",1 }	// "Zebrado"###"Administra‡„o"
 Private NomeProg := "GPER190"
 Private aLinha   := {}
 Private nLastKey := 0
@@ -117,7 +118,7 @@ pergunte(cPerg,.F.)
 //³ mv_par13        //  Categorias                               ³
 //³ mv_par14        //  Imprime C.C em Outra Pagina              ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-cTit := STR0009		//" RELA€O DE EXAME MEDICO / CONTRATO DE EXPERIENCIA "
+cTit := " RELAÇÄO DE EXAME MEDICO / CONTRATO DE EXPERIENCIA "		//" RELA€O DE EXAME MEDICO / CONTRATO DE EXPERIENCIA "
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Envia controle para a funcao SETPRINT                        ³
@@ -147,13 +148,13 @@ cSegAte		:= mv_par16
 lSalta     := If( mv_par14 == 1 , .T. , .F. )
 
 If	mv_par11 == 1
-	Titulo  := STR0010		//" RELACAO DE EXAME MEDICO "
-	Wcabec1 := STR0011 + SubStr(DtoC(dDataBase),4,2)+"/"+SubStr(DtoC(dDataBase),7,IF(nTData==10,4,2))	//"MES/ANO REFERENCIA: "
+	Titulo  := " relação de exame médico "		//" RELACAO DE EXAME MEDICO "
+	Wcabec1 := "Mes/ano referencia: " + SubStr(DtoC(dDataBase),4,2)+"/"+SubStr(DtoC(dDataBase),7,IF(nTData==10,4,2))	//"MES/ANO REFERENCIA: "
 Else
-	Titulo  := STR0012		//" RELACAO DE VENCIMENTOS DE CONTRATO DE EXPERIENCIA "
-	Wcabec1 := STR0013 + PADR(DtoC(dDataBase),10)		//"DATA REFERENCIA: "
+	Titulo  := " relação de vencimentos de contrato de experiência "		//" RELACAO DE VENCIMENTOS DE CONTRATO DE EXPERIENCIA "
+	Wcabec1 := "Data de referência: " + PADR(DtoC(dDataBase),10)		//"DATA REFERENCIA: "
 Endif
-Wcabec2 := STR0014+If(mv_par11==1,SPACE(02)+STR0015,STR0016+" "+STR0022) //"FILIAL  C. CUSTO   MATR.   NOME FUNCIONARIO                    DATA ADMISSAO    "###"EXAME MEDICO"###"CONTR.EXPER.1§PERIOD."###"CONTR.EXPER.2§PERIOD."
+Wcabec2 := "Filial  c. custo              reg.    nome empregado                      admissão    "+If(mv_par11==1,SPACE(02)+"Exame Médico","Contr.exper.1º. períod."+" "+"Contr.exper.2º. períod.") //"FILIAL  C. CUSTO   MATR.   NOME FUNCIONARIO                    DATA ADMISSAO    "###"EXAME MEDICO"###"CONTR.EXPER.1§PERIOD."###"CONTR.EXPER.2§PERIOD."
 
 If nLastKey == 27
 	Return
@@ -405,7 +406,7 @@ Endif
 If nOrdem <> 4
 	cDet := Repl("-",132)
 	Impr(cDet,"C")
-	cDet := STR0017+ cCcAnt +" - "+DescCc(cCcAnt,cFilialAnt) + Space(11)		//"TOTAL C.CUSTO -> "
+	cDet := "Total c.custo -> "+ cCcAnt +" - "+DescCc(cCcAnt,cFilialAnt) + Space(11)		//"TOTAL C.CUSTO -> "
 Else
 	aArea	:= GetArea()
 
@@ -455,7 +456,7 @@ If  nOrdem # 2
 Endif
 
 cDescFil := aInfo[1] 
-cDet     := STR0018 + cFilialAnt+" - " + cDescFil + Space(24)	//"TOTAL FILIAL -> "
+cDet     := "Total filial -> " + cFilialAnt+" - " + cDescFil + Space(24)	//"TOTAL FILIAL -> "
 
 lRetu1 := fImpComp(aTotFil1) // Imprime
 
@@ -475,7 +476,7 @@ If  Len(aTotEmp1) == 0
 	Return Nil
 Endif
 
-cDet := STR0019+aInfo[3]+Space(3)	//"TOTAL EMPRESA -> "
+cDet := "Total empresa -> "+aInfo[3]+Space(3)	//"TOTAL EMPRESA -> "
 
 lRetu1 := fImpComp(aTotEmp1) // Imprime
 
@@ -506,7 +507,7 @@ AeVal(aPosicao,{ |X| nResImp += X[1] })  // Testa se a Soma == 0
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 If  nResImp > 0
 	cDet += TRANSFORM(aPosicao[1,1],"@E 999,999,999")
-	cDet += If( aPosicao[1,1] == 1 ,STR0020,STR0021)	//"  FUNCIONARIO"###"  FUNCIONARIOS"
+	cDet += If( aPosicao[1,1] == 1 ,"  Empregado","  EMPREGADOS  ")	//"  FUNCIONARIO"###"  FUNCIONARIOS"
 	Impr(cDet,"C")
 	Return( .T. )
 Else

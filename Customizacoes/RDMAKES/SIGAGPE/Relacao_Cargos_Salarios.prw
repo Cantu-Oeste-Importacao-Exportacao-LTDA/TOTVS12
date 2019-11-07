@@ -1,5 +1,5 @@
 #INCLUDE "FIVEWIN.CH"
-#INCLUDE "GPER340.CH"
+//#INCLUDE "GPER340.CH"
 #INCLUDE "report.ch"
 
 
@@ -78,6 +78,9 @@
 ±±ÀÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß*/    
+
+
+
 User Function GPER340()
 Local	oReport   
 Local	aArea 	:= GetArea()
@@ -85,10 +88,10 @@ Private	cString	:= "SRA"				// alias do arquivo principal (Base)
 Private cPosit	:= "SRJ"
 Private cPerg	:= "GPR340"
 //"GP340R_SX1T"  
-Private aOrd    := {OemToAnsi(STR0001),OemToAnsi(STR0002),OemToAnsi(STR0003),OemToAnsi(STR0029),	;
-					OemToAnsi(STR0030),OemToAnsi(STR0031),"Segmento"}	
+Private aOrd    := {OemToAnsi("C.custo + registo "),OemToAnsi("C.custo + Nome"),OemToAnsi("C.Custo + Função"),OemToAnsi("Nome"),	;
+					OemToAnsi("Registo"),OemToAnsi("Função"),"Segmento"}	
 					//"C.Custo + Matricula "###"C.Custo + Nome"###"C.Custo + Fun‡„o"###"Nome"###"Matricula"###"Fun‡„o"
-Private cTitulo	:= OemToAnsi(STR0009)	//"RELA€ŽO DE CARGOS E SALARIOS"     
+Private cTitulo	:= OemToAnsi('Relação de Cargos e Remunerações')	//"RELA€ŽO DE CARGOS E SALARIOS"     
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 //³Chama função para monitor uso de fontes customizados³
@@ -152,16 +155,16 @@ Static Function GPER340R3()
 //³ Define Variaveis Locais (Basicas)                            ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 Local cString := "SRA"        // alias do arquivo principal (Base)
-Local aOrd    := {STR0001,STR0002,OemtoAnsi(STR0003),STR0029,STR0030,OemtoAnsi(STR0031),"Segmento"}    //"C.Custo + Matricula "###"C.Custo + Nome"###"C.Custo + Fun‡„o"###"Nome"###"Matricula"###"Fun‡„o"
-Local cDesc1  := STR0004		//"Rela‡„o de Cargos e Salario."
-Local cDesc2  := STR0005		//"Ser  impresso de acordo com os parametros solicitados pelo"
-Local cDesc3  := STR0006		//"usuario."
+Local aOrd    := {"C.custo + registo ","C.custo + Nome",OemtoAnsi("C.Custo + Função"),"Nome","Registo",OemtoAnsi("Função"),"Segmento"}    //"C.Custo + Matricula "###"C.Custo + Nome"###"C.Custo + Fun‡„o"###"Nome"###"Matricula"###"Fun‡„o"
+Local cDesc1  := "Relação de Cargos e Remunerações"		//"Rela‡„o de Cargos e Salario."
+Local cDesc2  := "Sera impresso de acordo com os parâmetro s solicitados pelo"		//"Ser  impresso de acordo com os parametros solicitados pelo"
+Local cDesc3  := "Utilizador."		//"usuario."
 Local aRegs	  := {}
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define Variaveis Private(Basicas)                            ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Private aReturn  := {STR0007,1,STR0008,2,2,1,"",1 }	//"Zebrado"###"Administra‡„o"
+Private aReturn  := {"Código de barras",1,"Administração",2,2,1,"",1 }	//"Zebrado"###"Administra‡„o"
 Private NomeProg := "GPER340"
 Private aLinha   := { }
 Private nLastKey := 0
@@ -171,11 +174,11 @@ Private cPerg    := "GPR340"
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Variaveis Utilizadas na funcao IMPR                          ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Private Titulo   := STR0009		//"RELA€ŽO DE CARGOS E SALARIOS"
+Private Titulo   := 'Relação de Cargos e Remunerações'		//"RELA€ŽO DE CARGOS E SALARIOS"
 Private AT_PRG   := "GPER340"
 Private Wcabec0  := 2
-Private Wcabec1  := STR0010		//"FI  MATRIC NOME                           ADMISSAO   FUNCAO                  MAO DE       SALARIO   PERC.   PERC.   PERC."
-Private Wcabec2  := STR0011		//"                                                                                      OBRA         NOMINAL  C.CUSTO  FILIAL  EMPRESA"
+Private Wcabec1  := "Fi  Registo Nome                           Admissão   Função                  Mão De     Remuneração   Perc.   Perc.   Perc."		//"FI  MATRIC NOME                           ADMISSAO   FUNCAO                  MAO DE       SALARIO   PERC.   PERC.   PERC."
+Private Wcabec2  := "                                                                               Obra       Nominal  C.custo  Filial  Empresa"		//"                                                                                      OBRA         NOMINAL  C.CUSTO  FILIAL  EMPRESA"
 Private CONTFL   := 1
 Private LI		  := 0
 Private nTamanho := "M"
@@ -296,19 +299,19 @@ For nS:=1 to Len(cCategoria)
 Next nS                 
  
 
-Titulo := STR0012			//"RELACAO DE CARGOS E SALARIOS "
+Titulo := "Relação de Cargos e Remunerações "			//"RELACAO DE CARGOS E SALARIOS "
 If nOrdem==1
-	Titulo += STR0013		//"(C.CUSTO + MATRICULA)"
+	Titulo += "(c.custo + Registo)"		//"(C.CUSTO + MATRICULA)"
 ElseIf nOrdem==2
-	Titulo +=STR0014		//"(C.CUSTO + NOME)"
+	Titulo +="(c.custo + Nome)"		//"(C.CUSTO + NOME)"
 ElseIf nOrdem==3 
-	Titulo +=STR0015		//"(C.CUSTO + FUNCAO)"
+	Titulo +="(c.custo + Função)"		//"(C.CUSTO + FUNCAO)"
 ElseIf nOrdem == 4		
-	Titulo +=STR0034		//"(NOME)"
+	Titulo +="(nome)"		//"(NOME)"
 ElseIf nOrdem == 5		
-	Titulo +=STR0035		//"(MATRICULA)"
+	Titulo +="(registo)"		//"(MATRICULA)"
 ElseIf nOrdem == 6		
-	Titulo +=STR0036		//"(FUNCAO)"
+	Titulo +="(função)"		//"(FUNCAO)"
 ElseIf nOrdem == 7
 	Titulo +=("SEGMENTO")
 EndIf		
@@ -683,7 +686,7 @@ If TFILIALF > 0
 					IMPR(Repli("-",132),"C")
 					For x=1 To Len(aTCC)
 						If aTCC[X,1] = cFANT + cCANT 
-							DET := STR0017+Substr(cCANT+Space(20),1,20)+"-"+Subs(DescCc(cCAnt,cFAnt),1,20)+" "+STR0018+Transform(aTCCF[X,2],"@E 999,999")+" "+Transform(aTCC[X,2],cPict1)	//"TOTAL CENTRO DE CUSTO  "###"  QTDE......:"
+							DET := "Total centro de custo "+Substr(cCANT+Space(20),1,20)+"-"+Subs(DescCc(cCAnt,cFAnt),1,20)+" "+"Qtd.:"+Transform(aTCCF[X,2],"@E 999,999")+" "+Transform(aTCC[X,2],cPict1)	//"TOTAL CENTRO DE CUSTO  "###"  QTDE......:"
 							IF lImpTFilEmp // Se Imprimir %ais Filial/Empresa
 								For w=1 To Len(aTFIL)
 									If aTFIL[W,1] = cFANT
@@ -711,7 +714,7 @@ If TFILIALF > 0
 					IMPR(Repli("-",132),"C")
 					For x=1 To Len(aTCC)
 						If aTCC[X,1] = cFANT + cCANT 
-							DET := "Segmento "+Substr(cCANT+Space(20),1,20)+"-"+Subs(FBuscaCTH(cCAnt,cFAnt),1,20)+" "+STR0018+Transform(aTCCF[X,2],"@E 999,999")+" "+Transform(aTCC[X,2],cPict1)	//"TOTAL CENTRO DE CUSTO  "###"  QTDE......:"
+							DET := "Segmento "+Substr(cCANT+Space(20),1,20)+"-"+Subs(FBuscaCTH(cCAnt,cFAnt),1,20)+" "+"Qtd.:"+Transform(aTCCF[X,2],"@E 999,999")+" "+Transform(aTCC[X,2],cPict1)	//"TOTAL CENTRO DE CUSTO  "###"  QTDE......:"
 							IF lImpTFilEmp // Se Imprimir %ais Filial/Empresa
 								For w=1 To Len(aTFIL)
 									If aTFIL[W,1] = cFANT
@@ -743,7 +746,7 @@ If TFILIALF > 0
 							If fInfo(@aInfo,cFANT)
 								cNomeFilial:=aInfo[1]
 							Endif
-							DET := STR0019+cFANT+" - " + cNomeFilial+"  "+STR0020+Transform(TOTFILF,"@E 999,999")+"        "+Transform(TOTFIL,cPict1)	//"TOTAL DA FILIAL "###"                        QTDE......:"
+							DET := "Total da filial "+cFANT+" - " + cNomeFilial+"  "+"Qtd.:"+Transform(TOTFILF,"@E 999,999")+"        "+Transform(TOTFIL,cPict1)	//"TOTAL DA FILIAL "###"                        QTDE......:"
 							For w=1 To Len(aTFIL)
 								If aTFIL[W,1] = cFANT
 									DET +=Space(19)+Transform((aTFIL[W,2] / TEMPRESA)*100,"@E 999.999")
@@ -830,8 +833,8 @@ If TFILIALF > 0
 	If nOrdem ==1 .Or. nOrdem==2 .Or. nOrdem==3
 		If !Empty(TOTCC) .And. !Empty(TOTCCF) .And. !Empty(TOTFIL) .And. !Empty(TOTFILF) .Or. ( Eof()  .And. !Empty(TOTCC) )
 			IMPR(Repli("-",132),"C")
-			DET := STR0017 + cCANT + ;					//"TOTAL DO CENTRO DE CUSTO "
-					"-" + DescCc(cCAnt,cFAnt)+" "+STR0018+Transform(TOTCCF,"@E 999,999")+;		//" QTDE.:"
+			DET := "Total centro de custo " + cCANT + ;					//"TOTAL DO CENTRO DE CUSTO "
+					"-" + DescCc(cCAnt,cFAnt)+" "+"Qtd.:"+Transform(TOTCCF,"@E 999,999")+;		//" QTDE.:"
 					Space(01)+Transform(TOTCC,cPict1)
 			IF lImpTFilEmp // Se Imprimir %ais Filial/Empresa
   				DET +=Space(10)+Transform((TOTCC/TOTFIL)*100,"@E 999.999")
@@ -847,7 +850,7 @@ If TFILIALF > 0
 				IMPR(Repli("-",132),"C")
 				For x=1 To Len(aTCC)
 					If aTCC[X,1] = cFANT + cCANT 
-						DET := "Segmento "+Substr(cCANT+Space(20),1,20)+"-"+Subs(FBuscaCTH(cCAnt,cFAnt),1,20)+" "+STR0018+Transform(aTCCF[X,2],"@E 999,999")+" "+Transform(aTCC[X,2],cPict1)	//"TOTAL CENTRO DE CUSTO  "###"  QTDE......:"
+						DET := "Segmento "+Substr(cCANT+Space(20),1,20)+"-"+Subs(FBuscaCTH(cCAnt,cFAnt),1,20)+" "+"Qtd.:"+Transform(aTCCF[X,2],"@E 999,999")+" "+Transform(aTCC[X,2],cPict1)	//"TOTAL CENTRO DE CUSTO  "###"  QTDE......:"
 						IF lImpTFilEmp // Se Imprimir %ais Filial/Empresa
 							For w=1 To Len(aTFIL)
 								If aTFIL[W,1] = cFANT
@@ -874,12 +877,12 @@ If TFILIALF > 0
 		cNomeFilial:=ainfo[1]
 	EndIf
 	IF lImpTFilEmp // Se Imprimir %ais Filial/Empresa
-		DET := STR0019+ cFANT + " - " + cNomeFilial+Space(29)+STR0020+Transform(TOTFILF,"@E 999,999")+" "+Transform(TOTFIL,cPict1)	//"TOTAL DA FILIAL "###"QTDE.:"
+		DET := "Total da filial "+ cFANT + " - " + cNomeFilial+Space(29)+"Qtd.:"+Transform(TOTFILF,"@E 999,999")+" "+Transform(TOTFIL,cPict1)	//"TOTAL DA FILIAL "###"QTDE.:"
 		DET +=Space(19)+Transform((TOTFIL / TEMPRESA)*100,"@E 999.999")
 		IMPR(DET,"C")
 		IMPR(Repli("-",132),"C")
 		IMPR(Repli("-",132),"C")
-		DET := STR0025+" - " + Left(SM0->M0_NOMECOM,39) +Space(5)+ STR0026+Transform(TEMPRESAF , "@E 999,999")+" "+;	//"TOTAL DA EMPRESA  "###"QTDE.:"
+		DET := "Total da empresa  "+" - " + Left(SM0->M0_NOMECOM,39) +Space(5)+ "Qtd.:"+Transform(TEMPRESAF , "@E 999,999")+" "+;	//"TOTAL DA EMPRESA  "###"QTDE.:"
 		Transform(TEMPRESA ,cPict1)
 		IMPR(DET,"C")
 		IMPR(Repli("-",132),"C")
@@ -920,9 +923,9 @@ If ( cFil # Nil .And. cFilial == Space(FWGETTAMFILIAL)) .Or. cFil == Nil
 Endif
 If dbSeek( cFil + cCodigo )
 	If Left(RJ_MAOBRA ,1 ) == "D"
-		DescMO := STR0027		//"DIR"
+		DescMO := "Dir."		//"DIR"
 	Elseif Left(RJ_MAOBRA ,1 ) == "I"
-		DescMO := STR0028		//"IND"
+		DescMO := "Ind"		//"IND"
 	Else
 		DescMO := "   "
 	Endif
@@ -962,7 +965,7 @@ dbSelectArea("CTT")
 dbSetOrder(1)
 
 IF CTT->(dbSeek(xFilial("CTT",cCodFil) + cCodCC))
-    cDescCc := OemToAnsi(STR0017)+allTrim(cCodCC)+" - "+CTT->CTT_DESC01
+    cDescCc := OemToAnsi("Total centro de custo ")+allTrim(cCodCC)+" - "+CTT->CTT_DESC01
 EndIf  
 
 Return(cDescCc)              

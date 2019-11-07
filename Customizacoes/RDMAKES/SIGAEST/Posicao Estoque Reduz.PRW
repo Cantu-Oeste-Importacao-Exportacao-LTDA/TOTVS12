@@ -1,5 +1,6 @@
-#INCLUDE "MATR260.CH"
+//#INCLUDE "MATR260.CH"
 #INCLUDE "PROTHEUS.CH"
+
 
 /*ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -51,7 +52,7 @@ Return
 /*/
 Static Function ReportDef()
 
-Local aOrdem    := {OemToAnsi(STR0005),OemToAnsi(STR0006),OemToAnsi(STR0007),OemToAnsi(STR0008),OemToAnsi(STR0009)}    //" Por Codigo         "###" Por Tipo           "###" Por Descricao     "###" Por Grupo        "###" Por Almoxarifado   "
+Local aOrdem    := {OemToAnsi(" Por Codigo         "),OemToAnsi(" Por Tipo           "),OemToAnsi(" Por Descricao      "),OemToAnsi(" Por Grupo          "),OemToAnsi(" Por Armazem        ")}    //" Por Codigo         "###" Por Tipo           "###" Por Descricao     "###" Por Grupo        "###" Por Almoxarifado   "
 Local cAliasTRB := CriaTrab( nil,.F. )
 Local aSizeQT	:= TamSX3("B2_QATU")
 Local aSizeVL	:= TamSX3("B2_VATU1")
@@ -72,7 +73,7 @@ Local oSection
 //³ExpC5 : Descricao                                                       ³
 //³                                                                        ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oReport:= TReport():New("MATR260",STR0001,"MTR260", {|oReport| ReportPrint(oReport,aOrdem,cAliasTRB)},STR0002+" "+STR0003+" "+STR0004) //"Relacao da Posicao do Estoque"
+oReport:= TReport():New("MATR260","Relacao da Posicao do Estoque","MTR260", {|oReport| ReportPrint(oReport,aOrdem,cAliasTRB)},"Este relatorio emite a posicao dos saldos e empenhos de cada  produto"+" "+"em estoque. Ele tambem mostrara' o saldo disponivel ,ou seja ,o saldo"+" "+"subtraido dos empenhos.") //"Relacao da Posicao do Estoque"
 If TamSX3("B1_COD")[1] > 15
 	oReport:SetLandscape()
 EndIf
@@ -111,24 +112,24 @@ Pergunte(oReport:uParam,.F.)
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Criacao da Sessao 1                                          ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oSection := TRSection():New(oReport,STR0053,{"SB2","SB1",cAliasTRB},aOrdem) //"Saldos em Estoque"
+oSection := TRSection():New(oReport,"Saldos em Estoque",{"SB2","SB1",cAliasTRB},aOrdem) //"Saldos em Estoque"
 oSection:SetTotalInLine(.F.)
 
-TRCell():New(oSection,'B1_COD'		,'SB1',STR0036,/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
-TRCell():New(oSection,'B1_TIPO'		,'SB1',STR0037,/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
-TRCell():New(oSection,'B1_GRUPO'	,'SB1',STR0038,/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
-TRCell():New(oSection,'B1_DESC'		,'SB1',STR0039,/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
-TRCell():New(oSection,'B1_UM'		,'SB1',STR0040,/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
-TRCell():New(oSection,'B1_SEGUM'	,'SB1',STR0040,/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
-TRCell():New(oSection,'B2_FILIAL'	,'SB2',STR0041,/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
-TRCell():New(oSection,'B2_LOCAL'	,'SB2',STR0042,/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
+TRCell():New(oSection,'B1_COD'		,'SB1',"CODIGO",/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
+TRCell():New(oSection,'B1_TIPO'		,'SB1',"TP",/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
+TRCell():New(oSection,'B1_GRUPO'	,'SB1',"GRUP",/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
+TRCell():New(oSection,'B1_DESC'		,'SB1',"DESCRIÇÃO",/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
+TRCell():New(oSection,'B1_UM'		,'SB1',"UM",/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
+TRCell():New(oSection,'B1_SEGUM'	,'SB1',"UM",/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
+TRCell():New(oSection,'B2_FILIAL'	,'SB2',"FL",/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
+TRCell():New(oSection,'B2_LOCAL'	,'SB2',"ARMZ",/*Picture*/,/*Tamanho*/,/*lPixel*/,/*{|| code-block de impressao }*/)
 
-TRCell():New(oSection,'QUANT'		,cAliasTRB,STR0043+CRLF+STR0044,cPictQT,aSizeQT[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
-TRCell():New(oSection,'QUANTR'		,cAliasTRB,STR0045+CRLF+STR0046,cPictQT,aSizeQT[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
-TRCell():New(oSection,'DISPON'		,cAliasTRB,STR0047+CRLF+STR0048,cPictQT,aSizeQT[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
-TRCell():New(oSection,'VALOR'		,cAliasTRB,STR0049+CRLF+STR0044,cPictVL,aSizeVL[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
-TRCell():New(oSection,'VALORR'		,cAliasTRB,STR0049+CRLF+STR0050,cPictVL,aSizeVL[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
-TRCell():New(oSection,'DESCARM'		,cAliasTRB,STR0051+CRLF+STR0052,cPictLZ,aSizeLZ[1],/*lPixel*/,/*{|| code-block de impressao }*/)
+TRCell():New(oSection,'QUANT'		,cAliasTRB,"SALDO"+CRLF+"EM ESTOQUE",cPictQT,aSizeQT[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
+TRCell():New(oSection,'QUANTR'		,cAliasTRB,"EMPENHO PARA"+CRLF+"REQ/PV/RESERVA",cPictQT,aSizeQT[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
+TRCell():New(oSection,'DISPON'		,cAliasTRB,"ESTOQUE"+CRLF+"DISPONIVEL",cPictQT,aSizeQT[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
+TRCell():New(oSection,'VALOR'		,cAliasTRB,"VALOR"+CRLF+"EM ESTOQUE",cPictVL,aSizeVL[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
+TRCell():New(oSection,'VALORR'		,cAliasTRB,"VALOR"+CRLF+"EMPENHADO",cPictVL,aSizeVL[1],/*lPixel*/,/*{|| code-block de impressao }*/,,,"RIGHT")
+TRCell():New(oSection,'DESCARM'		,cAliasTRB,"DESCRIÇÃO"+CRLF+"DO ARMAZEM",cPictLZ,aSizeLZ[1],/*lPixel*/,/*{|| code-block de impressao }*/)
 
 oSection:SetHeaderPage()
 oSection:SetNoFilter(cAliasTRB)
@@ -192,13 +193,13 @@ aSB1Ite	:= TAMSX3("B1_CODITE")
 If StrZero(nOrdem,1) $ "245"
 	If nOrdem == 2
 		//-- SubtTotal por Tipo
-		oBreak01 := TRBreak():New(oSection,oSection:Cell("B1_TIPO"),STR0016+" "+STR0017,.F.)
+		oBreak01 := TRBreak():New(oSection,oSection:Cell("B1_TIPO"),"Total do "+" "+"Tipo",.F.)
 	ElseIf nOrdem == 4
 		//-- SubtTotal por Grupo
-		oBreak01 := TRBreak():New(oSection,oSection:Cell("B1_GRUPO"),STR0016+" "+STR0018,.F.)
+		oBreak01 := TRBreak():New(oSection,oSection:Cell("B1_GRUPO"),"Total do "+" "+"Grupo",.F.)
 	ElseIf nOrdem == 5         
 		//-- SubtTotal por Armazem
-		oBreak01 := TRBreak():New(oSection,oSection:Cell("B2_LOCAL"),STR0033,.F.)
+		oBreak01 := TRBreak():New(oSection,oSection:Cell("B2_LOCAL"),"SubTotal por Armazem",.F.)
 	EndIf
 	TRFunction():New(oSection:Cell('QUANT'	),NIL,"SUM",oBreak01,/*Titulo*/,/*cPicture*/,/*uFormula*/,.F.,.F.)
 	TRFunction():New(oSection:Cell('QUANTR'	),NIL,"SUM",oBreak01,/*Titulo*/,/*cPicture*/,/*uFormula*/,.F.,.F.)
@@ -212,9 +213,9 @@ EndIf
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 If mv_par17 == 1
 	If mv_par22 == 1 //-- SubTotal pela 2a.U.M.
-		oBreak02 := TRBreak():New(oSection,oSection:Cell("B1_SEGUM"),STR0019,.F.)
+		oBreak02 := TRBreak():New(oSection,oSection:Cell("B1_SEGUM"),"Total Unidade Medida : ",.F.)
 	Else //-- SubTotal pela 1a. U.M.
-		oBreak02 := TRBreak():New(oSection,oSection:Cell("B1_UM"),STR0019,.F.)
+		oBreak02 := TRBreak():New(oSection,oSection:Cell("B1_UM"),"Total Unidade Medida : ",.F.)
 	EndIf
 	TRFunction():New(oSection:Cell('QUANT'	),NIL,"SUM",oBreak02,/*Titulo*/,/*cPicture*/,/*uFormula*/,.F.,.F.)
 	TRFunction():New(oSection:Cell('QUANTR'	),NIL,"SUM",oBreak02,/*Titulo*/,/*cPicture*/,/*uFormula*/,.F.,.F.)
@@ -260,7 +261,7 @@ EndIf
 //³ Ajusta as perguntas para Custo Unificado                     |
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 If lCusUnif .And. ((mv_par01==1) .Or. !(mv_par04=='**') .Or. !(mv_par05=='**') .Or. nOrdem==5)
-	If Aviso(STR0024,STR0025+CHR(10)+CHR(13)+STR0029+CHR(10)+CHR(13)+STR0026+CHR(10)+CHR(13)+STR0027+CHR(10)+CHR(13)+STR0028+CHR(10)+CHR(13)+STR0030,{STR0031,STR0032}) == 2
+	If Aviso("Custo Unificado","Com o parametro MV_CUSFIL ativado o preenchimento das seguintes perguntas deve ser observado:"+CHR(10)+CHR(13)+'Ordem de Impressao -> Todas, exceto "ARMAZEM"'+CHR(10)+CHR(13)+'Aglutina Por Almoxarifado/Filial/Empresa? -> Somente podem ser utilizadas as opcoes "Filial" ou "Empresa"'+CHR(10)+CHR(13)+'Armazem De? -> Somente "**"'+CHR(10)+CHR(13)+'Armazem Ate? -> Somente "**"'+CHR(10)+CHR(13)+"Os parametros nao estao devidamente configurados. Imprime relatorio dessa forma ?",{"Imprime","Cancela"}) == 2
 		lRet := .F.
 	EndIf	
 EndIf
@@ -629,7 +630,7 @@ dbSelectArea(0)
 dbCreate(cAliasTRB,aCampos)
 
 dbUseArea( .F.,,cAliasTRB,cAliasTRB,.F.,.F. )
-IndRegua(cAliasTRB,cAliasTRB,cIndxKEY,,,STR0013)   //"Organizando Arquivo..."
+IndRegua(cAliasTRB,cAliasTRB,cIndxKEY,,,"Organizando Arquivo...")   //"Organizando Arquivo..."
 
 dbSelectArea("SB2")
 oReport:SetMeter(LastRec())        
@@ -1207,7 +1208,7 @@ dbSelectArea(0)
 DbCreate( cFileTRB,aCampos )
 
 dbUseArea( .F.,,cFileTRB,cFileTRB,.F.,.F. )
-IndRegua( cFileTRB,cFileTRB,cIndxKEY,,,OemToAnsi(STR0013))   //"Organizando Arquivo..."
+IndRegua( cFileTRB,cFileTRB,cIndxKEY,,,OemToAnsi("Organizando Arquivo..."))   //"Organizando Arquivo..."
 
 dbSelectArea( "SB2" )
 SetRegua(LastRec())
@@ -1582,7 +1583,7 @@ Local cPicVal	:= PesqPict("SB2","B2_VATU"+If(mv_par22 == 1,"2","1") ,15)
 Local	lT		:= .F.
 Local	lT1		:= .F.
 Local	lT2		:= .F.
-Local	cArm0	:= alltrim(OemToAnsi(STR0009))
+Local	cArm0	:= alltrim(OemToAnsi(" Por Armazem        "))
 Local	cArm1	:= ""
 Local	cArm2	:= ""
 Local	n2		:= Len(cArm0)
@@ -1605,8 +1606,8 @@ EndIf
 Private	Li		:= 80
 		M_Pag	:= 1
 
-cCab01 := OemToAnsi(STR0014)        //"CODIGO          TP GRUP DESCRICAO             UM FL ALM   SALDO       EMPENHO PARA     ESTOQUE      ___________V A L O R___________"
-cCab02 := OemToAnsi(STR0015)        //"                                                          EM ESTOQUE  REQ/PV/RESERVA   DISPONIVEL    EM ESTOQUE          EMPENHADO "
+cCab01 := OemToAnsi("CODIGO          TP GRUP DESCRICAO                                                                         UM FL ARMZ  SALDO       EMPENHO PARA       ESTOQUE       ____________VALOR ___________")        //"CODIGO          TP GRUP DESCRICAO             UM FL ALM   SALDO       EMPENHO PARA     ESTOQUE      ___________V A L O R___________"
+cCab02 := OemToAnsi("                                                                                                                      EM ESTOQUE  REQ/PV/RESERVA     DISPONIVEL      EM ESTOQUE        EMPENHADO")        //"                                                          EM ESTOQUE  REQ/PV/RESERVA   DISPONIVEL    EM ESTOQUE          EMPENHADO "
 //  	                                   123456789012345 12 1234 123456789012345678901 12 12 12 999,999,999.99 999,999,999.99 9999,999,999.99 9999,999,999.99 9999,999,999.99
 //      	                               0         1         2         3         4         5         6         7         8         9        10        11        12        13
 //          	                           0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012
@@ -1617,8 +1618,8 @@ If lVeic
 EndIf
 
 If mv_par23 == 1
-	cCab01 += STR0034
-	cCab02 += STR0035
+	cCab01 += "    DESCRICAO"
+	cCab02 += "    DO ARMAZEM"
 EndIf
 
 dbSelectArea( cFileTRB )
@@ -2029,7 +2030,7 @@ While !Eof()
 		If lT .OR. lT1
 			Li++
 			If nORDEM <> 5 
-				@ Li,016 PSay OemToAnsi(STR0019)+aTotUM[ ACM_CODE ]   //"Total Unidade Medida : "
+				@ Li,016 PSay OemToAnsi("Total Unidade Medida : ")+aTotUM[ ACM_CODE ]   //"Total Unidade Medida : "
 				@ Li,054 + nCOL1 PSay aTotUM[ ACM_SALD ] Picture cPicture
 				@ Li,070 + nCOL1 PSay aTotUM[ ACM_EMPN ] Picture cPicture
 				@ Li,085 + nCOL1 PSay aTotUM[ ACM_DISP ] Picture cPicture
@@ -2039,7 +2040,7 @@ While !Eof()
 				aTotUM    := Nil
 			Else
 				If lT1  
-					@ Li,n1 PSay "Sub" + OemToAnsi(STR0019) ; //"SubTotal Unidade Medida : "
+					@ Li,n1 PSay "Sub" + OemToAnsi("Total Unidade Medida : ") ; //"SubTotal Unidade Medida : "
 					+ SUBSTR(aTotUM1[ ACM_CODE ],1,LEN(aTotUM1[ ACM_CODE ])-2) ;
 					+ " - " + cArm1 + " : " ;
 					+ SUBSTR(aTotUM1[ ACM_CODE ],LEN(aTotUM1[ ACM_CODE ])-1,2)
@@ -2057,7 +2058,7 @@ While !Eof()
 						Li	+=	2
 					EndIf
 					
-					@ Li,016 PSay OemToAnsi(STR0019)+aTotUM[ ACM_CODE ]   //"Total Unidade Medida : "
+					@ Li,016 PSay OemToAnsi("Total Unidade Medida : ")+aTotUM[ ACM_CODE ]   //"Total Unidade Medida : "
 					@ Li,054 + nCOL1 PSay aTotUM[ ACM_SALD ] Picture cPicture
 					@ Li,070 + nCOL1 PSay aTotUM[ ACM_EMPN ] Picture cPicture
 					@ Li,085 + nCOL1 PSay aTotUM[ ACM_DISP ] Picture cPicture
@@ -2078,7 +2079,7 @@ While !Eof()
 		//SubTotal por Armazem
 		If nOrdem == 5 .And. mv_par01 == 1 .And. cLocal != FIELD->LOCAL
 			If nOrdem == 5
-				@ Li,n1 PSay OemToAnsi(STR0033) ; //"SubTotal por Armazem: "
+				@ Li,n1 PSay OemToAnsi("SubTotal por Armazem") ; //"SubTotal por Armazem: "
 				+ SUBSTR(aTotAMZ[ ACM_CODE ],1,LEN(aTotAMZ[ ACM_CODE ])-2) + " - " + cArm1 + " : " ;
 				+ cLocal
 				@ Li,054 + nCOL1 PSay aTotAMZ[ ACM_SALD ] Picture cPicture
@@ -2101,7 +2102,7 @@ While !Eof()
 			
 			Li++
 			
-			@ Li,016 PSay OemToAnsi(STR0016)+If( (nOrdem == 2),OemToAnsi(STR0017),OemToAnsi(STR0018))+" : "+aTotORD[ ACM_CODE ]   //"Total do "###"Tipo"###"Grupo"
+			@ Li,016 PSay OemToAnsi("Total do ")+If( (nOrdem == 2),OemToAnsi("Tipo"),OemToAnsi("Grupo"))+" : "+aTotORD[ ACM_CODE ]   //"Total do "###"Tipo"###"Grupo"
 	 	   	@ Li,054 + nCOL1 PSay aTotORD[ ACM_SALD ] Picture cPicture
 		   	@ Li,070 + nCOL1 PSay aTotORD[ ACM_EMPN ] Picture cPicture
 		   	@ Li,085 + nCOL1 PSay aTotORD[ ACM_DISP ] Picture cPicture
@@ -2125,7 +2126,7 @@ If nTotValSal + nTotValRPR + nTotValRes + nTotValEst + nTotValEmp # 0
 		Cabec(cTitulo,cCab01,cCab02,wnRel,cTam,nTipo)
 	EndIf
 	Li += If(mv_par17#1,1,0)
-	@ Li,016 PSay OemToAnsi(STR0020) // "Total Geral : "
+	@ Li,016 PSay OemToAnsi("Total Geral : ") // "Total Geral : "
 	@ Li,054 + nCOL1 PSay nTotValSal Picture cPicture
 	@ Li,070 + nCOL1 PSay nTotValRPR Picture cPicture
 	@ Li,085 + nCOL1 PSay nTotValRes Picture cPicture
@@ -2134,9 +2135,9 @@ If nTotValSal + nTotValRPR + nTotValRes + nTotValEst + nTotValEmp # 0
 EndIf
 
 If (LastKey() == 286) .Or. If(lEnd==Nil,.F.,lEnd) .Or. lAbortPrint
-	@ pRow()+1,00 PSay OemToAnsi(STR0021)     //"CANCELADO PELO OPERADOR."
+	@ pRow()+1,00 PSay OemToAnsi("CANCELADO PELO OPERADOR.")     //"CANCELADO PELO OPERADOR."
 ElseIf !(RecCount()==0) //utilizado para nao Imprimir Pagina em Branco
-	Roda( LastRec(), OemToAnsi(STR0022),cTam )    //"Registro(s) processado(s)"
+	Roda( LastRec(), OemToAnsi("Registro(s) processado(s)"),cTam )    //"Registro(s) processado(s)"
 EndIf
 
 SET DEVICE TO SCREEN

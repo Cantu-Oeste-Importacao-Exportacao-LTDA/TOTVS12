@@ -1,5 +1,7 @@
-#INCLUDE "UMATR320.CH"
+//#INCLUDE "UMATR320.CH"
 #INCLUDE "PROTHEUS.CH"
+
+
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -75,17 +77,17 @@ Static Function MATR320R3
 //³ Define Variaveis                                             ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 LOCAL Tamanho  := "G"
-LOCAL titulo   := STR0001	//"Resumo das Entradas e Saidas"
-LOCAL cDesc1   := STR0002	//"Este programa mostra um resumo ,por tipo de material ,de todas  as  suas"
-LOCAL cDesc2   := STR0003	//"entradas e saidas. A coluna SALDO INICIAL  e' o  resultado da  soma  das"
-LOCAL cDesc3   := STR0004	//"outras colunas do relatorio e nao o saldo inicial cadastrado no estoque."
+LOCAL titulo   := "Resumo das Entradas e Saidas"	//"Resumo das Entradas e Saidas"
+LOCAL cDesc1   := "Este programa mostra um resumo, por tipo de material, de todas as suas"	//"Este programa mostra um resumo ,por tipo de material ,de todas  as  suas"
+LOCAL cDesc2   := "entradas e saidas. A coluna SALDO INICIAL e o resultado da soma das"	//"entradas e saidas. A coluna SALDO INICIAL  e' o  resultado da  soma  das"
+LOCAL cDesc3   := "outras colunas do relatorio e nao o saldo inicial cadastrado no estoque."	//"outras colunas do relatorio e nao o saldo inicial cadastrado no estoque."
 LOCAL cString  := "SB1"
 LOCAL wnrel    := "MATR320"
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Variaveis tipo Private padrao de todos os relatorios         ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-PRIVATE aReturn:= { OemToAnsi(STR0005), 1,OemToAnsi(STR0006), 1, 2, 1, "",1 }			//"Zebrado"###"Administracao"
+PRIVATE aReturn:= { OemToAnsi("Zebrado"), 1,OemToAnsi("Administracao"), 1, 2, 1, "",1 }			//"Zebrado"###"Administracao"
 PRIVATE nLastKey := 0 ,cPerg := "MTR320"
 Private _cFil	:= "" // Adriano
 _cFil	:= VerEmp()
@@ -196,17 +198,17 @@ nTipo  := IIF(aReturn[4]==1,15,18)
 cMoeda := LTrim(Str(mv_par09))
 cMoeda := IIF(cMoeda=="0","1",cMoeda)
 If Type("NewHead")#"U"
-	NewHead += STR0007+AllTrim(GetMv("MV_SIMB"+cMoeda))+" - "+STR0035+dtoc(mv_par07,"ddmmyy")+STR0036+dtoc(mv_par08,"ddmmyy")			//" EM "
+	NewHead += " EM "+AllTrim(GetMv("MV_SIMB"+cMoeda))+" - "+"Período de "+dtoc(mv_par07,"ddmmyy")+" Até "+dtoc(mv_par08,"ddmmyy")			//" EM "
 Else
-	Titulo  += STR0007+AllTrim(GetMv("MV_SIMB"+cMoeda))+" - "+STR0035+dtoc(mv_par07,"ddmmyy")+STR0036+dtoc(mv_par08,"ddmmyy")		   //" EM "
+	Titulo  += " EM "+AllTrim(GetMv("MV_SIMB"+cMoeda))+" - "+"Período de "+dtoc(mv_par07,"ddmmyy")+" Até "+dtoc(mv_par08,"ddmmyy")		   //" EM "
 EndIf
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Monta os Cabecalhos                                          ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-Cabec1 := STR0008		//"TIPO            SALDO          COMPRAS    MOVIMENTACOES      REQUISICOES   TRANSFERENCIAS         PRODUCAO           VENDAS       TRANSF. P/     DEVOLUCAO DE     DEVOLUCAO DE  ENTRADA PODER  SAIDA PODER        SALDO"
-Cabec2 := STR0009 +Iif(mv_par10 == 1,STR0010,Iif(mv_par10 == 2,STR0011,STR0012))    //"              INICIAL                          INTERNAS    PARA PRODUCAO                                                           PROCESSO            VENDAS          COMPRAS    TERCEIROS      TERCEIROS"###"        ATUAL"###"DO FECHAMENTO"###" DO MOVIMENTO"
+Cabec1 := "TIPO            SALDO          COMPRAS  ENTRADA TRANSF.    MOVIMENTACOES           VENDAS    SAIDA TRANSF.       DEVOLUCAO        DEVOLUCAO            SALDO"		//"TIPO            SALDO          COMPRAS    MOVIMENTACOES      REQUISICOES   TRANSFERENCIAS         PRODUCAO           VENDAS       TRANSF. P/     DEVOLUCAO DE     DEVOLUCAO DE  ENTRADA PODER  SAIDA PODER        SALDO"
+Cabec2 := "              INICIAL                     ENTRE FILIAIS         INTERNAS                     ENTRE FILIAIS       DE VENDAS       DE COMPRAS    " +Iif(mv_par10 == 1,"        ATUAL",Iif(mv_par10 == 2,"DO FECHAMENTO"," DO MOVIMENTO"))    //"              INICIAL                          INTERNAS    PARA PRODUCAO                                                           PROCESSO            VENDAS          COMPRAS    TERCEIROS      TERCEIROS"###"        ATUAL"###"DO FECHAMENTO"###" DO MOVIMENTO"
 
 ******************      12   9,999,999,999.99 9,999,999,999.99 9,999,999,999.99 9,999,999,999.99 9999,999,999.99 9,999,999,999.99 9,999,999,999.99 9,999,999,999.99 9,999,999,999.99 9,999,999,999.99 999,999,999.99 999,999,999.99 9,999,999,999.99
 ******************      0         1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16        17        18        19        20        21        22
@@ -310,7 +312,7 @@ Cabec2 := STR0009 +Iif(mv_par10 == 1,STR0010,Iif(mv_par10 == 2,STR0011,STR0012))
 		cQuery += " ORDER BY 3,2,1" //3-TIPO/2-PRODUTO/1-ARQ
 
 		cQuery:=ChangeQuery(cQuery)
-		MsAguarde({|| dbUseArea(.T.,"TOPCONN",TCGenQry(,,cQuery),cAliasTOP,.F.,.T.)},STR0015)
+		MsAguarde({|| dbUseArea(.T.,"TOPCONN",TCGenQry(,,cQuery),cAliasTOP,.F.,.T.)},"Selecionando Registros")
 		SetRegua(LastRec())
 		dbSelectArea(cAliasTop)	
 	
@@ -320,7 +322,7 @@ Cabec2 := STR0009 +Iif(mv_par10 == 1,STR0010,Iif(mv_par10 == 2,STR0011,STR0012))
 		While lContinua .And. !EOF()
 		
 			If lEnd
-				@ PROW()+1,001 PSay STR0013	//"CANCELADO PELO OPERADOR"
+				@ PROW()+1,001 PSay "CANCELADO PELO OPERADOR"	//"CANCELADO PELO OPERADOR"
 				lContinua := .F.
 				Exit
 			EndIf
@@ -352,7 +354,7 @@ Cabec2 := STR0009 +Iif(mv_par10 == 1,STR0010,Iif(mv_par10 == 2,STR0011,STR0012))
 			While !EOF() .And. (cAliasTop)->B1_TIPO == cTipAnt
 			
 				If lEnd
-					@ PROW()+1,001 PSay STR0013	//"CANCELADO PELO OPERADOR"
+					@ PROW()+1,001 PSay "CANCELADO PELO OPERADOR"	//"CANCELADO PELO OPERADOR"
 					lContinua := .F.
 					Exit
 				EndIf
@@ -564,7 +566,7 @@ If lTotal
 		Cabec(titulo,cabec1,cabec2,wnrel,Tamanho,nTipo)
 	EndIf
 
-	@ li,000 PSay STR0014	//"TOT.:"
+	@ li,000 PSay "TOT.:"	//"TOT.:"
 	@ li,005 PSay nTotSant  PicTure tm(nTotSant ,16)
 	@ li,022 PSay nTotComp  PicTure tm(nTotComp ,16)
 	@ li,039 PSay _nETotFil  PicTure tm(nTotCons ,16)

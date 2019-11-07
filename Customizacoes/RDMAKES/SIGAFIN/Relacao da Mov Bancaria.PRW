@@ -1,4 +1,3 @@
-#Include "FINR620.CH"
 #Include "PROTHEUS.CH"
 
 //Static lFWCodFil := FindFunction("FWCodFil")
@@ -29,18 +28,18 @@ User Function FinR620A()
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define Variaveis 										     ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-LOCAL wnrel
-LOCAL cDesc1 := STR0001  //"Este programa ir  emitir a rela‡„o da movimenta‡„o banc ria"
-LOCAL cDesc2 := STR0002  //"de acordo com os parametros definidos pelo usuario. Poder  ser"
-LOCAL cDesc3 := STR0003  //"impresso em ordem de data disponivel,banco,natureza ou dt.digita‡„o."
+
+
+
 LOCAL cString := "SE5"
-LOCAL aOrd := {OemToAnsi(STR0004),OemToAnsi(STR0005),OemToAnsi(STR0006),OemToAnsi(STR0007),OemToAnsi(STR0034)}  //"Por Dt.Dispo"###"Por Banco"###"Por Natureza"###"Dt.Digitacao"###"Por Dt. Movimentacao"
+LOCAL wnrel
+LOCAL aOrd := {OemToAnsi("Por Dt.Dispo"),OemToAnsi("Por Banco"),OemToAnsi("Por Natureza"),OemToAnsi("Dt.Digitacao"),OemToAnsi("Por Dt. Movimentacao")}  //"Por Dt.Dispo"###"Por Banco"###"Por Natureza"###"Dt.Digitacao"###"Por Dt. Movimentacao"
 Local cTamanho
 
 PRIVATE titulo 
 PRIVATE cabec1	:= ""
 PRIVATE cabec2 := ""
-PRIVATE aReturn := { OemToAnsi(STR0019), 1,OemToAnsi(STR0020), 2, 2, 1, "",1 }  //"Zebrado"###"Administracao"
+PRIVATE aReturn := { OemToAnsi("Zebrado"), 1,OemToAnsi("Administracao"), 2, 2, 1, "",1 }  //"Zebrado"###"Administracao"
 PRIVATE nomeprog:="FINR620"
 PRIVATE nLastKey := 0
 PRIVATE cPerg	 :="FIN620" 
@@ -56,7 +55,7 @@ U_USORWMAKE(ProcName(),FunName())
 pergunte("FIN620",.T.)
 
 mv_par11 := Iif(Empty(mv_par11),1,mv_par11)
-titulo := STR0021 + If(mv_par11==1, STR0022, STR0023) //" Analitico"###" Sintetico"
+titulo := "Relacao da Movimentacao Bancaria" + If(mv_par11==1, " Analitico", " Sintetico") //" Analitico"###" Sintetico"
 // Seta o tamanho do relatorio, G - Analitico e ordem <> 3 e M - Caso contrario.
 cTamanho :=	If(mv_par11==1 .And. aReturn[8] != 3,"G","M")
 
@@ -95,7 +94,7 @@ If nLastKey == 27
 Endif                                                     
                                 
 // Muda titulo do relatorio conforme impressao (analitico ou sintetico).
-Titulo := STR0021 + If(mv_par11==1, STR0022, STR0023) //" Analitico"###" Sintetico"
+Titulo := "Relacao da Movimentacao Bancaria" + If(mv_par11==1, " Analitico", " Sintetico") //" Analitico"###" Sintetico"
 // Seta o tamanho do relatorio, G - Analitico e ordem <> 3 e M - Caso contrario.
 cTamanho :=	If(mv_par11==1 .And. aReturn[8] != 3,"G","M")
 
@@ -216,7 +215,7 @@ cMoeda := Str(mv_par09,1,0)
 //³ Defini‡„o dos cabe‡alhos							    	  ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 If mv_par11 == 1
-	titulo := STR0008 //"Relacao da Movimentacao Bancaria em "
+	titulo := "Relacao da Movimentacao Bancaria em " //"Relacao da Movimentacao Bancaria em "
 	If aReturn[8] != 3 .And. mv_par15 == 1 // Ordem de natureza nao sera impresso os saldos
 		cabec1 := "DATA       BCO AGENCIA  CONTA      NATUREZA    DOCUMENTO                              VALOR                               BENEFICIARIO"
 		cabec2 := "                                                                           ENTRADA             SAIDA        SALDO ATUAL"
@@ -225,16 +224,16 @@ If mv_par11 == 1
 		cabec2 := "                                                                          ENTRADA             SAIDA            "
 	Endif	
 Else
-	titulo := STR0026 //"Movimentação Bancária em "
-	cabec1 := If(	mv_par15 == 1, STR0027,;
-						StrTran(StrTran(StrTran(STR0027,"SALDO ATUAL",""),"SALDO ACTUAL",""),"CURR. BALN.","")) //"                                    ENTRADA             SAIDA        SALDO ATUAL"
+	titulo := "Movimentacäo Bancaria em " //"Movimentação Bancária em "
+	cabec1 := If(	mv_par15 == 1, "                                                                  ENTRADA         SAIDA         SALDO ATUAL",;
+						StrTran(StrTran(StrTran("                                                                  ENTRADA         SAIDA         SALDO ATUAL","SALDO ATUAL",""),"SALDO ACTUAL",""),"CURR. BALN.","")) //"                                    ENTRADA             SAIDA        SALDO ATUAL"
 Endif	
 
 
 nMoeda	:= mv_par09
 cTexto	:= GetMv("MV_MOEDA"+Str(nMoeda,1))
 Titulo	+= cTexto
-titulo   += STR0028 + If(mv_par11==1, STR0029, STR0030) + STR0028 //" - "###"Analitico"###"Sintetico"###" - "
+titulo   += " - " + If(mv_par11==1, "Analitico", "Sintetico") + " - " //" - "###"Analitico"###"Sintetico"###" - "
 dbSelectArea("SE5")
 
 #IFDEF TOP
@@ -249,7 +248,7 @@ dbSelectArea("SE5")
 #ENDIF
 
 If aReturn[8] == 1
-	titulo += OemToAnsi(STR0011)  //" por data"
+	titulo += OemToAnsi(" por data")  //" por data"
 	#IFDEF TOP
 		cCondicao 	:= ".T."
 		cCond2 		:= "E5_DTDISPO"		
@@ -270,13 +269,13 @@ If aReturn[8] == 1
 			         cIndex ,;
 						cChave,,;
 						"E5_FILIAL >= '"+mv_par13+"' .AND. E5_FILIAL <= '"+mv_par14+"'",;
-						OemToAnsi(STR0012))  //"Selecionando Registros..."
+						OemToAnsi("Selecionando Registros..."))  //"Selecionando Registros..."
 		ELSE
 			cChave	:= "E5_FILIAL+DTOS(E5_DTDISPO)+E5_BANCO+E5_AGENCIA+E5_CONTA"
 			IndRegua("SE5"  ,;
 			         cIndex ,;
 						cChave,,,;
-						OemToAnsi(STR0012))  //"Selecionando Registros..."
+						OemToAnsi("Selecionando Registros..."))  //"Selecionando Registros..."
 		ENDIF
 		nIndex	 := RetIndex("SE5")
 		dbSelectArea("SE5")
@@ -289,7 +288,7 @@ If aReturn[8] == 1
 		ENDIF
 	#ENDIF
 Elseif aReturn[8] == 2
-	titulo += OemToAnsi(STR0013)  //" por Banco"
+	titulo += OemToAnsi(" por Banco")  //" por Banco"
 	SE5->(dbSetOrder(3))
 	#IFDEF TOP
 		cCondicao 	:= ".T."
@@ -310,7 +309,7 @@ Elseif aReturn[8] == 2
 			         cIndex,;
 						cChave,,;
 						"E5_FILIAL >= '"+mv_par13+"' .AND. E5_FILIAL <= '"+mv_par14+"'",;
-						OemToAnsi(STR0012))  //"Selecionando Registros..."
+						OemToAnsi("Selecionando Registros..."))  //"Selecionando Registros..."
 			nIndex	 := RetIndex("SE5")
 			SE5->(dbSetIndex(cIndex+OrdBagExt()))
 		   SE5->(dbSetOrder(nIndex+1))
@@ -321,7 +320,7 @@ Elseif aReturn[8] == 2
 		ENDIF
 	#ENDIF
 Elseif aReturn[8] == 3
-	titulo += OemToAnsi(STR0014)  //" por Natureza"
+	titulo += OemToAnsi(" por Natureza")  //" por Natureza"
 	SE5->(dbSetOrder(4))
 	#IFDEF TOP
 		cCondicao 	:= ".T."
@@ -342,7 +341,7 @@ Elseif aReturn[8] == 3
 			         cIndex ,;
 						cChave,,;
 						"E5_FILIAL >= '"+mv_par13+"' .AND. E5_FILIAL <= '"+mv_par14+"'",;
-						OemToAnsi(STR0012))
+						OemToAnsi("Selecionando Registros..."))
 			nIndex	 := RetIndex("SE5")
 			SE5->(dbSetIndex(cIndex+OrdBagExt()))
 		   SE5->(dbSetOrder(nIndex+1))
@@ -363,20 +362,20 @@ Elseif aReturn[8] == 4 // Digitacao
 		cCondicao 	:= ".T."
 	#ELSE
 		cCondicao := "E5_DTDIGIT >= mv_par07 .and. E5_DTDIGIT <= mv_par08"
-		titulo += OemToAnsi(STR0015)  //"  Por Data de Digitacao"
+		titulo += OemToAnsi("  Por Data de Digitacao")  //"  Por Data de Digitacao"
 		cIndex:=CriaTrab("",.F.)
 		dbSelectArea("SE5")
 		IF mv_par12 == 1
 	 	   IndRegua("SE5",;
 			          cIndex ,;
 						 cOrder,,;
-						 "E5_FILIAL >= '" + mv_par13 + "' .AND. E5_FILIAL <= '" + mv_par14 + "'",OemToAnsi(STR0012))  //"Selecionando Registros..."
+						 "E5_FILIAL >= '" + mv_par13 + "' .AND. E5_FILIAL <= '" + mv_par14 + "'",OemToAnsi("Selecionando Registros..."))  //"Selecionando Registros..."
 			nIndex	 := RetIndex("SE5")
 			SE5->(dbSetIndex(cIndex+OrdBagExt()))
 		   SE5->(dbSetOrder(nIndex+1))
 			SE5->(dbSeek(DTOS(mv_par07),.T.))
 		ELSE
-		   IndRegua("SE5",cIndex,cOrder,,,OemToAnsi(STR0012))  //"Selecionando Registros..."
+		   IndRegua("SE5",cIndex,cOrder,,,OemToAnsi("Selecionando Registros..."))  //"Selecionando Registros..."
 		   nIndex	 := RetIndex("SE5")
 			SE5->(dbSetIndex(cIndex+OrdBagExt()))
 		   SE5->(dbSetOrder(nIndex+1))
@@ -395,19 +394,19 @@ ElseIf aReturn[8] >= 5 // Data da Movimentacao
 		cCondicao 	:= ".T."
 	#ELSE
 		cCondicao := "E5_DATA >= mv_par01 .and. E5_DATA <= mv_par02"
-		titulo    += OemToAnsi(STR0034) // "Por Dt. Movimentacao"
+		titulo    += OemToAnsi("Por Dt. Movimentacao") // "Por Dt. Movimentacao"
 		cIndex    := CriaTrab("",.F.)
 		dbSelectArea("SE5")
 		If mv_par12 == 1
 	 		IndRegua("SE5", cIndex, cOrder,,;
 					 "E5_FILIAL >= '" + mv_par13 + "' .AND. E5_FILIAL <= '" + mv_par14 + "'",;
-					 OemToAnsi(STR0012))  //"Selecionando Registros..."
+					 OemToAnsi("Selecionando Registros..."))  //"Selecionando Registros..."
 			nIndex := RetIndex("SE5")
 			SE5->(dbSetIndex(cIndex+OrdBagExt()))
 			SE5->(dbSetOrder(nIndex+1))
 			SE5->(dbSeek(DTOS(mv_par01),.T.))
 		Else
-			IndRegua("SE5",cIndex,cOrder,,,OemToAnsi(STR0012))  //"Selecionando Registros..."
+			IndRegua("SE5",cIndex,cOrder,,,OemToAnsi("Selecionando Registros..."))  //"Selecionando Registros..."
 			nIndex := RetIndex("SE5")
 			SE5->(dbSetIndex(cIndex+OrdBagExt()))
 			SE5->(dbSetOrder(nIndex+1))
@@ -511,8 +510,8 @@ For nBancos := 1 To IIf(aReturn[8]==2,Len(aSaldo),1)
 			Endif
 				
 			// Imprime o saldo anterior
-			@li,000 PSAY STR0031 + DTOC(mv_par01)+ ; //"Saldo anterior a "
-							 If( aReturn[8] == 2, " : " + aSaldo[nBancos][2]+" "+aSaldo[nBancos][3]+" "+aSaldo[nBancos][4],STR0032)+; //" (Todos os bancos): "
+			@li,000 PSAY "Saldo anterior a " + DTOC(mv_par01)+ ; //"Saldo anterior a "
+							 If( aReturn[8] == 2, " : " + aSaldo[nBancos][2]+" "+aSaldo[nBancos][3]+" "+aSaldo[nBancos][4]," (Todos os bancos): ")+; //" (Todos os bancos): "
 							 Transform(nSaldoAnt,cPict)
 			li++
 			li++
@@ -523,7 +522,7 @@ For nBancos := 1 To IIf(aReturn[8]==2,Len(aSaldo),1)
 	While !Eof() .And. EVAL(bWhile) .And. &cCondicao .and. lContinua
 	
 		IF lEnd
-			@PROW()+1,001 PSAY OemToAnsi(STR0016)  //"CANCELADO PELO OPERADOR"
+			@PROW()+1,001 PSAY OemToAnsi("CANCELADO PELO OPERADOR")  //"CANCELADO PELO OPERADOR"
 			lContinua:=.F.
 			Exit
 		End
@@ -601,7 +600,7 @@ For nBancos := 1 To IIf(aReturn[8]==2,Len(aSaldo),1)
 		While !EOF() .and. &cCond2 = cAnterior .and. EVAL(bWhile) .and. lContinua .And. &cCond3
 	
 			IF lEnd
-				@PROW()+1,001 PSAY OemToAnsi(STR0016)  //"CANCELADO PELO OPERADOR"
+				@PROW()+1,001 PSAY OemToAnsi("CANCELADO PELO OPERADOR")  //"CANCELADO PELO OPERADOR"
 				lContinua:=.F.
 				Exit
 			EndIF
@@ -784,8 +783,8 @@ For nBancos := 1 To IIf(aReturn[8]==2,Len(aSaldo),1)
 				cPict := PesqPict( "SE5", "E5_VALOR", 18, mv_par09 )
 			Endif
 			// Imprime o saldo anterior
-			@li,000 PSAY STR0031 + DTOC(mv_par01)+ ; //"Saldo anterior a "
-							 If( aReturn[8] == 2, " : " + Substr(cAnterior,1,3)+" "+Substr(cAnterior,4,5)+" "+Substr(cAnterior,9,10),STR0032)+; //" (Todos os bancos): "
+			@li,000 PSAY "Saldo anterior a " + DTOC(mv_par01)+ ; //"Saldo anterior a "
+							 If( aReturn[8] == 2, " : " + Substr(cAnterior,1,3)+" "+Substr(cAnterior,4,5)+" "+Substr(cAnterior,9,10)," (Todos os bancos): ")+; //" (Todos os bancos): "
 							 Transform(nSaldoAnt,cPict)
 			li++
 			li++
@@ -885,14 +884,14 @@ For nBancos := 1 To IIf(aReturn[8]==2,Len(aSaldo),1)
 		If ( nTotEnt + nTotSai ) != 0
 			li++
 			IF aReturn[8] == 1 .or. aReturn[8] == 4 .or. aReturn[8] == 5
-				@li, 0 PSAY STR0033 + DTOC(cAnterior) //"Total : "
+				@li, 0 PSAY "Total : " + DTOC(cAnterior) //"Total : "
 			Elseif aReturn[8] == 2
 				// Banco+Agencia+Conta
-				@li, 0 PSAY STR0033 + Substr(cAnterior,1,3)+" "+Substr(cAnterior,4,5)+" "+Substr(cAnterior,9,10) //"Total : "
+				@li, 0 PSAY "Total : " + Substr(cAnterior,1,3)+" "+Substr(cAnterior,4,5)+" "+Substr(cAnterior,9,10) //"Total : "
 			Elseif aReturn[8] == 3
 				dbSelectArea("SED")
 				dbSeek(cFilial+cAnterior)
-				@li, 0 PSAY STR0033 + cAnterior + " "+Substr(ED_DESCRIC,1,30) //"Total : "
+				@li, 0 PSAY "Total : " + cAnterior + " "+Substr(ED_DESCRIC,1,30) //"Total : "
 			EndIF
 			If mv_par11 != 1 // Sintetico
 				@li, 55 PSAY nTotEnt	  PicTure tm(nTotEnt,16,MsDecimais(mv_par09))
@@ -926,7 +925,7 @@ IF (nGerEnt+nGerSai) != 0
 		cabec(@titulo,cabec1,cabec2,nomeprog,cTamanho,IIF(aReturn[4]==1,15,18))
 	Endif
 	li++
-	@li,	0 PSAY OemToAnsi(STR0017)  //"Total Geral : "
+	@li,	0 PSAY OemToAnsi("Total Geral : ")  //"Total Geral : "
 	If mv_par11 != 1 // Sintetico
 		@li, 55 PSAY nGerEnt 	PicTure tm(nGerEnt,16,MsDecimais(mv_par09))
 		@li, 73 PSAY nGerSai 	PicTure tm(nGerSai,16,MsDecimais(mv_par09))
@@ -945,7 +944,7 @@ If lVazio
 	IF li > 58
 		cabec(@titulo,cabec1,cabec2,nomeprog,cTamanho,IIF(aReturn[4]==1,15,18))
 	End
-	@li, 0 PSAY OemToAnsi(STR0018)  //"Nao existem lancamentos neste periodo"
+	@li, 0 PSAY OemToAnsi("Nao existem lancamentos neste periodo")  //"Nao existem lancamentos neste periodo"
 	li++
 	roda(cbcont,cbtxt,cTamanho)
 End

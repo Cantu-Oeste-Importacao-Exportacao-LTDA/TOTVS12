@@ -1,5 +1,5 @@
 #include "rwmake.ch"       
-#INCLUDE "SEGDES.CH"
+//#INCLUDE "SEGDES.CH"
 
 User Function SEGDES_ESP()
 
@@ -93,20 +93,22 @@ U_USORWMAKE(ProcName(),FunName())
 
 //+--------------------------------------------------------------+
 //¦ Define Variaveis Locais (Basicas)                            ¦
-//+--------------------------------------------------------------+
-cTit     := STR0001 // ' REQUERIMENTO DE SEGURO-DESEMPREGO - S.D. '
-cDesc1   := STR0002 // 'Requerimento de Seguro-Desemprego - S.D.'
-cDesc2   := STR0003 // 'Será impresso de acordo com os parametros solicitados pelo'
-cDesc3   := STR0004 // 'usuario.'
+//+--------------------------------------------------------------+            	
+
+
+cTit     := " requerimento de seguro-desemprego - s.d. " // ' REQUERIMENTO DE SEGURO-DESEMPREGO - S.D. '
+cDesc1   := "Requerimento De Seguro-desemprego - S.d." // 'Requerimento de Seguro-Desemprego - S.D.'
+cDesc2   := "Sera impresso de acordo com os parâmetro s solicitados pelo" // 'Será impresso de acordo com os parametros solicitados pelo'
+cDesc3   := "Utilizador." // 'usuario.'
 cString  := 'SRA'
 cAlias   := 'SRA'
-aOrd     := {STR0005,STR0006}	// 'Matricula'###'Centro de Custo'
+aOrd     := {"Matrícula","Centro De Custo"}	// 'Matricula'###'Centro de Custo'
 WnRel    := 'SEGDES'
 cPerg    := 'SEGDES'                    
 cFilAnte := '··'
 lEnd     := .F.
 lFirst   := .T. 
-aReturn  := { STR0007,1,STR0008,2,2,1,'',1 }	// 'Zebrado'###'Administraçäo'	
+aReturn  := { "Código de barras",1,"Administração",2,2,1,'',1 }	// 'Zebrado'###'Administraçäo'	
 aInfo    := {}
 nLastKey := 0
 nLinha	 := 0
@@ -189,7 +191,7 @@ Endif
 
 If nTipoRel = 1
 	lFirst := .T.
-	oPrint := TMSPrinter():New( STR0001 )
+	oPrint := TMSPrinter():New( " requerimento de seguro-desemprego - s.d. " )
 	oPrint:SetPortrait()
 Endif	
 
@@ -249,7 +251,7 @@ Do While !Eof()
 	//¦ Cancela Impres¦o ao se pressionar <ALT> + <A>.               ¦
 	//+--------------------------------------------------------------+
 	If lEnd
-		@ pRow()+ 1, 00 PSAY STR0009 // ' CANCELADO PELO OPERADOR . . . '
+		@ pRow()+ 1, 00 PSAY " cancelado pelo operador . . . " // ' CANCELADO PELO OPERADOR . . . '
 		Exit
 	EndIF
 	
