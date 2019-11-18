@@ -23,7 +23,6 @@ User Function XMLCTE09()
 	Local	nPosCC		:=  aScan(aItem,{|x| AllTrim(x[1]) == "D1_CC"})
 	Local	nLenItem	:=  Len(aItem)
 	Local	nValIcmCte	:=  Iif(Len(aInfIcmsCte) > 0 .And. aInfIcmsCte[1,1] == "ICM" ,aInfIcmsCTe[1,5], 0 )
-	Local	aOrdHeader 	:=  apBuildHeader("SD1") // Monta um Vetor aHeader baseado na ordem do SX3 - Usado para reordenar os campos 
 	Local 	nZ,nY
 	Local	aNewItem	:= {}
 
@@ -37,7 +36,7 @@ User Function XMLCTE09()
 		nLenItem	:= Len(aItem)
 
 	Endif
-	
+
 	If nPosOper <> 0			
 		aDel(aItem,nPosOper)
 		aSize(aItem,nLenItem-1)
@@ -63,7 +62,22 @@ User Function XMLCTE09()
 				// TES 039
 			ElseIf  nValIcmCte == 0 .Or. SF2->F2_VALICM == 0
 				aItem[nPosTes,2] := "039"
-			Endif			
+			Endif		
+				
+			If nPosClVl <> 0
+				aItem[nPosClVl,2]	:= "999001001"
+			Else
+				Aadd(aItem,{"D1_CLVL" 	,"999001001"		               				,Nil})
+				nLenItem	:= Len(aItem)
+			Endif
+
+			// Centro de Custo
+			If nPosCC <> 0
+				aItem[nPosCC,2]		:= "020202001"
+			Else 
+				Aadd(aItem,{"D1_CC" 	,"020202001"		               				,Nil})
+				nLenItem	:= Len(aItem)
+			Endif		
 
 		Else
 			aItem[nPosTes,2] := "038"	
