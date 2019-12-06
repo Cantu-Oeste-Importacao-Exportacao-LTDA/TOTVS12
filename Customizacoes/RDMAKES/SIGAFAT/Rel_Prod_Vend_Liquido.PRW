@@ -1349,7 +1349,7 @@ IndRegua("TRB",cArqTrb2,"D2_FILIAL+D2_TP+D2_COD+D2_DOC+D2_SERIE",,cFilSD2,STR001
 		cQuery += " SD2.D2_LOCAL,SD2.D2_TES,SD2.D2_EMISSAO,SD2.D2_TIPO,SD2.D2_QUANT," 
 		cQuery += " SD2.D2_TOTAL,SD2.D2_CUSTO"+Str(mv_par09,1)+",SD2.D2_VALIPI," 
 		cQuery += " SD2.D2_VALICM,SD2.D2_ORIGLAN,SD2.D2_CLIENTE," 
-		cQuery += IIf(!Empty(aReturn[7]),A285QryFil("SD2",cQuery,aReturn[7]),"")
+		//cQuery += IIf(!Empty(aReturn[7]),A285QryFil("SD2",cQuery,aReturn[7]),"")
 		cQuery += "	SD2.D2_ITEM,SD2.D2_LOJA"
 		
 		//Adicao a query dos campos de impostos 

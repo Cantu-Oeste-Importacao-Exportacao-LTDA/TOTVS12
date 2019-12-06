@@ -6412,7 +6412,14 @@ cString += '<nNF>'+ConvType(Val(aNota[02]),9)+'</nNF>'
 //Nota TИcnica 2013/005 - Data e Hora no formato UTC
 If cVeramb >= "3.10"
 	cString += '<dhEmi>'+ConvType(aNota[03])+"T"+Iif(Len(AllTrim(aNota[06])) > 5,ConvType(aNota[06]),ConvType(aNota[06])+":00")+'</dhEmi>'
-	cString += NfeTag('<dhSaiEnt>',Iif(lDSaiEnt,"",ConvType(aNota[03])+"T"+Iif(Len(AllTrim(aNota[06])) > 5,ConvType(aNota[06]),ConvType(aNota[06])+":00")))
+	//зддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддP©
+	//ЁCANTU INICIO - DATA DE ENTRADA DEVE SER DIFERENTE DA DATA DE EMISSцOЁ
+	//юддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддPы
+	//cString += NfeTag('<dhSaiEnt>',Iif(lDSaiEnt,"",ConvType(aNota[03])+"T"+Iif(Len(AllTrim(aNota[06])) > 5,ConvType(aNota[06]),ConvType(aNota[06])+":00")))
+	cString += NfeTag('<dhSaiEnt>',Iif(lDSaiEnt,"",ConvType(dDataBase)+"T"+Iif(Len(aNota[06]) > 5,ConvType(aNota[06]),ConvType(aNota[06])+":00")))   
+	//зддддддддд©
+	//ЁCANTU FIMЁ
+	//юддддддддды
 Else	
 	cString += '<dEmi>'+ConvType(aNota[03])+'</dEmi>'
 	cString += NfeTag('<dSaiEnt>',Iif(lDSaiEnt, "", ConvType(aNota[03])))

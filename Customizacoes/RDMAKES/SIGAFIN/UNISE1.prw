@@ -219,7 +219,9 @@ for i := 1 to len(aEmp)
 			case j == 29
 				cQuery += " AS MULTNAT " 	
 			case j == 30
-				cQuery += " AS HIST " 			
+				cQuery += " AS HIST " 	
+		
+						
 		EndCase
 	Next j 
 
@@ -302,8 +304,20 @@ If nHandle > 0
 		//³Transformação dos campos numéricos em string e mascarado para composição do arquivo³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 		
-		cValor := Transform(SETMP->VALOR,      "@E 999,999,999.99")
-		cSaldo := Transform(SETMP->SALDO,      "@E 999,999,999.99")
+		
+		// Edison 20/11/19 inicio
+		// Tratamento para deixar valor negativo quando for os tipos RA/NCC/PA/NDF
+		If SETMP->TIPO  $ "RA /NCC/PA /NDF"
+			cValor := Transform(SETMP->VALOR * -1 ,"@E 999,999,999.99")
+			cSaldo := Transform(SETMP->SALDO * -1 ,"@E 999,999,999.99")
+		Else 
+			cValor := Transform(SETMP->VALOR ,"@E 999,999,999.99")
+			cSaldo := Transform(SETMP->SALDO, "@E 999,999,999.99")
+			
+		EndIf
+	    
+	    // Edison 20/11/19 fim
+		
 		cMulta := Transform(SETMP->MULTA,      "@E 999,999,999.99")
 		cDesco := Transform(SETMP->DESCONTO,   "@E 999,999,999.99")
 		cDecre := Transform(SETMP->DECRESCIMO, "@E 999,999,999.99")
