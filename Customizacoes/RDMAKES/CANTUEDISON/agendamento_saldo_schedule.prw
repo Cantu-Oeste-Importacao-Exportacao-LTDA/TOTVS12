@@ -35,3 +35,11 @@ User Function m3004005()
 	MSExecAuto({|x| mata300(x)},PARAMIXB)
 	RESET ENVIRONMENT
 Return Nil
+
+User Function m3001001()
+	Local PARAMIXB := .T.      //-- Caso a rotina seja rodada em batch(.T.), senão (.F.)
+	Local aemp := {"10","01"}  //-- "Empresa","Filial"
+	PREPARE ENVIRONMENT EMPRESA aemp[1] Filial aemp[2] USER 'admin' PASSWORD '@dmin2019' TABLES  "SB1","SB2","SB9","SD1","SD2","SD3","SF4" MODULO "EST"
+	MSExecAuto({|x| mata300(x)},PARAMIXB)
+	RESET ENVIRONMENT
+Return Nil

@@ -1,4 +1,4 @@
-#include "rwmake.ch"
+/*#include "rwmake.ch"
 
 User Function F050BOT()
 
@@ -9,3 +9,4 @@ Local aRotina := {}
 aAdd(aRotina,{"MsDocument","FATA340",0,3,0,Nil})//"Conhecimento"
 
 Return aRotina
+*/

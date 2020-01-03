@@ -86,9 +86,15 @@ Local aArea := GetArea()
 	//³Processamento da rotina de compensação automatica devolução de compras. ³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	
+	//INICIO EDISON. 19/12/2019
+	//Comentado rotina customizada para chamar a compensação automática customizada.
+	// Configurado parâmetro MV_CMPDEVC padrão para efetuar a compensação.
+	/*
 	If ALLTRIM(SuperGetMV("MV_X_ACPAD",,"N")) == "S" .AND. SF2->F2_TIPO == "D"
 		fCompDEV( SF2->F2_FILIAL, SF2->F2_DOC, SF2->F2_SERIE, SF2->F2_CLIENTE, SF2->F2_LOJA )
-	EndIf	
+	EndIf
+	*/
+	//FIM EDISON.	
 
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 	//³Atualização do status do pedido B2B Vertis.                             ³

@@ -332,7 +332,7 @@ User Function AFIN03BX(nRecSe1, cMotBx, cCnpj)
 	DBSELECTAREA("SE1")
 	SE1->(DBGOTO(nRecSe1))
 	
-	nVlrBx := SE1->E1_SALDO
+	nVlrBx := SE1->E1_SALDO 
 	
 	BEGIN TRANSACTION
 	
@@ -377,18 +377,18 @@ User Function AFIN03BX(nRecSe1, cMotBx, cCnpj)
 		DBSELECTAREA("SE2")
 		SE2->(DBSETORDER(1))		
 		
-		AADD(aTitulo,{"E2_FILIAL" 		,	SE1->E1_FILIAL		, Nil})
-		AADD(aTitulo,{"E2_PREFIXO" 		,	cPrefCP				, Nil})
-		AADD(aTitulo,{"E2_NUM" 			,	SE1->E1_NUM			, Nil})
-		AADD(aTitulo,{"E2_TIPO"    		,	cTipo				, Nil})
-		AADD(aTitulo,{"E2_PARCELA" 		,	SE1->E1_PARCELA		, Nil})
-		AADD(aTitulo,{"E2_NATUREZ"    	,	SE1->E1_NATUREZ		, Nil})
-		AADD(aTitulo,{"E2_FORNECE"		,	SA2->A2_COD			, Nil})
-		AADD(aTitulo,{"E2_LOJA"    		,	SA2->A2_LOJA		, Nil})
-		AADD(aTitulo,{"E2_EMISSAO"    	,	dDataBase			, Nil})
-		AADD(aTitulo,{"E2_VENCTO"    	,	SE1->E1_VENCREA		, Nil})	
-		AADD(aTitulo,{"E2_VALOR"    	, 	nVlrBx				, Nil})
-		AADD(aTitulo,{"E2_CLVLDB"    	, 	SE1->E1_CLVLCR		, Nil})
+		AADD(aTitulo,{"E2_FILIAL" 		,	SE1->E1_FILIAL						, Nil})
+		AADD(aTitulo,{"E2_PREFIXO" 		,	cPrefCP								, Nil})
+		AADD(aTitulo,{"E2_NUM" 			,	SE1->E1_NUM							, Nil})
+		AADD(aTitulo,{"E2_TIPO"    		,	cTipo								, Nil})
+		AADD(aTitulo,{"E2_PARCELA" 		,	SE1->E1_PARCELA						, Nil})
+		AADD(aTitulo,{"E2_NATUREZ"    	,	SE1->E1_NATUREZ						, Nil})
+		AADD(aTitulo,{"E2_FORNECE"		,	SA2->A2_COD							, Nil})
+		AADD(aTitulo,{"E2_LOJA"    		,	SA2->A2_LOJA						, Nil})
+		AADD(aTitulo,{"E2_EMISSAO"    	,	dDataBase							, Nil})
+		AADD(aTitulo,{"E2_VENCTO"    	,	SE1->E1_VENCREA						, Nil})	
+		AADD(aTitulo,{"E2_VALOR"    	, 	nVlrBx	- SE1->E1_DECRESC			, Nil})
+		AADD(aTitulo,{"E2_CLVLDB"    	, 	SE1->E1_CLVLCR						, Nil})
 		
 //		AADD(aTitulo,{"E2_CCUSTO"    	,	oJson:E2_CCUSTO		, Nil})	
 		AADD(aTitulo,{"E2_HIST"    		,	"ORIGEM NCC: " + SE1->(E1_FILIAL  + E1_PREFIXO  + E1_NUM  + E1_PARCELA )		, Nil})	

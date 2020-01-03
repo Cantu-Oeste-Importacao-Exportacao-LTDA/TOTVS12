@@ -1,9 +1,11 @@
 
-User Function MT103DEV()
+/*User Function MT103DEV()
 Local cQuery    := " "
 Local dData_De  := PARAMIXB[1]
 Local dData_Ate := PARAMIXB[2]
 Local nDiasDev  := SuperGetMv("MV_DIASDEV",,60) 
+Local cCliente   
+Local cLoja    
 
 //旼컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
 //쿎hama fun豫o para monitor uso de fontes customizados�
@@ -22,3 +24,5 @@ cquery += "AND D_E_L_E_T_ = ' ' "
 cquery += " AND F2_FRETE > 0 "
  
 Return (cQuery)
+
+*/

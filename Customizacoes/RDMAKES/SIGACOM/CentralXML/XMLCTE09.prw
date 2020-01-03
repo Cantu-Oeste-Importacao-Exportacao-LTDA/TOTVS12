@@ -81,7 +81,7 @@ User Function XMLCTE09()
 
 				ElseIf cEmpAnt $ "04/05/12/13/14/15/16/17/40/41/42/43"
 
-					aItem[nPosClVl,2]	:= "999001001"
+					aItem[nPosClVl,2]	:= "001001001"
 
 				EndIf
 				//aItem[nPosClVl,2]	:= "999001001"
@@ -99,7 +99,7 @@ User Function XMLCTE09()
 					nLenItem	:= Len(aItem)
 
 				ElseIf cEmpAnt $ "04/05/12/13/14/15/16/17/40/41/42/43"
-					Aadd(aItem,{"D1_CLVL" 	,"999001001"		               				,Nil})
+					Aadd(aItem,{"D1_CLVL" 	,"001001001"		               				,Nil})
 					nLenItem	:= Len(aItem)
 
 				EndIf
@@ -174,7 +174,7 @@ User Function XMLCTE09()
 
 				ElseIf cEmpAnt $ "04/05/12/13/14/15/16/17/40/41/42/43"
 
-					aItem[nPosClVl,2]	:= "999001001"
+					aItem[nPosClVl,2]	:= "001001001"
 
 				EndIf
 				//aItem[nPosClVl,2]	:= "009001001"
@@ -193,7 +193,7 @@ User Function XMLCTE09()
 
 				ElseIf cEmpAnt $ "04/05/12/13/14/15/16/17/40/41/42/43"
 
-					Aadd(aItem,{"D1_CLVL" 	,"999001001"		               				,Nil})
+					Aadd(aItem,{"D1_CLVL" 	,"001001001"		               				,Nil})
 					nLenItem	:= Len(aItem)
 
 				EndIf

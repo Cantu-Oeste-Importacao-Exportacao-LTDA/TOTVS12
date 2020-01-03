@@ -118,7 +118,7 @@ conout("2/6). Verificando Controle de Alçadas...")
 while !eof().and.(xFilial("SCR") == SCR->CR_FILIAL) .And. (AllTrim(SCR->CR_NUM) == cPedido) .And. (SCR->CR_TIPO == "PC")
 	aRetSaldo   := MaSalAlc(SCR->CR_APROV,DDatabase)
 	nSaldo 	 := aRetSaldo[1]
-	CRoeda 	 := A097Moeda(aRetSaldo[2])
+	//CRoeda 	 := A097Moeda(aRetSaldo[2])
 	nTotal      := xMoeda(SCR->CR_TOTAL,SCR->CR_MOEDA,aRetSaldo[2],SCR->CR_EMISSAO,,SCR->CR_TXMOEDA)
 	nSalDif     := nSaldo - nTotal
 	//

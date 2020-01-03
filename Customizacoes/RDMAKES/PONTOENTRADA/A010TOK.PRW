@@ -1,5 +1,6 @@
+/*
 #include "protheus.ch"
-
+*/
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -14,8 +15,9 @@
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-
+/*
 User Function A010TOK()             
+/*
 	/****WorkFlow de inclusão/alteração de produto****/
 	//Roberto Rosin
 	//24/08/2012
@@ -24,7 +26,7 @@ User Function A010TOK()
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 	//³Chama função para monitor uso de fontes customizados³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-	U_USORWMAKE(ProcName(),FunName())
+/*	U_USORWMAKE(ProcName(),FunName())
 	
 	//se estiver alterando, cahama a função que retorna o código HTML com as alterações.
 	If altera
@@ -51,11 +53,16 @@ Static function enviaEmail()
 	oHtml:ValByName( "INCLUALTE", cInclualte )
 	oHtml:ValByName( "USUARIO",   cUsername )
 	oHtml:ValByName( "CODDESC", M->B1_COD + ' - ' + M->B1_DESC)
+	
+*/	
 
 	/*	
 	if altera
 		oHtml:ValByName( "ALTERACOES","Alterações: " + cAlteracao)
 	endIf
 	*/
+/*
 	oProcess:Start()
 return
+
+*/
